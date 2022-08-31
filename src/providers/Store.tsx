@@ -1,33 +1,20 @@
-/**
- * contain all global values and method in order to update
- * @typedef  {Object}   storage
- * @property {Object}   get contain all global values
- * @property {Function} set method in order to update values
- */
 
 import React from "react";
 import data from "../datas/default";
 
-
 const StoreContext = React.createContext(data);
 
-/**
- * @type {storage}
- */
-const store = {
+const store:any = {
   get: {},
   set: () => {},
 };
 
-
-
-
-const StoreProvider = ({ children }) => {
+const StoreProvider = ({ children }:any) => {
     const [get, set] = React.useState(data);
     store.get = get;
-    store.set = (newData) => update(newData);
+    store.set = (newData: any) => update(newData);
     
-    const update = newData => {
+    const update = (newData: any) => {
       set({
         ...get,
         ...newData,
@@ -36,7 +23,6 @@ const StoreProvider = ({ children }) => {
 
     return (
       <StoreContext.Provider 
-// @ts-ignore
       value={[get, update]}>
         {children}
       </StoreContext.Provider>
