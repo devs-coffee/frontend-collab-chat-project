@@ -1,7 +1,12 @@
-function ProtectedContent({ children }: any) {
-    
-    
-    return children;
+import { ReactNode } from "react";
+
+type ProtectedContentProps = {
+    children: ReactNode;
+};
+
+
+const ProtectedContent = ({ children } : ProtectedContentProps) => {
+    return <div>{children}</div> ;
 }
 
 
