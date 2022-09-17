@@ -1,17 +1,11 @@
 import { useState } from 'react';
 
+import { signupForm } from '../../interfaces/ISignupForm';
 import "./Signup.scss";
 
 export default function Signup() {
-    interface signupFormObject {
-        pseudo: string,
-        email: string,
-        password: string,
-        passwordconfirm: string,
-        image: string
-    }
     
-    let formObject: signupFormObject = {
+    let formObject: signupForm = {
         pseudo: '',
         email: '',
         password: '',
@@ -20,8 +14,6 @@ export default function Signup() {
     }
 
     const [inputValue, setInputValue] = useState(formObject);
-
-    
 
     function valueChange(event: any):void {
         let inputKey:string = event.target.id.substring(event.target.id.lastIndexOf('-') + 1);

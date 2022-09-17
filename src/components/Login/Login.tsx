@@ -1,15 +1,11 @@
 import { useState } from 'react';
 
+import { loginForm } from '../../interfaces/ILoginForm';
 import "./Login.scss";
 
 export default function Login() {
-    interface loginFormObject {
-        
-        email: string,
-        password: string
-    }
     
-    let formObject: loginFormObject = {
+    let formObject: loginForm = {
         email: '',
         password: ''
     }
