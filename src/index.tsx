@@ -1,7 +1,6 @@
 import ReactDOM from 'react-dom/client';
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { StoreProvider } from "./providers/Store";
 
 import Home from "./pages/Home/Home";
 import ProtectedContent from './components/ProtectedContent/ProtectedContent';
@@ -12,18 +11,16 @@ import './styles/index.scss';
 
 const root = ReactDOM.createRoot(document.getElementById('root')!);
 root.render(
-  <StoreProvider>
-    <Router>
-      <Routes>
-        <Route path="/" element={
-          <ProtectedContent>
-              <Home />
-          </ProtectedContent>
-        } />
-        <Route path="/auth" element={<Auth />} />
-        <Route path="/error" element={<Error />} />
-        <Route path="*" element={<Error />} />
-      </Routes>
-    </Router>
-  </StoreProvider>
+  <Router>
+    <Routes>
+      <Route path="/" element={
+        <ProtectedContent>
+            <Home />
+        </ProtectedContent>
+      } />
+      <Route path="/auth" element={<Auth />} />
+      <Route path="/error" element={<Error />} />
+      <Route path="*" element={<Error />} />
+    </Routes>
+  </Router>
 );
