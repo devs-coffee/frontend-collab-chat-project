@@ -1,10 +1,15 @@
 import { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+
+import { login, signout } from '../../redux/authSlice';
 
 import { loginForm } from '../../interfaces/ILoginForm';
 import "./Login.scss";
 
 export default function Login() {
-    
+    const authStatus = useSelector((state:any) => state.auth);
+    const dispatch = useDispatch();
+
     let formObject: loginForm = {
         email: '',
         password: ''
@@ -23,7 +28,19 @@ export default function Login() {
         event.preventDefault();
         console.log('formulaire soumis');
         console.log(inputValue);
+        console.log('authStatus :', authStatus);
+        dispatch(login({pseudo: 'test'}));
     }
+
+    /*
+    // REMOVE AFTER TESTS
+    */
+   function handleSignout() {
+    dispatch(signout());
+   }
+   /*
+   // END REMOVE
+   */
     
     return (
         <div className="Login">
@@ -41,6 +58,12 @@ export default function Login() {
                 </div>
                 <button type="submit" onClick={handleSubmit} >envoi</button>
             </div>
+           <br/>
+           <br/>
+           <br/>
+           <p>{authStatus.user}</p>
+           <button onClick={handleSignout}>Logout</button>
+
         </div>
     )
 }
