@@ -61,7 +61,7 @@ export default function Login() {
            <br/>
            <br/>
            <br/>
-           <p>{authStatus.user}</p>
+           <p>{authStatus.user ? authStatus.user : 'non connecté'}</p>
            <button onClick={handleSignout}>Logout</button>
 
         </div>

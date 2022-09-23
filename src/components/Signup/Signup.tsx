@@ -1,57 +1,111 @@
-import { useState } from 'react';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
 
-import { signupForm } from '../../interfaces/ISignupForm';
+import { signupForm, signupFormErrors } from '../../interfaces/ISignupForm';
 import "./Signup.scss";
+
+const validate = (values:signupForm) => {
+    const errors:signupFormErrors = {};
+    const emailRegexp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    const passwordRegexp = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[+\-/=!@_&*])[0-9a-zA-Z+\-/=!@_&*]{8,}$/;
+    //pseudo
+    
+    if(!values.pseudo || values.pseudo === '') {
+        errors.pseudo = 'Obligatoire !';
+    }
+    if (values.pseudo.length < 4 && values.pseudo !== '') {
+        errors.pseudo = 'Trop court ! ( 4 caractères minimum )';
+    }
+    if(values.pseudo.length > 20) {
+        errors.pseudo = 'Trop long ! ( 20 caractères max )';
+    }
+    //email
+    if(!values.email || values.email === '') {
+        errors.email = 'Obligatoire !';
+    }
+    if(values.email && !emailRegexp.test(values.email)) {
+        errors.email = 'Adresse mail non valide !';
+    }
+    //password
+    if(!values.password || values.password === '') {
+        errors.password = 'Obligatoire !';
+    }
+    if(!passwordRegexp.test(values.password)) {
+        errors.password = 'Mot de passe invalide!';
+    }
+    //passwordConfirm
+    if(!values.passwordConfirm || values.passwordConfirm === '') {
+        errors.passwordConfirm = 'Obligatoire !'
+    }
+    if(values.passwordConfirm && values.passwordConfirm !== values.password) {
+        errors.passwordConfirm = 'Doit correspondre au mot de passe'
+    }
+    return errors;
+}
 
 export default function Signup() {
     
-    let formObject: signupForm = {
-        pseudo: '',
-        email: '',
-        password: '',
-        passwordconfirm: '',
-        image: ''
-    }
-
-    const [inputValue, setInputValue] = useState(formObject);
-
-    function valueChange(event: any):void {
-        let inputKey:string = event.target.id.substring(event.target.id.lastIndexOf('-') + 1);
-        if(Object.keys(formObject).includes(inputKey)) {
-            Object.defineProperty(formObject, inputKey, {value: event.target.value});
-        }
-        setInputValue(formObject);
-    }
-
-    function handleSubmit(event: any):void {
-        event.preventDefault();
-        console.log(inputValue);
-    }
-    
     return (
         <div className="Signup">
-            <div className="signup-form">
-                <h2>inscription</h2>
-                <div className="field-box">
-                    <div className="signup-form-pseudo signup-form__fields">
-                        <label className='signup-form__labels' htmlFor="signup-pseudo">Pseudo :</label>
-                        <input type="text" name="signup_pseudo" id="signup-pseudo" onChange={valueChange} />
-                    </div>
-                    <div className='signup-form-email signup-form__fields'>
-                        <label className='signup-form__labels' htmlFor="signup-email">Email :</label>
-                        <input type="text" name="signup_email" id="signup-email" onChange={valueChange} />
-                    </div>
-                    <div className="signup-form-password signup-form__fields">
-                        <label className="signup-form__labels" htmlFor="signup-password">Mot de passe :</label>
-                        <input type="text" name="signup_password" id="signup-password" onChange={valueChange} />
-                    </div>
-                    <div className="signup-form-passwordconfirm signup-form__fields">
-                        <label className="signup-form__labels" htmlFor="signup-passwordconfirm">Confirmez :</label>
-                        <input type="text" name="signup_passwordconfirm" id="signup-passwordconfirm" onChange={valueChange} />
-                    </div>
-                    <button type="submit" onClick={handleSubmit} >envoi</button>
-                </div>
-            </div>
+            <Formik
+                //className="signup-form"
+                initialValues={{
+                    pseudo: '',
+                    email: '',
+                    password: '',
+                    passwordConfirm: '',
+                    image: ''
+                }}
+                validate={validate}
+                onSubmit={(values, {setSubmitting}) => {
+                    console.log('form values :\n', JSON.stringify(values, null, 2));
+                }}
+            >
+                {formik => (
+                    <Form className="signup-form" /*onSubmit={formik.handleSubmit}*/>
+                        <h2>inscription</h2>
+                        <div className="field-box">
+                            <div className="signup-form-pseudo signup-form__fields">
+                                <label className='signup-form__labels' htmlFor="signup_pseudo">Pseudo :</label>
+                                <Field 
+                                    type="text"
+                                    name="pseudo"
+                                    id="signup_pseudo"
+                                    //{...formik.getFieldProps('pseudo')}
+                                />
+                                <ErrorMessage name="pseudo" />
+                            </div>
+                            <div className='signup-form-email signup-form__fields'>
+                                <label className='signup-form__labels' htmlFor="signup-email">Email :</label>
+                                <Field
+                                    type="text"
+                                    name="email"
+                                    id="signup_email"
+                                />
+                                <ErrorMessage name="email" />
+                            </div>
+                            <div className="signup-form-password signup-form__fields">
+                                <label className="signup-form__labels" htmlFor="signup-password">Mot de passe :</label>
+                                <Field
+                                    type="text"
+                                    name="passsword"
+                                    id="signup_password"
+                                />
+                                <ErrorMessage name="password" />
+                            </div>
+                            <div className="signup-form-passwordconfirm signup-form__fields">
+                                <label className="signup-form__labels" htmlFor="signup-passwordconfirm">Confirmez :</label>
+                                <Field
+                                    type="text"
+                                    name="passwordConfirm"
+                                    id="signup_passwordconfirm"
+                                />
+                                <ErrorMessage name="passwordConfirm" />
+                            </div>
+                            <button type="submit" >envoi</button>
+                        </div>
+                    </Form>
+                )}
+            </Formik>
         </div>
     )
 }
