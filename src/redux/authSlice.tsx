@@ -7,11 +7,15 @@ export const authSlice = createSlice({
     reducers: {
         login: (state, action) => {
             state.isLogged = true;
-            state.user = action.payload.pseudo;
+            state.user = action.payload.user;
+            state.token = action.payload.access_token;
+            localStorage.setItem('access_token', action.payload.access_token);
         },
         signout: (state) => {
             state.isLogged = false;
-            state.user = null
+            state.user = null;
+            state.token = null;
+            localStorage.removeItem('access_token');
         }
     }
 })

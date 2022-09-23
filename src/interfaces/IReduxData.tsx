@@ -1,7 +1,9 @@
+import { User } from "./IUser"
+
 export interface reduxData {
     authStatus: {
         isLogged: boolean,
-        user: string | null,
+        user: User | null,
         token: string | null
     }
 }

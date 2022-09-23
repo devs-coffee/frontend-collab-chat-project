@@ -11,6 +11,7 @@
     "@types/node": "^18.7.14",
     "@types/react": "^18.0.18",
     "@types/react-dom": "^18.0.6",
+    "axios": "^0.27.2",
     "formik": "^2.2.9",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
@@ -28,6 +29,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
+  "proxy": "http://localhost:4200",
   "eslintConfig": {
     "extends": [
       "react-app",

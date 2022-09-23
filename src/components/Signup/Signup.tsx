@@ -1,4 +1,5 @@
 import { Formik, Form, Field, ErrorMessage } from 'formik';
+import axios from 'axios';
 
 import { signupForm, signupFormErrors } from '../../interfaces/ISignupForm';
 import "./Signup.scss";
@@ -29,7 +30,7 @@ const validate = (values:signupForm) => {
     if(!values.password || values.password === '') {
         errors.password = 'Obligatoire !';
     }
-    if(!passwordRegexp.test(values.password)) {
+    if(values.password && !passwordRegexp.test(values.password)) {
         errors.password = 'Mot de passe invalide!';
     }
     //passwordConfirm
@@ -43,11 +44,9 @@ const validate = (values:signupForm) => {
 }
 
 export default function Signup() {
-    
     return (
         <div className="Signup">
             <Formik
-                //className="signup-form"
                 initialValues={{
                     pseudo: '',
                     email: '',
@@ -57,11 +56,14 @@ export default function Signup() {
                 }}
                 validate={validate}
                 onSubmit={(values, {setSubmitting}) => {
-                    console.log('form values :\n', JSON.stringify(values, null, 2));
+                    axios.post('/auth/signup', values)
+                    .then(response => {
+                        console.log(response.data);
+                    })
                 }}
             >
                 {formik => (
-                    <Form className="signup-form" /*onSubmit={formik.handleSubmit}*/>
+                    <Form className="signup-form" >
                         <h2>inscription</h2>
                         <div className="field-box">
                             <div className="signup-form-pseudo signup-form__fields">
@@ -87,7 +89,7 @@ export default function Signup() {
                                 <label className="signup-form__labels" htmlFor="signup-password">Mot de passe :</label>
                                 <Field
                                     type="text"
-                                    name="passsword"
+                                    name="password"
                                     id="signup_password"
                                 />
                                 <ErrorMessage name="password" />
