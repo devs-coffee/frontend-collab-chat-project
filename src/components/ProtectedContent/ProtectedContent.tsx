@@ -34,8 +34,7 @@ const ProtectedContent = ({ children } : ProtectedContentProps) => {
     }
     
     if(!authStatus.token && token) {
-        setTimeout(() => {
-            getUserInfos()
+        getUserInfos()
         .then(response => {
             if(response) {
                 const newState = {
@@ -54,9 +53,6 @@ const ProtectedContent = ({ children } : ProtectedContentProps) => {
             console.log(error);
             return <Navigate to="/auth" ></Navigate>
         });
-        }, 1000);
-        
-        
     }
     return <div>Veuillez patienter</div>
 }
