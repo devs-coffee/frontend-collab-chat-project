@@ -54,6 +54,10 @@ const ProtectedContent = ({ children } : ProtectedContentProps) => {
             return <Navigate to="/auth" ></Navigate>
         });
     }
+    if(!authStatus.token && !token) {
+        return <Navigate to="/auth" ></Navigate>
+    }
+    
     return <div>Veuillez patienter</div>
 }
 
