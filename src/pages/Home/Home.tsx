@@ -1,5 +1,3 @@
-import { Link } from "react-router-dom";
-
 import { signout } from "../../redux/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 import "./Home.scss";

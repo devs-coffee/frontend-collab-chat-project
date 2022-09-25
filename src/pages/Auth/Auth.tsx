@@ -6,6 +6,7 @@ import Signup from '../../components/Signup/Signup';
 import './Auth.scss';
 
 function Auth() {
+    console.log('auth chargé');
     const [component, setComponent] = useState(true);
 
     const toggleComponent = ():void => {

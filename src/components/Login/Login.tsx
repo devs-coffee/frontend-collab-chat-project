@@ -46,7 +46,7 @@ export default function Login() {
                     console.log(values);
                     axios.post('/auth/login', values)
                     .then(response => {
-                        console.log(response.data);
+                        console.log(response.data.result);
                         dispatch(login(response.data.result));
                         navigate('/');
                     })
