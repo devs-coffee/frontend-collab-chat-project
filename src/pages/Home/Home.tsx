@@ -1,4 +1,4 @@
-import { signout } from "../../redux/authSlice";
+import { unsetLogs } from "../../redux/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 import "./Home.scss";
 
@@ -9,7 +9,7 @@ export default function Home() {
     <div className="Home">
       <h1>Hello {authStatus.user.pseudo} !</h1>
       
-      <button onClick={() => dispatch(signout())} >signout</button>
+      <button onClick={() => dispatch(unsetLogs())} >signout</button>
       
     </div>
   );

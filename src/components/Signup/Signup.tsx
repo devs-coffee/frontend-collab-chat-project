@@ -1,8 +1,14 @@
 import { Formik, Form, Field, ErrorMessage } from 'formik';
-import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 
+import { setLogs } from '../../redux/authSlice';
+import { AuthenticationService } from '../../services/authenticationService';
 import { signupForm, signupFormErrors } from '../../interfaces/ISignupForm';
 import "./Signup.scss";
+
+
+const authenticationService = new AuthenticationService();
 
 const validate = (values:signupForm) => {
     const errors:signupFormErrors = {};
@@ -44,6 +50,8 @@ const validate = (values:signupForm) => {
 }
 
 export default function Signup() {
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
     return (
         <div className="Signup">
             <Formik
@@ -55,10 +63,12 @@ export default function Signup() {
                     image: ''
                 }}
                 validate={validate}
-                onSubmit={(values, {setSubmitting}) => {
-                    axios.post('/auth/signup', values)
+                onSubmit={(values) => {
+                    authenticationService.signup(values)
                     .then(response => {
-                        console.log(response.data);
+                        console.log(response);
+                        dispatch(setLogs(response.result));
+                        navigate('/');
                     })
                 }}
             >
@@ -72,7 +82,6 @@ export default function Signup() {
                                     type="text"
                                     name="pseudo"
                                     id="signup_pseudo"
-                                    //{...formik.getFieldProps('pseudo')}
                                 />
                                 <ErrorMessage name="pseudo" />
                             </div>

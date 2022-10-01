@@ -3,7 +3,7 @@ import { Navigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { AuthenticationService } from "../../services/authenticationService";
-import { login } from '../../redux/authSlice';
+import { setLogs } from '../../redux/authSlice';
 import { User } from "../../interfaces/IUser";
 
 type ProtectedContentProps = {
@@ -42,7 +42,7 @@ const ProtectedContent = ({ children } : ProtectedContentProps) => {
                     access_token: token,
                     user: response
                 }
-                dispatch(login(newState));
+                dispatch(setLogs(newState));
                 return <div>{children}</div>
             }
             else {

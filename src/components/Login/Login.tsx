@@ -1,12 +1,15 @@
 import { useNavigate } from 'react-router-dom';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { useSelector, useDispatch } from 'react-redux';
-import axios from 'axios';
 
-import { login, signout } from '../../redux/authSlice';
+import { setLogs } from '../../redux/authSlice';
+import { AuthenticationService } from '../../services/authenticationService';
 
 import { loginForm, loginFormErrors } from '../../interfaces/ILoginForm';
 import "./Login.scss";
+
+
+const authenticationService = new AuthenticationService();
 
 const validate = (values:loginForm) => {
     const errors:loginFormErrors = {};
@@ -24,16 +27,6 @@ export default function Login() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    /*
-    // REMOVE AFTER TESTS
-    */
-   function handleSignout() {
-    dispatch(signout());
-   }
-   /*
-   // END REMOVE
-   */
-    
     return (
         <div className="Login">
             <Formik
@@ -42,12 +35,11 @@ export default function Login() {
                     password: ''
                 }}
                 validate={validate}
-                onSubmit={(values, {setSubmitting}) => {
-                    console.log(values);
-                    axios.post('/auth/login', values)
+                onSubmit={(values) => {
+                    authenticationService.login(values)
                     .then(response => {
-                        console.log(response.data.result);
-                        dispatch(login(response.data.result));
+                        console.log(response);
+                        dispatch(setLogs(response.result));
                         navigate('/');
                     })
                 }}
@@ -79,12 +71,6 @@ export default function Login() {
                     </Form>
                 )}
             </Formik>
-           <br/>
-           <br/>
-           <br/>
-           <p>{authStatus.user ? authStatus.user.pseudo : 'non connecté'}</p>
-           <button onClick={handleSignout}>Logout</button>
-
         </div>
     )
 }
