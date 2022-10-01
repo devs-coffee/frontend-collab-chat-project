@@ -1,11 +1,14 @@
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
+import { useState } from 'react';
 
 import { setLogs } from '../../redux/authSlice';
 import { AuthenticationService } from '../../services/authenticationService';
 import { signupForm, signupFormErrors } from '../../interfaces/ISignupForm';
+
 import "./Signup.scss";
+
 
 
 const authenticationService = new AuthenticationService();
@@ -52,6 +55,7 @@ const validate = (values:signupForm) => {
 export default function Signup() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const [loginError, setLoginError] = useState(false);
     return (
         <div className="Signup">
             <Formik
@@ -64,11 +68,14 @@ export default function Signup() {
                 }}
                 validate={validate}
                 onSubmit={(values) => {
+                    setLoginError(false);
                     authenticationService.signup(values)
                     .then(response => {
-                        console.log(response);
                         dispatch(setLogs(response.result));
                         navigate('/');
+                    })
+                    .catch(error => {
+                        setLoginError(true);
                     })
                 }}
             >
@@ -117,6 +124,7 @@ export default function Signup() {
                     </Form>
                 )}
             </Formik>
+            {loginError && <span className='login-error'>Email et / ou mot de passe invalide !</span>}
         </div>
     )
 }

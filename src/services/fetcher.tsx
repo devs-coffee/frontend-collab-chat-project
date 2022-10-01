@@ -26,12 +26,7 @@ export abstract class Fetcher {
     private handleError = (error: any) => Promise.reject(error);
     private readonly token = localStorage.getItem('access_token');
 
-    async get<T>(url: string, isProtected=true):Promise<AxiosResponse<OperationResult<T>>> {
-        let config:AxiosRequestConfig = {};
-        if(isProtected) {
-            //config.headers.Authorization = 'Bearer ${this.token}';
-            config = {headers: {'Authorization': `Bearer ${this.token}`}}
-        }
+    async get<T>(url: string, config?: AxiosRequestConfig<T>):Promise<AxiosResponse<OperationResult<T>>> {
         const response = await axios.get(url, config);
         return response;
     }

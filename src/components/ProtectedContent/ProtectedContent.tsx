@@ -29,17 +29,16 @@ const ProtectedContent = ({ children } : ProtectedContentProps) => {
         }
     }
 
-    if(authStatus.token && token) {
+    if(authStatus.isLogged && token) {
         return <div>{children}</div> ;
     }
     
-    if(!authStatus.token && token) {
+    if(!authStatus.isLogged && token) {
         getUserInfos()
         .then(response => {
             if(response) {
                 const newState = {
                     isLogged: true,
-                    access_token: token,
                     user: response
                 }
                 dispatch(setLogs(newState));
@@ -54,7 +53,7 @@ const ProtectedContent = ({ children } : ProtectedContentProps) => {
             return <Navigate to="/auth" ></Navigate>
         });
     }
-    if(!authStatus.token && !token) {
+    if(!authStatus.isLogged && !token) {
         return <Navigate to="/auth" ></Navigate>
     }
     
