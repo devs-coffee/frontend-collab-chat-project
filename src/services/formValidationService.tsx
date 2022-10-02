@@ -59,19 +59,19 @@ export class FormValidationService {
             errors.pseudo = 'Trop long ! ( 20 caractères max )';
         }
         //password
-        if(values.newPassword && !validationRegexps.password.test(values.newPassword)) {
-            errors.newPassword = 'Mot de passe invalide!';
+        if(values.password && !validationRegexps.password.test(values.password)) {
+            errors.password = 'Mot de passe invalide!';
         }
-        if(values.newPassword && values.oldPassword && values.newPassword === values.oldPassword) {
-            errors.newPassword = 'Doit être différent du mot de passe actuel!';
+        if(values.password && values.oldPassword && values.password === values.oldPassword) {
+            errors.password = 'Doit être différent du mot de passe actuel!';
         }
         //passwordConfirm
-        if(values.newPassword && values.newPasswordConfirm && values.newPasswordConfirm !== values.newPassword) {
-            errors.newPasswordConfirm = 'Doit correspondre au mot de passe'
+        if(values.password && values.passwordConfirm && values.passwordConfirm !== values.password) {
+            errors.passwordConfirm = 'Doit correspondre au mot de passe'
         }
         //image
-        if(values.image) {
-            console.log(values.image);
+        if(values.picture) {
+            console.log(values.picture);
         }
         return errors
     }

@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { Navigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { AuthenticationService } from "../../services/authenticationService";
@@ -15,6 +15,7 @@ const ProtectedContent = ({ children } : ProtectedContentProps) => {
     const dispatch = useDispatch();
     const token = window.localStorage.getItem('access_token');
     const authenticationService = new AuthenticationService();
+    const navigate = useNavigate();
 
     async function getUserInfos():Promise<User | null> {
         try {
@@ -24,7 +25,6 @@ const ProtectedContent = ({ children } : ProtectedContentProps) => {
             }
             return null;
         } catch (error) {
-            console.log(error);
             return null;
         }
     }
@@ -37,6 +37,7 @@ const ProtectedContent = ({ children } : ProtectedContentProps) => {
         getUserInfos()
         .then(response => {
             if(response) {
+                console.log(response);
                 const newState = {
                     isLogged: true,
                     user: response
@@ -45,11 +46,10 @@ const ProtectedContent = ({ children } : ProtectedContentProps) => {
                 return <div>{children}</div>
             }
             else {
-                return <Navigate to="/auth" ></Navigate>
+                navigate('/auth');
             }
         })
         .catch(error => {
-            console.log(error);
             return <Navigate to="/auth" ></Navigate>
         });
     }

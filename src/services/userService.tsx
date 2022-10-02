@@ -6,12 +6,13 @@ import { ApiUserResponse } from "../interfaces/IApiUserResponse";
 import { useSelector } from 'react-redux';
 
 export class UserService extends Fetcher {
-    constructor() {
-        super()
-    }
-    private authStatus = useSelector((state:any) => state.auth);
-    async updateProfile(values:profileUpdateForm):Promise<OperationResult<ApiUserResponse>> {
-        const response = await super.patch<profileUpdateForm, ApiUserResponse>(`/user/${this.authStatus.user.id}`, values);
+    // constructor() {
+    //     super()
+    // }
+    //super()
+    //private authStatus = useSelector((state:any) => state.auth);
+    async updateProfile(values:profileUpdateForm, id:string):Promise<OperationResult<ApiUserResponse>> {
+        const response = await super.patch<profileUpdateForm, ApiUserResponse>(`/users/${id}`, values);
         return response.data;
     }
 }

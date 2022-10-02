@@ -37,16 +37,17 @@ export default function Profile() {
             <Formik
                 initialValues={{
                     pseudo: authStatus.user.pseudo,
-                    newPassword: '',
-                    newPasswordConfirm: '',
+                    password: '',
+                    passwordConfirm: '',
                     oldPassword: '',
-                    image: ''
+                    picture: ''
+                    
                 }}
                 validate={formValidationService.validateProfileUpdate}
                 onSubmit={(values) => {
-                    values.image = base64image;
+                    values.picture = base64image;
                     console.log(values);
-                    //userService.updateProfile(values);
+                    userService.updateProfile(values, authStatus.user.id);
                 }}
             >
                 {formik => (
@@ -70,7 +71,7 @@ export default function Profile() {
                                     <label className='profile-update-form__labels' htmlFor="profile-update_new-password">Nouveau mot de passe :</label>
                                     <Field 
                                         type="text"
-                                        name="newPassword"
+                                        name="Password"
                                         id="profile-update_new-password"
                                     />
                                     <ErrorMessage name="newPassword" />
@@ -79,7 +80,7 @@ export default function Profile() {
                                     <label className='profile-update-form__labels' htmlFor="profile-update_new-password-confirm">Confirmez :</label>
                                     <Field 
                                         type="text"
-                                        name="newPasswordConfirm"
+                                        name="PasswordConfirm"
                                         id="profile-update_new-password-confirm"
                                     />
                                     <ErrorMessage name="newPasswordConfirm" />

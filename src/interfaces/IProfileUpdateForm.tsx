@@ -1,9 +1,10 @@
 export interface profileUpdateForm {
     pseudo?: string,
-    newPassword?: string,
-    newPasswordConfirm?: string,
+    password?: string,
+    passwordConfirm?: string,
     oldPassword?: string,
-    image?: string
+    picture?: string,
+    id?: string
 }
 
 export interface  profileUpdateFormErrors extends profileUpdateForm {}
