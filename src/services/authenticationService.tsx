@@ -3,7 +3,6 @@ import { signupForm } from "../interfaces/ISignupForm";
 import { User } from "../interfaces/IUser";
 import { Fetcher } from "./fetcher";
 import { ApiAuthResponse } from "../interfaces/IApiAuthResponse";
-import { AxiosResponse } from "axios";
 import { loginForm } from "../interfaces/ILoginForm";
 
 export class AuthenticationService extends Fetcher {

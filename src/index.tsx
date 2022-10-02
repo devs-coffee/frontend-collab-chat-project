@@ -6,6 +6,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import Home from "./pages/Home/Home";
 import ProtectedContent from './components/ProtectedContent/ProtectedContent';
+import Profile from './pages/Profile/Profile';
 import Error from "./pages/Error/Error";
 import Auth from "./pages/Auth/Auth";
 
@@ -20,7 +21,9 @@ root.render(
           <ProtectedContent>
               <Home />
           </ProtectedContent>
-        } />
+        } >
+          <Route path="profile" element={<Profile />} />
+        </Route>
         <Route path="/auth" element={<Auth />} />
         <Route path="/error" element={<Error />} />
         <Route path="*" element={<Error />} />

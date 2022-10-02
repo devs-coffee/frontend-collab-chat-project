@@ -5,52 +5,12 @@ import { useState } from 'react';
 
 import { setLogs } from '../../redux/authSlice';
 import { AuthenticationService } from '../../services/authenticationService';
-import { signupForm, signupFormErrors } from '../../interfaces/ISignupForm';
+import { FormValidationService } from '../../services/formValidationService';
 
 import "./Signup.scss";
 
-
-
 const authenticationService = new AuthenticationService();
-
-const validate = (values:signupForm) => {
-    const errors:signupFormErrors = {};
-    const emailRegexp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    const passwordRegexp = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[+\-/=!@_&*])[0-9a-zA-Z+\-/=!@_&*]{8,}$/;
-    //pseudo
-    
-    if(!values.pseudo || values.pseudo === '') {
-        errors.pseudo = 'Obligatoire !';
-    }
-    if (values.pseudo.length < 4 && values.pseudo !== '') {
-        errors.pseudo = 'Trop court ! ( 4 caractères minimum )';
-    }
-    if(values.pseudo.length > 20) {
-        errors.pseudo = 'Trop long ! ( 20 caractères max )';
-    }
-    //email
-    if(!values.email || values.email === '') {
-        errors.email = 'Obligatoire !';
-    }
-    if(values.email && !emailRegexp.test(values.email)) {
-        errors.email = 'Adresse mail non valide !';
-    }
-    //password
-    if(!values.password || values.password === '') {
-        errors.password = 'Obligatoire !';
-    }
-    if(values.password && !passwordRegexp.test(values.password)) {
-        errors.password = 'Mot de passe invalide!';
-    }
-    //passwordConfirm
-    if(!values.passwordConfirm || values.passwordConfirm === '') {
-        errors.passwordConfirm = 'Obligatoire !'
-    }
-    if(values.passwordConfirm && values.passwordConfirm !== values.password) {
-        errors.passwordConfirm = 'Doit correspondre au mot de passe'
-    }
-    return errors;
-}
+const formValidationService = new FormValidationService();
 
 export default function Signup() {
     const dispatch = useDispatch();
@@ -66,7 +26,7 @@ export default function Signup() {
                     passwordConfirm: '',
                     image: ''
                 }}
-                validate={validate}
+                validate={formValidationService.validateSignup}
                 onSubmit={(values) => {
                     setLoginError(false);
                     authenticationService.signup(values)
