@@ -71,7 +71,7 @@ export class FormValidationService {
         }
         //image
         if(values.picture) {
-            console.log(values.picture);
+            //console.log(values.picture);
         }
         return errors
     }
