@@ -10,11 +10,10 @@ import { FormValidationService } from '../../services/formValidationService';
 import { UserService } from '../../services/userService';
 
 import './Profile.scss';
-
+import { setLogs, setUser } from '../../redux/authSlice';
 
 const formValidationService = new FormValidationService();
 const userService = new UserService();
-
 
 export default function Profile() {
     const dispatch = useDispatch();
@@ -25,28 +24,22 @@ export default function Profile() {
     const [ zoom, setZoom ] = useState<number>(1);
     const [ cropperImage, setCropperImage] = useState<string>('');
 
-
-    const onCropComplete = useCallback((croppedArea: Area, croppedAreaPixels: Area) => {
-        getCroppedImg(cropperImage, croppedArea)
-        .then(crop => {
-            if(crop) {
-                setBase64image(crop);
-            }
-        })
+    const onCropComplete = async (croppedArea: Area, croppedAreaPixels: Area) => {
+        const crop = await getCroppedImg(cropperImage, croppedAreaPixels)
         .catch(error => {
             console.log(error);
         });
-    }, []);
+        if(crop) {
+            setBase64image(crop);
+        }
+    };
     
     const onFileSelected = ((event:any) => {
         const reader = new FileReader();
         reader.readAsDataURL(event.target.files[0]);
-        
         reader.onload = function () {
             if(reader.result) {
-                console.log(reader.result.toString());
                 setCropperImage(reader.result.toString());
-                console.log(cropperImage);
                 setBase64image(reader.result.toString());
             }
         };
@@ -67,8 +60,7 @@ export default function Profile() {
                     password: undefined,
                     passwordConfirm: undefined,
                     oldPassword: undefined,
-                    picture: authStatus.user.picture
-                    
+                    picture: ""
                 }}
                 validate={formValidationService.validateProfileUpdate}
                 onSubmit={(values) => {
@@ -83,8 +75,17 @@ export default function Profile() {
                     userService.updateProfile(values, authStatus.user.id)
                     .then(response => {
                         console.log(response);
-                        //dispatch
-                        // réinitialiser formulaire
+                        dispatch(setUser(response.result));
+                        //////
+                        // TODO réinitialiser formulaire
+                        //////
+                        if(document.getElementById('image')){
+                            const elt = document.getElementById('image') as HTMLInputElement;
+                            elt.value="";
+                        }
+                        setCropperImage('');
+                        
+                        
                     })
                     .catch(error => {
                         console.log(error);
@@ -138,28 +139,30 @@ export default function Profile() {
                                 </div>
                             </div>
                         }
-                        <div className="crop-container">
+                        {cropperImage && <div className="crop-container">
                             <Cropper
                                 image={cropperImage}
                                 crop={crop}
+                                cropShape="round"
+                                showGrid={false}
                                 zoom={zoom}
-                                aspect={4/3}
+                                aspect={1}
                                 onCropChange={setCrop}
                                 onCropComplete={onCropComplete}
                                 onZoomChange={setZoom}
                             />
-                        </div>
-                            
-                        <Field type="file" id="image" name="image" onChange={onFileSelected}/>
-                        <br />
-                        <Slider
+                        </div>}
+                        {cropperImage && <Slider
                             value={zoom}
                             min={1}
                             max={3}
                             step={0.1}
                             aria-labelledby="zoom"
                             onChange={(e, zoom) => setZoom(Number(zoom))}
-                        />
+                        />}   
+                        <Field type="file" id="image" name="image" onChange={onFileSelected}/>
+                        <br />
+                        
                         <br />
                         
                         <button type="submit" >envoi</button>
@@ -167,7 +170,6 @@ export default function Profile() {
                 )}
             </Formik>
             
-            {/* {base64image && <img src={base64image} />} */}
             {authStatus.user.picture && <img src={authStatus.user.picture} />}
         </div>
     )
