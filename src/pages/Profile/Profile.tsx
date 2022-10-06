@@ -1,5 +1,5 @@
 import { Formik, Form, Field, ErrorMessage } from 'formik';
-import { useState, useCallback } from 'react';
+import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Cropper from 'react-easy-crop';
 import { Point, Area } from 'react-easy-crop/types';
@@ -8,9 +8,9 @@ import Slider from '@mui/material/Slider';
 
 import { FormValidationService } from '../../utils/formValidationService';
 import { UserService } from '../../services/userService';
+import { setUser } from '../../redux/authSlice';
 
 import './Profile.scss';
-import { setLogs, setUser } from '../../redux/authSlice';
 
 const formValidationService = new FormValidationService();
 const userService = new UserService();
@@ -65,29 +65,19 @@ export default function Profile() {
                     // TODO : filtrer les valeurs à envoyer, doivent être différentes du authStatus
                     // voir avec les touched
                     ////
-                    
                     values.picture = base64image;
-                    
-                    console.log(values);
                     userService.updateProfile(values, authStatus.user.id)
                     .then(response => {
-                        console.log(response);
                         dispatch(setUser(response.result));
-                        //////
-                        // TODO réinitialiser formulaire
-                        //////
-                        if(document.getElementById('image')){
+                       if(document.getElementById('image')){
                             const elt = document.getElementById('image') as HTMLInputElement;
                             elt.value="";
                         }
                         setCropperImage('');
-                        
-                        
                     })
                     .catch(error => {
                         console.log(error);
                     });
-
                 }}
             >
                 {formik => (
@@ -159,15 +149,12 @@ export default function Profile() {
                         />}   
                         <Field type="file" id="image" name="image" onChange={onFileSelected}/>
                         <br />
-                        
                         <br />
-                        
                         <button type="submit" >envoi</button>
                     </Form>
                 )}
             </Formik>
-            
-            {authStatus.user.picture && <img src={authStatus.user.picture} />}
+            {authStatus.user.picture && <img src={authStatus.user.picture} alt="your actual avatar" />}
         </div>
     )
 }
