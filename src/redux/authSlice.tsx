@@ -14,9 +14,12 @@ export const authSlice = createSlice({
             state.isLogged = false;
             state.user = null;
             localStorage.removeItem('access_token');
+        },
+        setUser: (state, action) => {
+            state.user = action.payload;
         }
     }
 })
 
-export const { setLogs, unsetLogs } = authSlice.actions;
+export const { setLogs, unsetLogs, setUser } = authSlice.actions;
 export default authSlice.reducer;

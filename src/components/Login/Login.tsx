@@ -5,24 +5,12 @@ import { useState } from 'react';
 
 import { setLogs } from '../../redux/authSlice';
 import { AuthenticationService } from '../../services/authenticationService';
-import { loginForm, loginFormErrors } from '../../interfaces/ILoginForm';
+import { FormValidationService } from '../../utils/formValidationService';
 
 import "./Login.scss";
 
-
-
 const authenticationService = new AuthenticationService();
-
-const validate = (values:loginForm) => {
-    const errors:loginFormErrors = {};
-    if(!values.email || values.email === '') {
-        errors.email = 'Obligatoire !';
-    }
-    if(!values.password || values.password === '') {
-        errors.password = 'Obligatoire !';
-    }
-    return errors;
-}
+const formValidationService = new FormValidationService();
 
 export default function Login(props:any) {
     const dispatch = useDispatch();
@@ -36,7 +24,7 @@ export default function Login(props:any) {
                     email: '',
                     password: ''
                 }}
-                validate={validate}
+                validate={formValidationService.validateLogin}
                 onSubmit={(values) => {
                     setLoginError(false);
                     authenticationService.login(values)
