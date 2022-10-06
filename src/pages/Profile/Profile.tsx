@@ -3,7 +3,7 @@ import { useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Cropper from 'react-easy-crop';
 import { Point, Area } from 'react-easy-crop/types';
-import getCroppedImg from '../../services/canvasUtils';
+import getCroppedImg from '../../utils/canvasUtils';
 import Slider from '@mui/material/Slider';
 
 import { FormValidationService } from '../../services/formValidationService';
@@ -26,9 +26,6 @@ export default function Profile() {
 
     const onCropComplete = async (croppedArea: Area, croppedAreaPixels: Area) => {
         const crop = await getCroppedImg(cropperImage, croppedAreaPixels)
-        .catch(error => {
-            console.log(error);
-        });
         if(crop) {
             setBase64image(crop);
         }

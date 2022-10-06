@@ -37,7 +37,6 @@ const ProtectedContent = ({ children } : ProtectedContentProps) => {
         getUserInfos()
         .then(response => {
             if(response) {
-                console.log(response);
                 const newState = {
                     isLogged: true,
                     user: response
