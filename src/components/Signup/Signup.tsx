@@ -5,7 +5,7 @@ import { useState } from 'react';
 
 import { setLogs } from '../../redux/authSlice';
 import { AuthenticationService } from '../../services/authenticationService';
-import { FormValidationService } from '../../services/formValidationService';
+import { FormValidationService } from '../../utils/formValidationService';
 
 import "./Signup.scss";
 

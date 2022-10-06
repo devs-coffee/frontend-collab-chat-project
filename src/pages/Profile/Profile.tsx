@@ -6,7 +6,7 @@ import { Point, Area } from 'react-easy-crop/types';
 import getCroppedImg from '../../utils/canvasUtils';
 import Slider from '@mui/material/Slider';
 
-import { FormValidationService } from '../../services/formValidationService';
+import { FormValidationService } from '../../utils/formValidationService';
 import { UserService } from '../../services/userService';
 
 import './Profile.scss';
