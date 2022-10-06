@@ -41,8 +41,8 @@ export default function Login(props:any) {
                     <Form className="login-form">
                         <h2>Connexion</h2>
                         <div className="field-box">
-                            <div className='login-form-email login-form__fields'>
-                                <label className="login-form__labels" htmlFor="login-email">E-mail :</label>
+                            <div className='login-form-email form__fields'>
+                                <label className="form__labels" htmlFor="login-email">E-mail :</label>
                                 <Field
                                     type="text"
                                     name="email"
@@ -50,8 +50,8 @@ export default function Login(props:any) {
                                 />
                                 <ErrorMessage name="email" />
                             </div>
-                            <div className='login-form-password login-form__fields'>
-                                <label className="login-form__labels" htmlFor="login-password">Mot de passe</label>
+                            <div className='login-form-password form__fields'>
+                                <label className="form__labels" htmlFor="login-password">Mot de passe :</label>
                                 <Field
                                     type="text"
                                     name="password"
@@ -59,8 +59,8 @@ export default function Login(props:any) {
                                 />
                                 <ErrorMessage name="password" />
                             </div>
+                            <button type="submit" >envoi</button>
                         </div>
-                        <button type="submit" >envoi</button>
                     </Form>
                 )}
             </Formik>

@@ -1,0 +1,21 @@
+@mixin form {
+    background-color: gray;
+    text-align: center;
+    & .field-box {
+        padding: 20px;
+        margin: auto;
+        background-color: darkgray;
+        width: fit-content;
+    }
+    margin: auto;
+    & .form__fields {
+        display: flex;
+        justify-content: space-between;
+        margin: 10px 0;
+        
+    }
+    & label {
+        margin-right: 5px;
+        
+    }
+}

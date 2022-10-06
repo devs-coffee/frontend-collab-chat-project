@@ -43,8 +43,8 @@ export default function Signup() {
                     <Form className="signup-form" >
                         <h2>inscription</h2>
                         <div className="field-box">
-                            <div className="signup-form-pseudo signup-form__fields">
-                                <label className='signup-form__labels' htmlFor="signup_pseudo">Pseudo :</label>
+                            <div className="signup-form-pseudo form__fields">
+                                <label className='form__labels' htmlFor="signup_pseudo">Pseudo :</label>
                                 <Field 
                                     type="text"
                                     name="pseudo"
@@ -52,7 +52,7 @@ export default function Signup() {
                                 />
                                 <ErrorMessage name="pseudo" />
                             </div>
-                            <div className='signup-form-email signup-form__fields'>
+                            <div className='signup-form-email form__fields'>
                                 <label className='signup-form__labels' htmlFor="signup-email">Email :</label>
                                 <Field
                                     type="text"
@@ -61,8 +61,8 @@ export default function Signup() {
                                 />
                                 <ErrorMessage name="email" />
                             </div>
-                            <div className="signup-form-password signup-form__fields">
-                                <label className="signup-form__labels" htmlFor="signup-password">Mot de passe :</label>
+                            <div className="signup-form-password form__fields">
+                                <label className="form__labels" htmlFor="signup-password">Mot de passe :</label>
                                 <Field
                                     type="text"
                                     name="password"
@@ -70,8 +70,8 @@ export default function Signup() {
                                 />
                                 <ErrorMessage name="password" />
                             </div>
-                            <div className="signup-form-passwordconfirm signup-form__fields">
-                                <label className="signup-form__labels" htmlFor="signup-passwordconfirm">Confirmez :</label>
+                            <div className="signup-form-passwordconfirm form__fields">
+                                <label className="form__labels" htmlFor="signup-passwordconfirm">Confirmez :</label>
                                 <Field
                                     type="text"
                                     name="passwordConfirm"
