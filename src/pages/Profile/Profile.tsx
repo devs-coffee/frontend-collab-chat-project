@@ -4,13 +4,15 @@ import { useDispatch, useSelector } from 'react-redux';
 import Cropper from 'react-easy-crop';
 import { Point, Area } from 'react-easy-crop/types';
 import getCroppedImg from '../../utils/canvasUtils';
-import Slider from '@mui/material/Slider';
-
+import { Slider, Badge, List, ListItem, ListItemButton, ListItemIcon, Breadcrumbs } from '@mui/material';
+import ChangeCircleIcon from '@mui/icons-material/ChangeCircle';
+import HighlightOffTwoToneIcon from '@mui/icons-material/HighlightOffTwoTone';
 import { FormValidationService } from '../../utils/formValidationService';
 import { UserService } from '../../services/userService';
 import { setUser } from '../../redux/authSlice';
 
 import './Profile.scss';
+
 
 const formValidationService = new FormValidationService();
 const userService = new UserService();
@@ -31,8 +33,7 @@ export default function Profile() {
         }
     };
 
-    const askImageSelection = (event:any) => {
-        event.preventDefault();
+    const askImageSelection = () => {
         const inputEl = document.querySelector('#image') as HTMLInputElement;
         inputEl.click();
     }
@@ -53,6 +54,14 @@ export default function Profile() {
 
     const togglePasswordEdit = () => {
         setPasswordEdit(!passwordEdit);
+    }
+
+    const avoidImageEdition = () => {
+        if(document.getElementById('image')){
+            const elt = document.getElementById('image') as HTMLInputElement;
+            elt.value="";
+        }
+        setCropperImage('');
     }
     return (
         <div className="Profile">
@@ -75,11 +84,7 @@ export default function Profile() {
                     userService.updateProfile(values, authStatus.user.id)
                     .then(response => {
                         dispatch(setUser(response.result));
-                       if(document.getElementById('image')){
-                            const elt = document.getElementById('image') as HTMLInputElement;
-                            elt.value="";
-                        }
-                        setCropperImage('');
+                        avoidImageEdition();
                     })
                     .catch(error => {
                         console.log(error);
@@ -134,19 +139,24 @@ export default function Profile() {
                             </div>
                         }
                         <div className="formgroup-heading">Avatar :</div>
-                        {cropperImage && <div className="crop-container">
-                            <Cropper
-                                image={cropperImage}
-                                crop={crop}
-                                cropShape="round"
-                                showGrid={false}
-                                zoom={zoom}
-                                aspect={1}
-                                onCropChange={setCrop}
-                                onCropComplete={onCropComplete}
-                                onZoomChange={setZoom}
-                            />
-                        </div>}
+                        {cropperImage && 
+                            <Badge badgeContent={<HighlightOffTwoToneIcon />} color="warning" onClick={avoidImageEdition}>
+                                <div className="crop-container">
+                                <Cropper
+                                    image={cropperImage}
+                                    crop={crop}
+                                    cropShape="round"
+                                    showGrid={false}
+                                    zoom={zoom}
+                                    aspect={1}
+                                    onCropChange={setCrop}
+                                    onCropComplete={onCropComplete}
+                                    onZoomChange={setZoom}
+                                />
+                                </div>
+                            </Badge>
+                            
+                        }
                         {cropperImage && <div className="slider-box"><Slider
                             value={zoom}
                             min={1}
@@ -156,10 +166,19 @@ export default function Profile() {
                             onChange={(e, zoom) => setZoom(Number(zoom))}
                         /></div>}   
                         <Field type="file" id="image" name="image" onChange={onFileSelected} />
-                        {authStatus.user.picture && <img className="actual-avatar" src={authStatus.user.picture} alt="your actual avatar" />}
+                        {authStatus.user.picture && 
+                            <div className="avatar-editor">
+                                <img className="actual-avatar" src={authStatus.user.picture} alt="your actual avatar" />
+                            <Breadcrumbs>
+                                <ChangeCircleIcon sx={{ color: '#1616c4' }} onClick={askImageSelection} />
+                                <HighlightOffTwoToneIcon sx={{ color: '#800101' }}/>
+                            </Breadcrumbs>
+                            </div>
+                            
+                        
+                        }
                         {!authStatus.user.picture && <span>aucun</span>}
                         <br />
-                        <button onClick={askImageSelection}>changer</button>
                         <br />
                         <br />
                         <button type="submit" >envoi</button>
