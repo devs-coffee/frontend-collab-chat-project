@@ -4,9 +4,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import Cropper from 'react-easy-crop';
 import { Point, Area } from 'react-easy-crop/types';
 import getCroppedImg from '../../utils/canvasUtils';
-import { Slider, Badge, List, ListItem, ListItemButton, ListItemIcon, Breadcrumbs } from '@mui/material';
+import { Slider, Badge, Button, Breadcrumbs } from '@mui/material';
 import ChangeCircleIcon from '@mui/icons-material/ChangeCircle';
 import HighlightOffTwoToneIcon from '@mui/icons-material/HighlightOffTwoTone';
+import AddAPhotoTwoToneIcon from '@mui/icons-material/AddAPhotoTwoTone';
 import { FormValidationService } from '../../utils/formValidationService';
 import { UserService } from '../../services/userService';
 import { setUser } from '../../redux/authSlice';
@@ -177,7 +178,13 @@ export default function Profile() {
                             
                         
                         }
-                        {!authStatus.user.picture && <span>aucun</span>}
+                        {!authStatus.user.picture && <div>
+                                <span>aucun</span><br/>
+                                <Button variant="contained" startIcon={<AddAPhotoTwoToneIcon />}>
+                                    Send
+                                </Button>
+                            </div>
+                        }
                         <br />
                         <br />
                         <br />
