@@ -3,9 +3,9 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { useDispatch } from 'react-redux';
 import { useState } from 'react';
 
-import { setLogs } from '../../redux/authSlice';
-import { AuthenticationService } from '../../services/authenticationService';
-import { FormValidationService } from '../../utils/formValidationService';
+import { setLogs } from '../../../redux/authSlice';
+import { AuthenticationService } from '../../../services/authenticationService';
+import { FormValidationService } from '../../../utils/formValidationService';
 
 import "./Login.scss";
 
