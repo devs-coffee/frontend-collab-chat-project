@@ -30,7 +30,8 @@ export default function Header() {
                     aria-haspopup="true"
                     aria-expanded={ isAccountMenuOpen ? "true" : undefined}
                 >
-                    <Avatar alt="votre avatar" src={authStatus.user.picture} />
+                    {authStatus.user.picture && <Avatar alt="votre avatar" src={authStatus.user.picture} />}
+                    {!authStatus.user.picture && <Avatar>{authStatus.user.pseudo.substring(0, 1).toUpperCase()}</Avatar>}
                 </IconButton>
                 <Menu
                     anchorEl={anchorEl}

@@ -30,6 +30,12 @@ export default function Profile() {
             setBase64image(crop);
         }
     };
+
+    const askImageSelection = (event:any) => {
+        event.preventDefault();
+        const inputEl = document.querySelector('#image') as HTMLInputElement;
+        inputEl.click();
+    }
     
     const onFileSelected = ((event:any) => {
         const reader = new FileReader();
@@ -83,8 +89,8 @@ export default function Profile() {
                 {formik => (
                     <Form className='profile-update-form'>
                         <div className='field-box'>
-                            <div className='profile-update-form-pseudo profile-update-form__fields'>
-                                <label className='profile-update-form__labels' htmlFor='profile-update_pseudo'>Pseudo :</label>
+                            <div className='profile-update-form-pseudo form__fields'>
+                                <label className='form__labels' htmlFor='profile-update_pseudo'>Pseudo :</label>
                                 <Field
                                     type="text"
                                     name="pseudo"
@@ -93,12 +99,12 @@ export default function Profile() {
                                 <ErrorMessage name="pseudo" />
                             </div>
                         </div>
-                        {!passwordEdit && <div onClick={togglePasswordEdit}>Changer de mot de passe</div>}
+                        {!passwordEdit && <div className="password-request-button" onClick={togglePasswordEdit}>Changer de mot de passe</div>}
                         {passwordEdit && 
-                            <div className='password-update-box'>
+                            <div className='password-update-box field-box'>
                                 <div onClick={togglePasswordEdit}>Annuler</div>
-                                <div className='profile-update-form-new-password profile-update-form__fields'>
-                                    <label className='profile-update-form__labels' htmlFor="profile-update_new-password">Nouveau mot de passe :</label>
+                                <div className='profile-update-form-new-password form__fields'>
+                                    <label className='form__labels' htmlFor="profile-update_new-password">Nouveau mot de passe :</label>
                                     <Field 
                                         type="text"
                                         name="password"
@@ -106,8 +112,8 @@ export default function Profile() {
                                     />
                                     <ErrorMessage name="newPassword" />
                                 </div>
-                                <div className='profile-update-form-new-password-confirm profile-update-form__fields'>
-                                    <label className='profile-update-form__labels' htmlFor="profile-update_new-password-confirm">Confirmez :</label>
+                                <div className='profile-update-form-new-password-confirm form__fields'>
+                                    <label className='form__labels' htmlFor="profile-update_new-password-confirm">Confirmez :</label>
                                     <Field 
                                         type="text"
                                         name="passwordConfirm"
@@ -115,8 +121,8 @@ export default function Profile() {
                                     />
                                     <ErrorMessage name="newPasswordConfirm" />
                                 </div>
-                                <div className='profile-update-form-old-password profile-update-form__fields'>
-                                    <label className='profile-update-form__labels' htmlFor="profile-old-password">Mot de passe actuel:</label>
+                                <div className='profile-update-form-old-password form__fields'>
+                                    <label className='form__labels' htmlFor="profile-old-password">Mot de passe actuel:</label>
                                     <Field 
                                         type="text"
                                         name="oldPassword"
@@ -124,8 +130,10 @@ export default function Profile() {
                                     />
                                     <ErrorMessage name="oldPassword" />
                                 </div>
+
                             </div>
                         }
+                        <div className="formgroup-heading">Avatar :</div>
                         {cropperImage && <div className="crop-container">
                             <Cropper
                                 image={cropperImage}
@@ -139,22 +147,26 @@ export default function Profile() {
                                 onZoomChange={setZoom}
                             />
                         </div>}
-                        {cropperImage && <Slider
+                        {cropperImage && <div className="slider-box"><Slider
                             value={zoom}
                             min={1}
                             max={3}
                             step={0.1}
                             aria-labelledby="zoom"
                             onChange={(e, zoom) => setZoom(Number(zoom))}
-                        />}   
-                        <Field type="file" id="image" name="image" onChange={onFileSelected}/>
+                        /></div>}   
+                        <Field type="file" id="image" name="image" onChange={onFileSelected} />
+                        {authStatus.user.picture && <img className="actual-avatar" src={authStatus.user.picture} alt="your actual avatar" />}
+                        {!authStatus.user.picture && <span>aucun</span>}
+                        <br />
+                        <button onClick={askImageSelection}>changer</button>
                         <br />
                         <br />
                         <button type="submit" >envoi</button>
                     </Form>
                 )}
             </Formik>
-            {authStatus.user.picture && <img src={authStatus.user.picture} alt="your actual avatar" />}
+            
         </div>
     )
 }

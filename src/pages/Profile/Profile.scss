@@ -1,5 +1,36 @@
-.crop-container {
-    position: relative;
-    width: 300px;
-    height: 300px;
+@import '../../styles/mixins';
+
+.Profile {
+    & Form {
+        @include form;
+    }
+    & .password-request-button {
+        width: fit-content;
+        margin: auto;
+        padding: 20px;
+        cursor: pointer;
+    }
+    & .formgroup-heading {
+        font-weight: bold;
+        font-size: large;
+    }
+    & input[type="file"] {
+        display: none;
+    }
+    & .crop-container {
+        position: relative;
+        margin: auto;
+        width: 300px;
+        height: 300px;
+    }
+    & .slider-box {
+        width: 300px;
+        margin: auto;
+    }
+    & .actual-avatar {
+        width: 200px;
+        height: 200px;
+        border-radius: 100px;
+    }
 }
+

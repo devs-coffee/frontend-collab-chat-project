@@ -1,5 +1,7 @@
 @import '../../../styles/mixins';
 
-Form {
-    @include form;
+.Signup {
+    & Form {
+        @include form;
+    }
 }
