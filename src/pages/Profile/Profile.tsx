@@ -180,7 +180,7 @@ export default function Profile() {
                         }
                         {!authStatus.user.picture && <div>
                                 <span>aucun</span><br/>
-                                <Button variant="contained" startIcon={<AddAPhotoTwoToneIcon />}>
+                                <Button variant="contained" startIcon={<AddAPhotoTwoToneIcon onClick={askImageSelection}/>}>
                                     Send
                                 </Button>
                             </div>
