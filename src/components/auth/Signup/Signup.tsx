@@ -24,44 +24,7 @@ export default function Signup() {
     const navigate = useNavigate();
     const [loginError, setLoginError] = useState<boolean>(false);
 
-    const [base64image, setBase64image] = useState<string>('');
-    const [ crop, setCrop ] = useState<Point>({ x:0, y: 0 });
-    const [ zoom, setZoom ] = useState<number>(1);
     const [ cropperImage, setCropperImage ] = useState<string>('');
-
-    const onCropComplete = async (croppedArea: Area, croppedAreaPixels: Area) => {
-        const crop = await getCroppedImg(cropperImage, croppedAreaPixels)
-        if(crop) {
-            setBase64image(crop);
-        }
-    };
-
-    const askImageSelection = () => {
-        const inputEl = document.querySelector('#image') as HTMLInputElement;
-        inputEl.click();
-    };
-
-    const onFileSelected = (event:any) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(event.target.files[0]);
-        reader.onload = function () {
-            if(reader.result) {
-                setCropperImage(reader.result.toString());
-                setBase64image(reader.result.toString());
-            }
-        };
-        reader.onerror = function (error) {
-            console.log('Error: ', error);
-        };
-    };
-
-    const avoidImageEdition = () => {
-        if(document.getElementById('image')){
-            const elt = document.getElementById('image') as HTMLInputElement;
-            elt.value="";
-        }
-        setCropperImage('');
-    };
 
     return (
         <div className="Signup">
@@ -75,7 +38,7 @@ export default function Signup() {
                 }}
                 validate={formValidationService.validateSignup}
                 onSubmit={(values) => {
-                    values.picture = base64image;
+                    values.picture = cropperImage;
                     setLoginError(false);
                     authenticationService.signup(values)
                     .then(response => {
@@ -160,7 +123,7 @@ export default function Signup() {
                                         Ajouter
                                     </Button>
                                 } */}
-                                <AvatarCropper setImage={setBase64image}/>
+                                <AvatarCropper setCropperImage={setCropperImage} cropperImage={cropperImage} userImage={''}/>
                             </div>
                             <button type="submit" >envoi</button>
                         </div>

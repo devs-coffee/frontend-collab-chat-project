@@ -1,6 +1,6 @@
 import Cropper from 'react-easy-crop';
 import { Field } from 'formik';
-import { Button, Slider, Breadcrumbs } from '@mui/material';
+import { Button, Slider } from '@mui/material';
 import { useState } from 'react';
 import { Point, Area } from 'react-easy-crop/types';
 import HighlightOffTwoToneIcon from '@mui/icons-material/HighlightOffTwoTone';
@@ -14,12 +14,12 @@ import './AvatarCropper.scss';
 export default function AvatarCropper(props:any) {
     const [ crop, setCrop ] = useState<Point>({ x:0, y: 0 });
     const [ zoom, setZoom ] = useState<number>(1);
-    const [ cropperImage, setCropperImage ] = useState<string>('');
+    //const [ props.cropperImage, props.setCropperImage ] = useState<string>('');
 
     const onCropComplete = async (croppedArea: Area, croppedAreaPixels: Area) => {
-        const crop = await getCroppedImg(cropperImage, croppedAreaPixels)
+        const crop = await getCroppedImg(props.cropperImage, croppedAreaPixels)
         if(crop) {
-            props.setImage(crop);
+            props.setCropperImage(crop);
         }
     };
 
@@ -33,8 +33,8 @@ export default function AvatarCropper(props:any) {
         reader.readAsDataURL(event.target.files[0]);
         reader.onload = function () {
             if(reader.result) {
-                setCropperImage(reader.result.toString());
-                props.setImage(reader.result.toString());
+                props.setCropperImage(reader.result.toString());
+                //props.setImage(reader.result.toString());
             }
         };
         reader.onerror = function (error) {
@@ -47,15 +47,20 @@ export default function AvatarCropper(props:any) {
             const elt = document.getElementById('image') as HTMLInputElement;
             elt.value="";
         }
-        setCropperImage('');
+        props.setCropperImage('');
     };
+
+    const deleteAvatar = () => {
+        //props.setImage(null);
+        avoidImageEdition();
+    }
 
     return (
         <div className="AvatarCropper">
-            {cropperImage &&
+            {props.cropperImage &&
                 <div className="crop-container">
                     <Cropper
-                        image={cropperImage}
+                        image={props.cropperImage}
                         crop={crop}
                         cropShape="round"
                         showGrid={false}
@@ -70,7 +75,7 @@ export default function AvatarCropper(props:any) {
                     </div>
                 </div>
             }
-            {cropperImage && <div className="slider-box"><Slider
+            {props.cropperImage && <div className="slider-box"><Slider
                 value={zoom}
                 min={1}
                 max={3}
@@ -79,16 +84,8 @@ export default function AvatarCropper(props:any) {
                 onChange={(e, zoom) => setZoom(Number(zoom))}
             /></div>}
             <Field type="file" id="image" name="image" onChange={onFileSelected} />
-            {props.userImage && 
-                <div className="avatar-editor">
-                    <img className="actual-avatar" src={props.userImage} alt="your actual avatar" />
-                    <Breadcrumbs>
-                        <ChangeCircleIcon sx={{ color: '#1616c4' }} onClick={askImageSelection} />
-                        <HighlightOffTwoToneIcon sx={{ color: '#800101' }}/>
-                    </Breadcrumbs>
-                </div>
-            }
-            {!cropperImage && !props.userImage &&
+            
+            {!props.cropperImage && !props.userImage &&
                 <Button variant="contained" startIcon={<AddAPhotoTwoToneIcon />} onClick={askImageSelection}>
                     Ajouter
                 </Button>

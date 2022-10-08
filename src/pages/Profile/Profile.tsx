@@ -1,6 +1,10 @@
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import ChangeCircleIcon from '@mui/icons-material/ChangeCircle';
+import HighlightOffTwoToneIcon from '@mui/icons-material/HighlightOffTwoTone';
+import { Breadcrumbs } from '@mui/material';
+
 
 import { FormValidationService } from '../../utils/formValidationService';
 import { UserService } from '../../services/userService';
@@ -15,12 +19,24 @@ const userService = new UserService();
 export default function Profile() {
     const dispatch = useDispatch();
     const authStatus = useSelector((state:any) => state.auth);
-    const [base64image, setBase64image] = useState<string>('');
+    //const [currentImage, setCurrentImage] = useState<string | null>(authStatus.user.picture);
     const [passwordEdit, setPasswordEdit] = useState(false);
+    const [ cropperImage, setCropperImage ] = useState<string>('');
 
     const togglePasswordEdit = () => {
         setPasswordEdit(!passwordEdit);
     };
+    const askImageSelection = () => {
+        const inputEl = document.querySelector('#image') as HTMLInputElement;
+        inputEl.click();
+    };
+    const deleteAvatar = () => {
+        userService.updateProfile({picture: null}, authStatus.user.id)
+        .then(response => {
+            dispatch(setUser(response.result));
+            setCropperImage('');
+        })
+    }
 
     return (
         <div className="Profile">
@@ -39,11 +55,19 @@ export default function Profile() {
                     // TODO : filtrer les valeurs à envoyer, doivent être différentes du authStatus
                     // voir avec les touched
                     ////
-                    values.picture = base64image;
+                    console.log(values);
+                    values.picture = cropperImage;
                     userService.updateProfile(values, authStatus.user.id)
                     .then(response => {
+                        console.log(response.result);
                         dispatch(setUser(response.result));
-                        setBase64image('');
+                        //setCurrentImage('');
+                        // if(document.querySelector('.avoid-badge')) {
+                        //     //document.querySelector('.avoid-badge')?.dispatchEvent(new Event('click'));
+                        //     const elt = document.querySelector('.avoid-badge') as HTMLElement;
+                        //     elt.click();
+                        // }
+                        setCropperImage('');
                     })
                     .catch(error => {
                         console.log(error);
@@ -97,7 +121,17 @@ export default function Profile() {
                             </div>
                         }
                         <div className="formgroup-heading">Avatar :</div>
-                        <AvatarCropper setImage={setBase64image} userImage={authStatus.user.picture} />
+                        {/* <AvatarCropper setImage={setCurrentImage} setCropperImage={setCropperImage} cropperImage={cropperImage} userImage={authStatus.user.picture} /> */}
+                        <AvatarCropper setCropperImage={setCropperImage} cropperImage={cropperImage} userImage={authStatus.user.picture} />
+                        {authStatus.user.picture && 
+                            <div className="avatar-editor">
+                                <img className="actual-avatar" src={authStatus.user.picture} alt="your actual avatar" />
+                                <Breadcrumbs>
+                                    <ChangeCircleIcon sx={{ color: '#1616c4' }} onClick={askImageSelection} />
+                                    <HighlightOffTwoToneIcon sx={{ color: '#800101' }} onClick={deleteAvatar}/>
+                                </Breadcrumbs>
+                            </div>
+                        }
                         <br />
                         <br />
                         <br />
