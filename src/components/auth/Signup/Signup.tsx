@@ -2,10 +2,17 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { useState } from 'react';
+import { Button, Slider, Badge } from '@mui/material';
+import AddAPhotoTwoToneIcon from '@mui/icons-material/AddAPhotoTwoTone';
+import ChangeCircleIcon from '@mui/icons-material/ChangeCircle';
+import HighlightOffTwoToneIcon from '@mui/icons-material/HighlightOffTwoTone';
+import Cropper from 'react-easy-crop';
+import { Point, Area } from 'react-easy-crop/types';
 
 import { setLogs } from '../../../redux/authSlice';
 import { AuthenticationService } from '../../../services/authenticationService';
 import { FormValidationService } from '../../../utils/formValidationService';
+import getCroppedImg from '../../../utils/canvasUtils';
 
 import "./Signup.scss";
 
@@ -15,7 +22,47 @@ const formValidationService = new FormValidationService();
 export default function Signup() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const [loginError, setLoginError] = useState(false);
+    const [loginError, setLoginError] = useState<boolean>(false);
+
+    const [base64image, setBase64image] = useState<string>('');
+    const [ crop, setCrop ] = useState<Point>({ x:0, y: 0 });
+    const [ zoom, setZoom ] = useState<number>(1);
+    const [ cropperImage, setCropperImage ] = useState<string>('');
+
+    const onCropComplete = async (croppedArea: Area, croppedAreaPixels: Area) => {
+        const crop = await getCroppedImg(cropperImage, croppedAreaPixels)
+        if(crop) {
+            setBase64image(crop);
+        }
+    };
+
+    const askImageSelection = () => {
+        const inputEl = document.querySelector('#image') as HTMLInputElement;
+        inputEl.click();
+    };
+
+    const onFileSelected = (event:any) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(event.target.files[0]);
+        reader.onload = function () {
+            if(reader.result) {
+                setCropperImage(reader.result.toString());
+                setBase64image(reader.result.toString());
+            }
+        };
+        reader.onerror = function (error) {
+            console.log('Error: ', error);
+        };
+    };
+
+    const avoidImageEdition = () => {
+        if(document.getElementById('image')){
+            const elt = document.getElementById('image') as HTMLInputElement;
+            elt.value="";
+        }
+        setCropperImage('');
+    };
+
     return (
         <div className="Signup">
             <Formik
@@ -24,10 +71,11 @@ export default function Signup() {
                     email: '',
                     password: '',
                     passwordConfirm: '',
-                    image: ''
+                    picture: ''
                 }}
                 validate={formValidationService.validateSignup}
                 onSubmit={(values) => {
+                    values.picture = base64image;
                     setLoginError(false);
                     authenticationService.signup(values)
                     .then(response => {
@@ -78,6 +126,41 @@ export default function Signup() {
                                     id="signup_passwordconfirm"
                                 />
                                 <ErrorMessage name="passwordConfirm" />
+                            </div>
+                            <div className="avatar-managment">
+                                {cropperImage && 
+                                    <div className="crop-container">
+                                        <Cropper
+                                            image={cropperImage}
+                                            crop={crop}
+                                            cropShape="round"
+                                            showGrid={false}
+                                            zoom={zoom}
+                                            aspect={1}
+                                            onCropChange={setCrop}
+                                            onCropComplete={onCropComplete}
+                                            onZoomChange={setZoom}
+                                        />
+                                        <div className="avoid-badge" title="annuler" onClick={avoidImageEdition} >
+                                            <HighlightOffTwoToneIcon sx={{ color: '#800101' }} />
+                                        </div>
+                                    </div>
+                                }
+                                {cropperImage && <div className="slider-box"><Slider
+                                    value={zoom}
+                                    min={1}
+                                    max={3}
+                                    step={0.1}
+                                    aria-labelledby="zoom"
+                                    onChange={(e, zoom) => setZoom(Number(zoom))}
+                                /></div>}
+                                <Field type="file" id="image" name="image" onChange={onFileSelected} />
+                                {!cropperImage &&
+                                    <Button variant="contained" startIcon={<AddAPhotoTwoToneIcon />} onClick={askImageSelection}>
+                                        Ajouter
+                                    </Button>
+                                }
+
                             </div>
                             <button type="submit" >envoi</button>
                         </div>

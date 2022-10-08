@@ -21,7 +21,7 @@ const userService = new UserService();
 export default function Profile() {
     const dispatch = useDispatch();
     const authStatus = useSelector((state:any) => state.auth);
-    const [base64image, setBase64image] = useState('');
+    const [base64image, setBase64image] = useState<string>('');
     const [passwordEdit, setPasswordEdit] = useState(false);
     const [crop, setCrop] = useState<Point>({ x:0, y: 0 });
     const [ zoom, setZoom ] = useState<number>(1);
@@ -37,9 +37,9 @@ export default function Profile() {
     const askImageSelection = () => {
         const inputEl = document.querySelector('#image') as HTMLInputElement;
         inputEl.click();
-    }
+    };
     
-    const onFileSelected = ((event:any) => {
+    const onFileSelected = (event:any) => {
         const reader = new FileReader();
         reader.readAsDataURL(event.target.files[0]);
         reader.onload = function () {
@@ -51,11 +51,11 @@ export default function Profile() {
         reader.onerror = function (error) {
             console.log('Error: ', error);
         };
-    })
+    };
 
     const togglePasswordEdit = () => {
         setPasswordEdit(!passwordEdit);
-    }
+    };
 
     const avoidImageEdition = () => {
         if(document.getElementById('image')){
@@ -63,7 +63,7 @@ export default function Profile() {
             elt.value="";
         }
         setCropperImage('');
-    }
+    };
     return (
         <div className="Profile">
             <h2>Profile works !</h2>
@@ -141,8 +141,7 @@ export default function Profile() {
                         }
                         <div className="formgroup-heading">Avatar :</div>
                         {cropperImage && 
-                            <Badge badgeContent={<HighlightOffTwoToneIcon />} color="warning" onClick={avoidImageEdition}>
-                                <div className="crop-container">
+                            <div className="crop-container">
                                 <Cropper
                                     image={cropperImage}
                                     crop={crop}
@@ -154,9 +153,10 @@ export default function Profile() {
                                     onCropComplete={onCropComplete}
                                     onZoomChange={setZoom}
                                 />
+                                <div className="avoid-badge" title="annuler" onClick={avoidImageEdition} >
+                                    <HighlightOffTwoToneIcon sx={{ color: '#800101' }} />
                                 </div>
-                            </Badge>
-                            
+                            </div>
                         }
                         {cropperImage && <div className="slider-box"><Slider
                             value={zoom}
@@ -175,13 +175,11 @@ export default function Profile() {
                                 <HighlightOffTwoToneIcon sx={{ color: '#800101' }}/>
                             </Breadcrumbs>
                             </div>
-                            
-                        
                         }
-                        {!authStatus.user.picture && <div>
+                        {!authStatus.user.picture && !cropperImage && <div>
                                 <span>aucun</span><br/>
                                 <Button variant="contained" startIcon={<AddAPhotoTwoToneIcon />} onClick={askImageSelection}>
-                                    Send
+                                    Ajouter
                                 </Button>
                             </div>
                         }
