@@ -2,9 +2,8 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { useState } from 'react';
-import { Button, Slider, Badge } from '@mui/material';
+import { Button, Slider } from '@mui/material';
 import AddAPhotoTwoToneIcon from '@mui/icons-material/AddAPhotoTwoTone';
-import ChangeCircleIcon from '@mui/icons-material/ChangeCircle';
 import HighlightOffTwoToneIcon from '@mui/icons-material/HighlightOffTwoTone';
 import Cropper from 'react-easy-crop';
 import { Point, Area } from 'react-easy-crop/types';
@@ -15,6 +14,7 @@ import { FormValidationService } from '../../../utils/formValidationService';
 import getCroppedImg from '../../../utils/canvasUtils';
 
 import "./Signup.scss";
+import AvatarCropper from '../../avatarCropper/AvatarCropper';
 
 const authenticationService = new AuthenticationService();
 const formValidationService = new FormValidationService();
@@ -128,7 +128,7 @@ export default function Signup() {
                                 <ErrorMessage name="passwordConfirm" />
                             </div>
                             <div className="avatar-managment">
-                                {cropperImage && 
+                                {/* {cropperImage && 
                                     <div className="crop-container">
                                         <Cropper
                                             image={cropperImage}
@@ -159,8 +159,8 @@ export default function Signup() {
                                     <Button variant="contained" startIcon={<AddAPhotoTwoToneIcon />} onClick={askImageSelection}>
                                         Ajouter
                                     </Button>
-                                }
-
+                                } */}
+                                <AvatarCropper setImage={setBase64image}/>
                             </div>
                             <button type="submit" >envoi</button>
                         </div>

@@ -14,37 +14,5 @@
         font-weight: bold;
         font-size: large;
     }
-    & input[type="file"] {
-        display: none;
-    }
-    & .crop-container {
-        position: relative;
-        margin: auto;
-        width: 300px;
-        height: 300px;
-        & .avoid-badge {
-            position: absolute;
-            top: -10px;
-            right: -10px;
-            cursor: pointer;
-        }
-    }
-    & .slider-box {
-        width: 300px;
-        margin: auto;
-    }
-    & .avatar-editor {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-end;
-        width: fit-content;
-        margin: auto;
-        
-    }
-    & .actual-avatar {
-        width: 200px;
-        height: 200px;
-        border-radius: 100px;
-    }
 }
 
