@@ -36,6 +36,7 @@ const ProtectedContent = ({ children } : ProtectedContentProps) => {
     if(!authStatus.isLogged && token) {
         getUserInfos()
         .then(response => {
+            console.log(response);
             if(response) {
                 dispatch(setUser(response))
                 return <div>{children}</div>
