@@ -5,7 +5,6 @@ import { useState } from 'react';
 import { Point, Area } from 'react-easy-crop/types';
 import HighlightOffTwoToneIcon from '@mui/icons-material/HighlightOffTwoTone';
 import AddAPhotoTwoToneIcon from '@mui/icons-material/AddAPhotoTwoTone';
-import ChangeCircleIcon from '@mui/icons-material/ChangeCircle';
 
 import getCroppedImg from '../../utils/canvasUtils';
 
@@ -14,12 +13,12 @@ import './AvatarCropper.scss';
 export default function AvatarCropper(props:any) {
     const [ crop, setCrop ] = useState<Point>({ x:0, y: 0 });
     const [ zoom, setZoom ] = useState<number>(1);
-    //const [ props.cropperImage, props.setCropperImage ] = useState<string>('');
-
+    const [baseImage , setBaseImage] = useState<string>('');
+    
     const onCropComplete = async (croppedArea: Area, croppedAreaPixels: Area) => {
-        const crop = await getCroppedImg(props.cropperImage, croppedAreaPixels)
+        const crop = await getCroppedImg(baseImage, croppedAreaPixels);
         if(crop) {
-            props.setCropperImage(crop);
+            props.setImage(crop);
         }
     };
 
@@ -33,8 +32,13 @@ export default function AvatarCropper(props:any) {
         reader.readAsDataURL(event.target.files[0]);
         reader.onload = function () {
             if(reader.result) {
-                props.setCropperImage(reader.result.toString());
-                //props.setImage(reader.result.toString());
+                if(document.getElementById('image')){
+                    const elt = document.getElementById('image') as HTMLInputElement;
+                    elt.value="";
+                }
+                props.setImage(reader.result.toString());
+                setBaseImage(reader.result.toString());
+                props.setCropperImage(reader.result.toString())
             }
         };
         reader.onerror = function (error) {
@@ -47,13 +51,9 @@ export default function AvatarCropper(props:any) {
             const elt = document.getElementById('image') as HTMLInputElement;
             elt.value="";
         }
+        props.setImage('');
         props.setCropperImage('');
     };
-
-    const deleteAvatar = () => {
-        //props.setImage(null);
-        avoidImageEdition();
-    }
 
     return (
         <div className="AvatarCropper">

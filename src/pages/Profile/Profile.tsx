@@ -19,9 +19,9 @@ const userService = new UserService();
 export default function Profile() {
     const dispatch = useDispatch();
     const authStatus = useSelector((state:any) => state.auth);
-    //const [currentImage, setCurrentImage] = useState<string | null>(authStatus.user.picture);
     const [passwordEdit, setPasswordEdit] = useState(false);
-    const [ cropperImage, setCropperImage ] = useState<string>('');
+    const [ croppedImage, setCroppedImage ] = useState<string>('');
+    const [ cropperImage, setCropperImage] = useState<string>('');
 
     const togglePasswordEdit = () => {
         setPasswordEdit(!passwordEdit);
@@ -34,7 +34,7 @@ export default function Profile() {
         userService.updateProfile({picture: null}, authStatus.user.id)
         .then(response => {
             dispatch(setUser(response.result));
-            setCropperImage('');
+            setCroppedImage('');
         })
     }
 
@@ -56,17 +56,11 @@ export default function Profile() {
                     // voir avec les touched
                     ////
                     console.log(values);
-                    values.picture = cropperImage;
+                    values.picture = croppedImage;
                     userService.updateProfile(values, authStatus.user.id)
                     .then(response => {
-                        console.log(response.result);
                         dispatch(setUser(response.result));
-                        //setCurrentImage('');
-                        // if(document.querySelector('.avoid-badge')) {
-                        //     //document.querySelector('.avoid-badge')?.dispatchEvent(new Event('click'));
-                        //     const elt = document.querySelector('.avoid-badge') as HTMLElement;
-                        //     elt.click();
-                        // }
+                        setCroppedImage('');
                         setCropperImage('');
                     })
                     .catch(error => {
@@ -121,8 +115,7 @@ export default function Profile() {
                             </div>
                         }
                         <div className="formgroup-heading">Avatar :</div>
-                        {/* <AvatarCropper setImage={setCurrentImage} setCropperImage={setCropperImage} cropperImage={cropperImage} userImage={authStatus.user.picture} /> */}
-                        <AvatarCropper setCropperImage={setCropperImage} cropperImage={cropperImage} userImage={authStatus.user.picture} />
+                        <AvatarCropper setImage={setCroppedImage} cropperImage={cropperImage} setCropperImage={setCropperImage}  userImage={authStatus.user.picture} />
                         {authStatus.user.picture && 
                             <div className="avatar-editor">
                                 <img className="actual-avatar" src={authStatus.user.picture} alt="your actual avatar" />

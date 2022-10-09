@@ -2,19 +2,14 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { useState } from 'react';
-import { Button, Slider } from '@mui/material';
-import AddAPhotoTwoToneIcon from '@mui/icons-material/AddAPhotoTwoTone';
-import HighlightOffTwoToneIcon from '@mui/icons-material/HighlightOffTwoTone';
-import Cropper from 'react-easy-crop';
-import { Point, Area } from 'react-easy-crop/types';
 
 import { setLogs } from '../../../redux/authSlice';
 import { AuthenticationService } from '../../../services/authenticationService';
 import { FormValidationService } from '../../../utils/formValidationService';
-import getCroppedImg from '../../../utils/canvasUtils';
 
 import "./Signup.scss";
 import AvatarCropper from '../../avatarCropper/AvatarCropper';
+import { signupForm } from '../../../interfaces/ISignupForm';
 
 const authenticationService = new AuthenticationService();
 const formValidationService = new FormValidationService();
@@ -25,6 +20,7 @@ export default function Signup() {
     const [loginError, setLoginError] = useState<boolean>(false);
 
     const [ cropperImage, setCropperImage ] = useState<string>('');
+    const [ croppedImage, setCroppedImage ] = useState<string>('');
 
     return (
         <div className="Signup">
@@ -37,8 +33,8 @@ export default function Signup() {
                     picture: ''
                 }}
                 validate={formValidationService.validateSignup}
-                onSubmit={(values) => {
-                    values.picture = cropperImage;
+                onSubmit={(values:signupForm) => {
+                    values.picture = croppedImage;
                     setLoginError(false);
                     authenticationService.signup(values)
                     .then(response => {
@@ -91,39 +87,7 @@ export default function Signup() {
                                 <ErrorMessage name="passwordConfirm" />
                             </div>
                             <div className="avatar-managment">
-                                {/* {cropperImage && 
-                                    <div className="crop-container">
-                                        <Cropper
-                                            image={cropperImage}
-                                            crop={crop}
-                                            cropShape="round"
-                                            showGrid={false}
-                                            zoom={zoom}
-                                            aspect={1}
-                                            onCropChange={setCrop}
-                                            onCropComplete={onCropComplete}
-                                            onZoomChange={setZoom}
-                                        />
-                                        <div className="avoid-badge" title="annuler" onClick={avoidImageEdition} >
-                                            <HighlightOffTwoToneIcon sx={{ color: '#800101' }} />
-                                        </div>
-                                    </div>
-                                }
-                                {cropperImage && <div className="slider-box"><Slider
-                                    value={zoom}
-                                    min={1}
-                                    max={3}
-                                    step={0.1}
-                                    aria-labelledby="zoom"
-                                    onChange={(e, zoom) => setZoom(Number(zoom))}
-                                /></div>}
-                                <Field type="file" id="image" name="image" onChange={onFileSelected} />
-                                {!cropperImage &&
-                                    <Button variant="contained" startIcon={<AddAPhotoTwoToneIcon />} onClick={askImageSelection}>
-                                        Ajouter
-                                    </Button>
-                                } */}
-                                <AvatarCropper setCropperImage={setCropperImage} cropperImage={cropperImage} userImage={''}/>
+                                <AvatarCropper setImage={setCroppedImage} cropperImage={cropperImage} setCropperImage={setCropperImage} userImage={''}/>
                             </div>
                             <button type="submit" >envoi</button>
                         </div>
