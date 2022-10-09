@@ -3,7 +3,7 @@ import { Navigate, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { AuthenticationService } from "../../services/authenticationService";
-import { setUser } from '../../redux/authSlice';
+import { setLogs, setUser } from '../../redux/authSlice';
 import { User } from "../../interfaces/IUser";
 
 type ProtectedContentProps = {
