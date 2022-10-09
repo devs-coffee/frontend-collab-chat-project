@@ -48,7 +48,7 @@ export default function Profile() {
                     password: undefined,
                     passwordConfirm: undefined,
                     oldPassword: undefined,
-                    picture: ""
+                    picture: undefined
                 }}
                 validate={formValidationService.validateProfileUpdate}
                 onSubmit={(values) => {
@@ -57,7 +57,10 @@ export default function Profile() {
                     // voir avec les touched
                     ////
                     console.log(values);
-                    values.picture = croppedImage;
+                    if(croppedImage !== '') {
+                        values.picture = croppedImage;
+                    }
+                    
                     userService.updateProfile(values, authStatus.user.id)
                     .then(response => {
                         dispatch(setUser(response.result));
