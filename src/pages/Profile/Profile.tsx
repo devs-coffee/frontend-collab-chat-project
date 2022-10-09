@@ -56,7 +56,6 @@ export default function Profile() {
                     // TODO : filtrer les valeurs à envoyer, doivent être différentes du authStatus
                     // voir avec les touched
                     ////
-                    console.log(values);
                     if(croppedImage !== '') {
                         values.picture = croppedImage;
                     }
