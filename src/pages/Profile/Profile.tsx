@@ -35,6 +35,7 @@ export default function Profile() {
         .then(response => {
             dispatch(setUser(response.result));
             setCroppedImage('');
+            setCropperImage('');
         })
     }
 
