@@ -3,11 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { useState } from 'react';
 
-import { setLogs } from '../../redux/authSlice';
-import { AuthenticationService } from '../../services/authenticationService';
-import { FormValidationService } from '../../utils/formValidationService';
+import { setLogs } from '../../../redux/authSlice';
+import { AuthenticationService } from '../../../services/authenticationService';
+import { FormValidationService } from '../../../utils/formValidationService';
 
 import "./Signup.scss";
+import AvatarCropper from '../../avatarCropper/AvatarCropper';
+import { signupForm } from '../../../interfaces/ISignupForm';
 
 const authenticationService = new AuthenticationService();
 const formValidationService = new FormValidationService();
@@ -15,7 +17,11 @@ const formValidationService = new FormValidationService();
 export default function Signup() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const [loginError, setLoginError] = useState(false);
+    const [loginError, setLoginError] = useState<boolean>(false);
+
+    const [ cropperImage, setCropperImage ] = useState<string>('');
+    const [ croppedImage, setCroppedImage ] = useState<string>('');
+
     return (
         <div className="Signup">
             <Formik
@@ -24,10 +30,11 @@ export default function Signup() {
                     email: '',
                     password: '',
                     passwordConfirm: '',
-                    image: ''
+                    picture: ''
                 }}
                 validate={formValidationService.validateSignup}
-                onSubmit={(values) => {
+                onSubmit={(values:signupForm) => {
+                    values.picture = croppedImage;
                     setLoginError(false);
                     authenticationService.signup(values)
                     .then(response => {
@@ -43,8 +50,8 @@ export default function Signup() {
                     <Form className="signup-form" >
                         <h2>inscription</h2>
                         <div className="field-box">
-                            <div className="signup-form-pseudo signup-form__fields">
-                                <label className='signup-form__labels' htmlFor="signup_pseudo">Pseudo :</label>
+                            <div className="signup-form-pseudo form__fields">
+                                <label className='form__labels' htmlFor="signup_pseudo">Pseudo :</label>
                                 <Field 
                                     type="text"
                                     name="pseudo"
@@ -52,7 +59,7 @@ export default function Signup() {
                                 />
                                 <ErrorMessage name="pseudo" />
                             </div>
-                            <div className='signup-form-email signup-form__fields'>
+                            <div className='signup-form-email form__fields'>
                                 <label className='signup-form__labels' htmlFor="signup-email">Email :</label>
                                 <Field
                                     type="text"
@@ -61,8 +68,8 @@ export default function Signup() {
                                 />
                                 <ErrorMessage name="email" />
                             </div>
-                            <div className="signup-form-password signup-form__fields">
-                                <label className="signup-form__labels" htmlFor="signup-password">Mot de passe :</label>
+                            <div className="signup-form-password form__fields">
+                                <label className="form__labels" htmlFor="signup-password">Mot de passe :</label>
                                 <Field
                                     type="text"
                                     name="password"
@@ -70,14 +77,17 @@ export default function Signup() {
                                 />
                                 <ErrorMessage name="password" />
                             </div>
-                            <div className="signup-form-passwordconfirm signup-form__fields">
-                                <label className="signup-form__labels" htmlFor="signup-passwordconfirm">Confirmez :</label>
+                            <div className="signup-form-passwordconfirm form__fields">
+                                <label className="form__labels" htmlFor="signup-passwordconfirm">Confirmez :</label>
                                 <Field
                                     type="text"
                                     name="passwordConfirm"
                                     id="signup_passwordconfirm"
                                 />
                                 <ErrorMessage name="passwordConfirm" />
+                            </div>
+                            <div className="avatar-managment">
+                                <AvatarCropper setImage={setCroppedImage} cropperImage={cropperImage} setCropperImage={setCropperImage} userImage={''}/>
                             </div>
                             <button type="submit" >envoi</button>
                         </div>

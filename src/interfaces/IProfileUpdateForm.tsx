@@ -3,7 +3,7 @@ export interface profileUpdateForm {
     password?: string,
     passwordConfirm?: string,
     oldPassword?: string,
-    picture?: string,
+    picture?: string | null,
     id?: string
 }
 

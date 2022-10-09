@@ -1,14 +1,15 @@
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import Cropper from 'react-easy-crop';
-import { Point, Area } from 'react-easy-crop/types';
-import getCroppedImg from '../../utils/canvasUtils';
-import Slider from '@mui/material/Slider';
+import ChangeCircleIcon from '@mui/icons-material/ChangeCircle';
+import HighlightOffTwoToneIcon from '@mui/icons-material/HighlightOffTwoTone';
+import { Breadcrumbs } from '@mui/material';
+
 
 import { FormValidationService } from '../../utils/formValidationService';
 import { UserService } from '../../services/userService';
 import { setUser } from '../../redux/authSlice';
+import AvatarCropper from '../../components/avatarCropper/AvatarCropper';
 
 import './Profile.scss';
 
@@ -18,36 +19,26 @@ const userService = new UserService();
 export default function Profile() {
     const dispatch = useDispatch();
     const authStatus = useSelector((state:any) => state.auth);
-    const [base64image, setBase64image] = useState('');
     const [passwordEdit, setPasswordEdit] = useState(false);
-    const [crop, setCrop] = useState<Point>({ x:0, y: 0 });
-    const [ zoom, setZoom ] = useState<number>(1);
+    const [ croppedImage, setCroppedImage ] = useState<string>('');
     const [ cropperImage, setCropperImage] = useState<string>('');
-
-    const onCropComplete = async (croppedArea: Area, croppedAreaPixels: Area) => {
-        const crop = await getCroppedImg(cropperImage, croppedAreaPixels)
-        if(crop) {
-            setBase64image(crop);
-        }
-    };
-    
-    const onFileSelected = ((event:any) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(event.target.files[0]);
-        reader.onload = function () {
-            if(reader.result) {
-                setCropperImage(reader.result.toString());
-                setBase64image(reader.result.toString());
-            }
-        };
-        reader.onerror = function (error) {
-            console.log('Error: ', error);
-        };
-    })
 
     const togglePasswordEdit = () => {
         setPasswordEdit(!passwordEdit);
+    };
+    const askImageSelection = () => {
+        const inputEl = document.querySelector('#image') as HTMLInputElement;
+        inputEl.click();
+    };
+    const deleteAvatar = () => {
+        userService.updateProfile({picture: null}, authStatus.user.id)
+        .then(response => {
+            dispatch(setUser(response.result));
+            setCroppedImage('');
+            setCropperImage('');
+        })
     }
+
     return (
         <div className="Profile">
             <h2>Profile works !</h2>
@@ -57,7 +48,7 @@ export default function Profile() {
                     password: undefined,
                     passwordConfirm: undefined,
                     oldPassword: undefined,
-                    picture: ""
+                    picture: undefined
                 }}
                 validate={formValidationService.validateProfileUpdate}
                 onSubmit={(values) => {
@@ -65,14 +56,14 @@ export default function Profile() {
                     // TODO : filtrer les valeurs à envoyer, doivent être différentes du authStatus
                     // voir avec les touched
                     ////
-                    values.picture = base64image;
+                    if(croppedImage !== '') {
+                        values.picture = croppedImage;
+                    }
+                    
                     userService.updateProfile(values, authStatus.user.id)
                     .then(response => {
                         dispatch(setUser(response.result));
-                       if(document.getElementById('image')){
-                            const elt = document.getElementById('image') as HTMLInputElement;
-                            elt.value="";
-                        }
+                        setCroppedImage('');
                         setCropperImage('');
                     })
                     .catch(error => {
@@ -83,8 +74,8 @@ export default function Profile() {
                 {formik => (
                     <Form className='profile-update-form'>
                         <div className='field-box'>
-                            <div className='profile-update-form-pseudo profile-update-form__fields'>
-                                <label className='profile-update-form__labels' htmlFor='profile-update_pseudo'>Pseudo :</label>
+                            <div className='profile-update-form-pseudo form__fields'>
+                                <label className='form__labels' htmlFor='profile-update_pseudo'>Pseudo :</label>
                                 <Field
                                     type="text"
                                     name="pseudo"
@@ -93,12 +84,12 @@ export default function Profile() {
                                 <ErrorMessage name="pseudo" />
                             </div>
                         </div>
-                        {!passwordEdit && <div onClick={togglePasswordEdit}>Changer de mot de passe</div>}
+                        {!passwordEdit && <div className="password-request-button" onClick={togglePasswordEdit}>Changer de mot de passe</div>}
                         {passwordEdit && 
-                            <div className='password-update-box'>
+                            <div className='password-update-box field-box'>
                                 <div onClick={togglePasswordEdit}>Annuler</div>
-                                <div className='profile-update-form-new-password profile-update-form__fields'>
-                                    <label className='profile-update-form__labels' htmlFor="profile-update_new-password">Nouveau mot de passe :</label>
+                                <div className='profile-update-form-new-password form__fields'>
+                                    <label className='form__labels' htmlFor="profile-update_new-password">Nouveau mot de passe :</label>
                                     <Field 
                                         type="text"
                                         name="password"
@@ -106,8 +97,8 @@ export default function Profile() {
                                     />
                                     <ErrorMessage name="newPassword" />
                                 </div>
-                                <div className='profile-update-form-new-password-confirm profile-update-form__fields'>
-                                    <label className='profile-update-form__labels' htmlFor="profile-update_new-password-confirm">Confirmez :</label>
+                                <div className='profile-update-form-new-password-confirm form__fields'>
+                                    <label className='form__labels' htmlFor="profile-update_new-password-confirm">Confirmez :</label>
                                     <Field 
                                         type="text"
                                         name="passwordConfirm"
@@ -115,8 +106,8 @@ export default function Profile() {
                                     />
                                     <ErrorMessage name="newPasswordConfirm" />
                                 </div>
-                                <div className='profile-update-form-old-password profile-update-form__fields'>
-                                    <label className='profile-update-form__labels' htmlFor="profile-old-password">Mot de passe actuel:</label>
+                                <div className='profile-update-form-old-password form__fields'>
+                                    <label className='form__labels' htmlFor="profile-old-password">Mot de passe actuel:</label>
                                     <Field 
                                         type="text"
                                         name="oldPassword"
@@ -126,35 +117,24 @@ export default function Profile() {
                                 </div>
                             </div>
                         }
-                        {cropperImage && <div className="crop-container">
-                            <Cropper
-                                image={cropperImage}
-                                crop={crop}
-                                cropShape="round"
-                                showGrid={false}
-                                zoom={zoom}
-                                aspect={1}
-                                onCropChange={setCrop}
-                                onCropComplete={onCropComplete}
-                                onZoomChange={setZoom}
-                            />
-                        </div>}
-                        {cropperImage && <Slider
-                            value={zoom}
-                            min={1}
-                            max={3}
-                            step={0.1}
-                            aria-labelledby="zoom"
-                            onChange={(e, zoom) => setZoom(Number(zoom))}
-                        />}   
-                        <Field type="file" id="image" name="image" onChange={onFileSelected}/>
+                        <div className="formgroup-heading">Avatar :</div>
+                        <AvatarCropper setImage={setCroppedImage} cropperImage={cropperImage} setCropperImage={setCropperImage}  userImage={authStatus.user.picture} />
+                        {authStatus.user.picture && 
+                            <div className="avatar-editor">
+                                <img className="actual-avatar" src={authStatus.user.picture} alt="your actual avatar" />
+                                <Breadcrumbs>
+                                    <ChangeCircleIcon sx={{ color: '#1616c4' }} onClick={askImageSelection} />
+                                    <HighlightOffTwoToneIcon sx={{ color: '#800101' }} onClick={deleteAvatar}/>
+                                </Breadcrumbs>
+                            </div>
+                        }
+                        <br />
                         <br />
                         <br />
                         <button type="submit" >envoi</button>
                     </Form>
                 )}
             </Formik>
-            {authStatus.user.picture && <img src={authStatus.user.picture} alt="your actual avatar" />}
         </div>
     )
 }

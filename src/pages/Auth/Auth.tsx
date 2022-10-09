@@ -1,15 +1,15 @@
 import { useState } from 'react';
 
-import Login from '../../components/Login/Login';
-import Signup from '../../components/Signup/Signup';
+import Login from '../../components/auth/Login/Login';
+import Signup from '../../components/auth/Signup/Signup';
 
 import './Auth.scss';
 
 function Auth() {
-    const [component, setComponent] = useState(true);
+    const [signup, setSignup] = useState(true);
 
     const toggleComponent = ():void => {
-        setComponent(!component);
+        setSignup(!signup);
     }
     
     const displayLogin = () => {
@@ -23,9 +23,9 @@ function Auth() {
     
     return (
         <div className="auth">
-            <h2>Auth works !</h2>
-            <div onClick={toggleComponent}>{component ? 'S\'enregistrer' : 'Se connecter'}</div>
-            {component ? displayLogin() : displaySignup()}
+            <h2>Bienvenue sur<br />OpenWebChat</h2>
+            <div className='form-selector' onClick={toggleComponent}>{signup ? 'Nouveau ?\nS\'enregistrer' : 'Se connecter'}</div>
+            {signup ? displayLogin() : displaySignup()}
         </div>
     )
 }

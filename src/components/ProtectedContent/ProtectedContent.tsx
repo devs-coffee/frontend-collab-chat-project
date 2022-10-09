@@ -38,7 +38,6 @@ const ProtectedContent = ({ children } : ProtectedContentProps) => {
         .then(response => {
             console.log(response);
             if(response) {
-                
                 dispatch(setUser(response))
                 return <div>{children}</div>
             }
@@ -53,7 +52,6 @@ const ProtectedContent = ({ children } : ProtectedContentProps) => {
     if(!authStatus.isLogged && !token) {
         return <Navigate to="/auth" ></Navigate>
     }
-    
     return <div>Veuillez patienter</div>
 }
 

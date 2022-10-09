@@ -1,0 +1,7 @@
+@import '../../../styles/mixins';
+
+.Login  {
+    & Form {
+        @include form;
+    }
+}
