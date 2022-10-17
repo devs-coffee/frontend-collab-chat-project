@@ -1,0 +1,7 @@
+@import '../../styles/mixins';
+
+.ServerCreationForm {
+    & Form {
+        @include form;
+    }
+}

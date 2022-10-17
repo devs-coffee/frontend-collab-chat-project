@@ -1,53 +1,41 @@
-import React, { useState, useEffect } from 'react';
+import { Avatar, Stack } from '@mui/material';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+import { green } from '@mui/material/colors';
+import React from 'react';
+import { useSelector } from 'react-redux';
 
 import { Server } from '../../interfaces/IServer';
-import { ServerService } from '../../services/serverService';
 
 import './DashboardServersHeading.scss';
+import { Link } from 'react-router-dom';
 
 type DashboardServersHeadingProps = {
-    addingServer: React.Dispatch<React.SetStateAction<boolean>>
+    addingServer: React.Dispatch<React.SetStateAction<boolean>>,
 }
 
 export default function DashboardServersHeading(props:DashboardServersHeadingProps) {
-    const serverService = new ServerService();
-    const [servers, setServers] = useState<Server[]>([]);
-    const [isDataLoading, setDataLoading] = useState<boolean>(true);
     const addNewServer = () => props.addingServer(true);
-
-    useEffect(() => {
-        setDataLoading(true);
-        getServers()
-        .then(data => {
-            if(data) {
-                setServers(data);
-            }
-            setDataLoading(false);
-            
-        })
-    }, [])
-
-    async function getServers():Promise<Server[] | null> {
-        try {
-            const response = await serverService.getServers();
-            if(response.isSucceed) {
-                return response.result;
-            }
-            return null;
-        } catch (error) {
-            return null;
-        }
-    }
+    const servers = useSelector((state:any) => state.servers);
     
-
     return (
         <div className="DashboardServersHeading">
             <h3>Servers heading works !</h3>
             {
-                isDataLoading ? (<span>Veuillez patienter</span>) :
-                servers.map((server:Server) => (server.name))
+                servers.length < 1 ? (<span>Veuillez patienter</span>) :
+                (
+                    <Stack direction="row" spacing={2}>
+                        {servers.map((server:Server) => (
+                            <Link to={`/server/${server.id}`} key={`linkto-${server.id}`}>
+                                <Avatar>{server.name.substring(0, 1).toUpperCase()}</Avatar>
+                            </Link>
+                            
+                        ))}
+                        <Avatar sx={{ bgcolor: green[500] }} >
+                            <AddCircleIcon onClick={addNewServer}/>
+                        </Avatar>
+                    </Stack>
+                )
             }
-            <button onClick={addNewServer}>Ajouter Serveur</button>
         </div>
     )
 }

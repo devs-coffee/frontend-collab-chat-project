@@ -1,3 +1,4 @@
+import { Server } from "./IServer"
 import { User } from "./IUser"
 
 export interface reduxData {
@@ -5,4 +6,5 @@ export interface reduxData {
         isLogged: boolean,
         user: User | null
     }
+    servers: Server[]
 }

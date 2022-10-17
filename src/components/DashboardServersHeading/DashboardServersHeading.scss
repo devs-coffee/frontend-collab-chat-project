@@ -1,0 +1,9 @@
+.DashboardServersHeading {
+    padding: 10px;
+    & .MuiAvatar-root {
+        cursor: pointer;
+    }
+    & a {
+        text-decoration: none;
+    }
+}

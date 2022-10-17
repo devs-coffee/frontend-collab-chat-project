@@ -12,6 +12,7 @@ import Auth from "./pages/Auth/Auth";
 import Dashboard from './pages/Dashboard/Dashboard';
 
 import './styles/index.scss';
+import Server from './pages/Server/Server';
 
 const root = ReactDOM.createRoot(document.getElementById('root')!);
 root.render(
@@ -27,6 +28,7 @@ root.render(
         } >
           <Route path="/" element={<Dashboard />} />
           <Route path="profile" element={<Profile />} />
+          <Route path="server/:serverId" element={<Server />} />
         </Route>
         <Route path="/auth" element={<Auth />} />
         <Route path="/error" element={<Error />} />
