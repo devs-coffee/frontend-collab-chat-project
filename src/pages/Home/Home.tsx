@@ -18,7 +18,7 @@ export default function Home() {
   const [isDataLoading, setDataLoading] = useState<boolean>(true);
   const dispatch = useDispatch();
 
-  const getServers = async ():Promise<Server[] | null> => {
+  const getServers = async () => {
     console.log('getServers()');
     try {
         const response = await serverService.getServers();

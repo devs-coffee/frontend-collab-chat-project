@@ -3,11 +3,11 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { green } from '@mui/material/colors';
 import React from 'react';
 import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 import { Server } from '../../interfaces/IServer';
 
 import './DashboardServersHeading.scss';
-import { Link } from 'react-router-dom';
 
 type DashboardServersHeadingProps = {
     addingServer: React.Dispatch<React.SetStateAction<boolean>>,
