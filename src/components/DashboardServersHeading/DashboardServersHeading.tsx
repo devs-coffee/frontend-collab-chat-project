@@ -25,13 +25,19 @@ export default function DashboardServersHeading(props:DashboardServersHeadingPro
                 (
                     <Stack direction="row" spacing={2}>
                         {servers.map((server:Server) => (
-                            <Link to={`/server/${server.id}`} key={`linkto-${server.id}`}>
-                                <Avatar>{server.name.substring(0, 1).toUpperCase()}</Avatar>
+                            <Link to={`/server/${server.id}`} key={`linkto-${server.id}`} title={server.name}>
+                                
+                                    {server.picture ?
+                                        (<Avatar alt="avatar server" src={server.picture} />)
+                                        :
+                                        (<Avatar>{server.name.substring(0, 1).toUpperCase()}</Avatar>)
+                                    }
+                                
                             </Link>
                             
                         ))}
-                        <Avatar sx={{ bgcolor: green[500] }} >
-                            <AddCircleIcon onClick={addNewServer}/>
+                        <Avatar sx={{ bgcolor: green[500] }} onClick={addNewServer} >
+                            <AddCircleIcon />
                         </Avatar>
                     </Stack>
                 )

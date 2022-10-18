@@ -36,16 +36,19 @@ export default function ServerDisplay() {
     }, [users]);
     
     return (
-        <div className="Server">
+        <div className="ServerDisplay">
             <p>Server display works !<br/>
             server id : {params.serverId} <br/>
+            {server.picture && 
+                (<span>Avatar :<br/>
+                <img className="server-avatar" alt="avatar serveur" src={server.picture} />
+                <br/></span>)
+            }
             name: {server.name}<br/>
             users: {users.map(user => (`| ${user.pseudo}`))}
             </p>
-           
-            
             <button onClick={() => setIsUpdatingServer(true)}>update</button>
-            {isUpdatingServer && (<ServerUpdateForm setIsUpdatingServer={setIsUpdatingServer} serverId={params.serverId}/>)}
+            {isUpdatingServer && (<ServerUpdateForm setIsUpdatingServer={setIsUpdatingServer} server={server}/>)}
         </div>
     )
 }

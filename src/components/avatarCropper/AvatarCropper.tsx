@@ -14,7 +14,9 @@ export default function AvatarCropper(props:any) {
     const [ crop, setCrop ] = useState<Point>({ x:0, y: 0 });
     const [ zoom, setZoom ] = useState<number>(1);
     const [baseImage , setBaseImage] = useState<string>('');
-    
+    const inputEl = document.querySelector('#imageInput') as HTMLInputElement;
+        
+
     const onCropComplete = async (croppedArea: Area, croppedAreaPixels: Area) => {
         const crop = await getCroppedImg(baseImage, croppedAreaPixels);
         if(crop) {
@@ -23,7 +25,7 @@ export default function AvatarCropper(props:any) {
     };
 
     const askImageSelection = () => {
-        const inputEl = document.querySelector('#image') as HTMLInputElement;
+        const inputEl = document.querySelector('#imageInput') as HTMLInputElement;
         inputEl.click();
     };
 
@@ -32,10 +34,7 @@ export default function AvatarCropper(props:any) {
         reader.readAsDataURL(event.target.files[0]);
         reader.onload = function () {
             if(reader.result) {
-                if(document.getElementById('image')){
-                    const elt = document.getElementById('image') as HTMLInputElement;
-                    elt.value="";
-                }
+                event.target.value="";
                 props.setImage(reader.result.toString());
                 setBaseImage(reader.result.toString());
                 props.setCropperImage(reader.result.toString())
@@ -47,10 +46,7 @@ export default function AvatarCropper(props:any) {
     };
 
     const avoidImageEdition = () => {
-        if(document.getElementById('image')){
-            const elt = document.getElementById('image') as HTMLInputElement;
-            elt.value="";
-        }
+        inputEl.value="";
         props.setImage('');
         props.setCropperImage('');
     };
@@ -83,9 +79,9 @@ export default function AvatarCropper(props:any) {
                 aria-labelledby="zoom"
                 onChange={(e, zoom) => setZoom(Number(zoom))}
             /></div>}
-            <Field type="file" id="image" name="image" onChange={onFileSelected} />
+            <Field type="file" id="imageInput" name="image" onChange={onFileSelected} />
             
-            {!props.cropperImage && !props.userImage &&
+            {!props.cropperImage && !props.previousImage &&
                 <Button variant="contained" startIcon={<AddAPhotoTwoToneIcon />} onClick={askImageSelection}>
                     Ajouter
                 </Button>

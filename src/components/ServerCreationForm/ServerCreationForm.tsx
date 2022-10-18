@@ -1,12 +1,14 @@
+import { useState } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import DisabledByDefaultRoundedIcon from '@mui/icons-material/DisabledByDefaultRounded';
 import { useDispatch } from 'react-redux';
 
 import { FormValidationService } from '../../utils/formValidationService';
 import { ServerService } from '../../services/serverService';
+import { addServer } from '../../redux/serversSlice';
+import AvatarCropper from '../avatarCropper/AvatarCropper';
 
 import "./ServerCreationForm.scss";
-import { addServer } from '../../redux/serversSlice';
 
 type ServerCreationFormProps = {
     setAddingServer: React.Dispatch<React.SetStateAction<boolean>>
@@ -16,8 +18,11 @@ const formValidationService = new FormValidationService();
 const serverService = new ServerService();
 
 export default function ServerCreationForm(props:ServerCreationFormProps) {
-    const avoidServerAdding = () => props.setAddingServer(false);
+    const [ cropperImage, setCropperImage ] = useState<string>('');
+    const [ croppedImage, setCroppedImage ] = useState<string>('');
+    
     const dispatch = useDispatch();
+    const avoidServerAdding = () => props.setAddingServer(false);
 
     return (
         <div className="ServerCreationForm">
@@ -27,6 +32,9 @@ export default function ServerCreationForm(props:ServerCreationFormProps) {
                 }}
                 validate={formValidationService.validateServerCreation}
                 onSubmit={(values) => {
+                    if(croppedImage) {
+                        values.picture = croppedImage;
+                    }
                     serverService.createServer(values)
                     .then(response => {
                         console.log(response);
@@ -48,11 +56,14 @@ export default function ServerCreationForm(props:ServerCreationFormProps) {
                                 />
                                 <ErrorMessage name="name" />
                             </div>
-                            <button type="submit" >envoi</button>
+                            
                         </div>
+                        <div className="avatar-managment">
+                            <AvatarCropper setImage={setCroppedImage} cropperImage={cropperImage} setCropperImage={setCropperImage} previousImage={''} />
+                        </div>
+                        <button type="submit" >envoi</button>
                     </Form>
                 )}
-
             </Formik>
         </div>
     )

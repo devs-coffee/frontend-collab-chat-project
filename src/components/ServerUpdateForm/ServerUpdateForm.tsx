@@ -1,17 +1,22 @@
-import React from 'react';
+import React, { useState} from 'react';
 import DisabledByDefaultRoundedIcon from '@mui/icons-material/DisabledByDefaultRounded';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import { useDispatch } from 'react-redux';
+import ChangeCircleIcon from '@mui/icons-material/ChangeCircle';
+import HighlightOffTwoToneIcon from '@mui/icons-material/HighlightOffTwoTone';
+import { Breadcrumbs } from '@mui/material';
 
 import { FormValidationService } from '../../utils/formValidationService';
 import { ServerService } from '../../services/serverService';
 import { removeServer, updateServer } from '../../redux/serversSlice';
+import { Server } from '../../interfaces/IServer';
 
 import './ServerUpdateForm.scss';
+import AvatarCropper from '../avatarCropper/AvatarCropper';
 
 type ServerUpdatingFormProps = {
     setIsUpdatingServer: React.Dispatch<React.SetStateAction<boolean>>
-    serverId: string | undefined
+    server: Server
 }
 
 const formValidationService = new FormValidationService();
@@ -19,33 +24,53 @@ const serverService = new ServerService();
 
 export default function ServerUpdateForm(props:ServerUpdatingFormProps) {
     const dispatch = useDispatch();
-    const removeThisServer = (event:any) => {
+    
+    const [ croppedImage, setCroppedImage ] = useState<string>('');
+    const [ cropperImage, setCropperImage] = useState<string>('');
+    
+    const deleteServer = (event:any) => {
         event.preventDefault();
-        if(props.serverId) {
-            serverService.deleteServer(props.serverId)
+        if(props.server) {
+            serverService.deleteServer(props.server.id)
             .then(response => {
                 console.log(response);
-                dispatch(removeServer(props.serverId));
+                dispatch(removeServer(props.server.id));
                 props.setIsUpdatingServer(false);
             })
         }
-        
+    };
+    const askImageSelection = () => {
+        const inputEl = document.querySelector('#imageInput') as HTMLInputElement;
+        inputEl.click();
+    };
+    const deleteAvatar = () => {
+        serverService.updateServer({picture: null}, props.server.id)
+        .then(response => {
+            dispatch(updateServer(response.result));
+            setCroppedImage('');
+            setCropperImage('');
+        })
     }
     return (
         <div className="ServerUpdateForm">
             <Formik
                 initialValues={{
-                    name: ''
+                    name: props.server.name
                 }}
                 validate={formValidationService.validateServerUpdate}
                 onSubmit={(values) => {
-                    console.log(`id: ${props.serverId}`);
-                    console.log(values);
-                    serverService.updateServer(values, props.serverId)
+                    if(croppedImage !== '') {
+                        values.picture = croppedImage;
+                    }
+                    serverService.updateServer(values, props.server.id)
                     .then(response => {
-                        console.log(response.result);
                         dispatch(updateServer(response.result));
+                        setCroppedImage('');
+                        setCropperImage('');
                         props.setIsUpdatingServer(false);
+                    })
+                    .catch(error => {
+                        console.log(error);
                     })
                 }}
             >
@@ -62,12 +87,24 @@ export default function ServerUpdateForm(props:ServerUpdatingFormProps) {
                                 />
                                 <ErrorMessage name="name" />
                             </div>
-                            <button type="submit" >envoi</button>
                         </div>
-                        <button onClick={removeThisServer} >Supprimer serveur</button>
+                        <div className="formgroup-heading">Avatar :</div>
+                        <AvatarCropper setImage={setCroppedImage} cropperImage={cropperImage} setCropperImage={setCropperImage} previousImage={props.server.picture} />
+                        {props.server.picture &&
+                            <div className="avatar-editor">
+                                <img className="actual-avatar" src={props.server.picture} alt="actual server avatar" />
+                                <Breadcrumbs>
+                                    <ChangeCircleIcon sx={{ color: '#1616c4' }} onClick={askImageSelection} />
+                                    <HighlightOffTwoToneIcon sx={{ color: '#800101' }} onClick={deleteAvatar}/>
+                                </Breadcrumbs>
+                            </div>
+                        }
+                        <br/><br/>
+                        <button type="submit" >envoi</button>
                     </Form>
                 )}
             </Formik>
+            <button onClick={deleteServer} >Supprimer serveur</button>
         </div>
     )
 }
