@@ -24,7 +24,6 @@ export const serversSlice = createSlice({
                 oldServer.name = name;
                 oldServer.picture = picture;
             }
-            state.forEach(server => console.log(server.name));
             return state;
         }
     }

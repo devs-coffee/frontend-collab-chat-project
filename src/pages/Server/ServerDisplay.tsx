@@ -24,7 +24,11 @@ export default function ServerDisplay() {
             if(response.isSucceed) {
                 setUsers(response.result);
             }
+            else {
+                console.log(response.errorMessage);
+            }
         } catch (error) {
+            console.log(error);
             return;
         }
     }

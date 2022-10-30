@@ -7,10 +7,8 @@ import Header from "../../components/template/header/Header";
 import { IoProvider } from "../../interfaces/IIoProvider";
 import { ServerService } from "../../services/serverService";
 import { setServers } from "../../redux/serversSlice";
-import { Server } from "../../interfaces/IServer";
 
 import "./Home.scss";
-
 
 export default function Home() {
   const serverService = new ServerService();
@@ -19,7 +17,6 @@ export default function Home() {
   const dispatch = useDispatch();
 
   const getServers = async () => {
-    console.log('getServers()');
     try {
         const response = await serverService.getServers();
         if(response.isSucceed) {
@@ -28,7 +25,8 @@ export default function Home() {
         }
         return null;
     } catch (error) {
-        return null;
+      setDataLoading(false);
+      return null;
     }
   }
 

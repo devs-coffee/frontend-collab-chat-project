@@ -37,9 +37,11 @@ export default function ServerCreationForm(props:ServerCreationFormProps) {
                     }
                     serverService.createServer(values)
                     .then(response => {
-                        console.log(response);
                         dispatch(addServer(response.result));
                         avoidServerAdding();
+                    })
+                    .catch(error => {
+                        console.log(error);
                     })
                 }}
             >

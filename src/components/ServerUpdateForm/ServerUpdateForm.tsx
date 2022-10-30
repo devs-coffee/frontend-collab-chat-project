@@ -33,9 +33,11 @@ export default function ServerUpdateForm(props:ServerUpdatingFormProps) {
         if(props.server) {
             serverService.deleteServer(props.server.id)
             .then(response => {
-                console.log(response);
                 dispatch(removeServer(props.server.id));
                 props.setIsUpdatingServer(false);
+            })
+            .catch(error => {
+                console.log(error);
             })
         }
     };
@@ -49,6 +51,9 @@ export default function ServerUpdateForm(props:ServerUpdatingFormProps) {
             dispatch(updateServer(response.result));
             setCroppedImage('');
             setCropperImage('');
+        })
+        .catch(error => {
+            console.log(error);
         })
     }
     return (
@@ -64,10 +69,15 @@ export default function ServerUpdateForm(props:ServerUpdatingFormProps) {
                     }
                     serverService.updateServer(values, props.server.id)
                     .then(response => {
-                        dispatch(updateServer(response.result));
-                        setCroppedImage('');
-                        setCropperImage('');
-                        props.setIsUpdatingServer(false);
+                        if(response.isSucceed) {
+                            dispatch(updateServer(response.result));
+                            setCroppedImage('');
+                            setCropperImage('');
+                            props.setIsUpdatingServer(false);
+                        }
+                        else {
+                            console.log(response.errorMessage);
+                        }
                     })
                     .catch(error => {
                         console.log(error);
