@@ -27,7 +27,7 @@ export default function Profile() {
         setPasswordEdit(!passwordEdit);
     };
     const askImageSelection = () => {
-        const inputEl = document.querySelector('#image') as HTMLInputElement;
+        const inputEl = document.querySelector('#imageInput') as HTMLInputElement;
         inputEl.click();
     };
     const deleteAvatar = () => {
@@ -118,7 +118,7 @@ export default function Profile() {
                             </div>
                         }
                         <div className="formgroup-heading">Avatar :</div>
-                        <AvatarCropper setImage={setCroppedImage} cropperImage={cropperImage} setCropperImage={setCropperImage}  userImage={authStatus.user.picture} />
+                        <AvatarCropper setImage={setCroppedImage} cropperImage={cropperImage} setCropperImage={setCropperImage}  previousImage={authStatus.user.picture} />
                         {authStatus.user.picture && 
                             <div className="avatar-editor">
                                 <img className="actual-avatar" src={authStatus.user.picture} alt="your actual avatar" />

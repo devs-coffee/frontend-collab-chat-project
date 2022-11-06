@@ -38,4 +38,8 @@ export abstract class Fetcher {
         const response = await axios.patch(url, body, config);
         return response;
     }
+    async delete<T>(url: string, config?: AxiosRequestConfig<T>):Promise<AxiosResponse<OperationResult<T>>> {
+        const response = await axios.delete(url, config);
+        return response;
+    }
 }

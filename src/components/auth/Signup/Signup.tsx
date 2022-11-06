@@ -4,12 +4,12 @@ import { useDispatch } from 'react-redux';
 import { useState } from 'react';
 
 import { setLogs } from '../../../redux/authSlice';
+import { signupForm } from '../../../interfaces/ISignupForm';
 import { AuthenticationService } from '../../../services/authenticationService';
 import { FormValidationService } from '../../../utils/formValidationService';
+import AvatarCropper from '../../avatarCropper/AvatarCropper';
 
 import "./Signup.scss";
-import AvatarCropper from '../../avatarCropper/AvatarCropper';
-import { signupForm } from '../../../interfaces/ISignupForm';
 
 const authenticationService = new AuthenticationService();
 const formValidationService = new FormValidationService();
@@ -87,7 +87,7 @@ export default function Signup() {
                                 <ErrorMessage name="passwordConfirm" />
                             </div>
                             <div className="avatar-managment">
-                                <AvatarCropper setImage={setCroppedImage} cropperImage={cropperImage} setCropperImage={setCropperImage} userImage={''}/>
+                                <AvatarCropper setImage={setCroppedImage} cropperImage={cropperImage} setCropperImage={setCropperImage} previousImage={''}/>
                             </div>
                             <button type="submit" >envoi</button>
                         </div>

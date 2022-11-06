@@ -4,6 +4,7 @@ import { Avatar, IconButton, Menu, MenuItem } from "@mui/material";
 import { Link } from "react-router-dom";
 
 import { unsetLogs } from "../../../redux/authSlice";
+import { unsetServers } from "../../../redux/serversSlice";
 
 import './Header.scss';
 
@@ -18,6 +19,10 @@ export default function Header() {
     };
     const handleAvatarClose = () => {
         setAnchorEl(null);
+    }
+    const logout = () => {
+        dispatch(unsetLogs());
+        dispatch(unsetServers());
     }
 
     return (
@@ -45,7 +50,7 @@ export default function Header() {
                     <MenuItem>
                         <Link to="profile">Profil</Link>
                     </MenuItem>
-                    <MenuItem onClick={() => dispatch(unsetLogs())}>
+                    <MenuItem onClick={() => logout()}>
                         Déconnexion
                     </MenuItem>
                 </Menu>

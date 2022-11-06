@@ -1,18 +1,8 @@
 @import '../../styles/mixins';
 
-.Profile {
+.ServerUpdateForm {
     & Form {
         @include form;
-    }
-    & .password-request-button {
-        width: fit-content;
-        margin: auto;
-        padding: 20px;
-        cursor: pointer;
-    }
-    & .formgroup-heading {
-        font-weight: bold;
-        font-size: large;
     }
     & .avatar-editor {
         display: flex;
@@ -27,4 +17,3 @@
         border-radius: 100px;
     }
 }
-
