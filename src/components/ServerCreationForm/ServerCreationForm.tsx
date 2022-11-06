@@ -37,8 +37,13 @@ export default function ServerCreationForm(props:ServerCreationFormProps) {
                     }
                     serverService.createServer(values)
                     .then(response => {
-                        dispatch(addServer(response.result));
-                        avoidServerAdding();
+                        if(response.isSucceed) {
+                            dispatch(addServer(response.result));
+                            avoidServerAdding();
+                        }
+                        else {
+                            console.log(response.errorMessage)
+                        }
                     })
                     .catch(error => {
                         console.log(error);

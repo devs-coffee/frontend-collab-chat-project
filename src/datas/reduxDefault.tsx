@@ -5,7 +5,11 @@ const data:reduxData = {
         isLogged: false,
         user: null
     },
-    servers: []
+    servers: {
+        data: [],
+        status: "idle",
+        error: null
+    }
 };
 
 export default data;

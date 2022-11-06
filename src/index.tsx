@@ -1,5 +1,5 @@
 import ReactDOM from 'react-dom/client';
-import store from './redux/store';
+import { store } from './redux/store';
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
@@ -12,8 +12,7 @@ import Auth from "./pages/Auth/Auth";
 import Dashboard from './pages/Dashboard/Dashboard';
 
 import './styles/index.scss';
-import Server from './pages/Server/ServerDisplay';
-import ServerDisplay from './pages/Server/ServerDisplay';
+import ServerDisplay from './pages/ServerDisplay/ServerDisplay';
 
 const root = ReactDOM.createRoot(document.getElementById('root')!);
 root.render(

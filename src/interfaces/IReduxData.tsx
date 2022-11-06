@@ -6,5 +6,9 @@ export interface reduxData {
         isLogged: boolean,
         user: User | null
     }
-    servers: Server[]
+    servers: {
+        data: Server[],
+        status: "idle" | "pending" | "succeed" | "failed",
+        error?: string | null
+    }
 }
