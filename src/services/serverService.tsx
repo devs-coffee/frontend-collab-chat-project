@@ -14,7 +14,7 @@ export class ServerService extends Fetcher {
         const response = await super.post<serverCreationForm, Server>(`/servers`, values);
         return response.data;
     }
-    async updateServer(values:serverUpdateForm, serverId:string | undefined):Promise<OperationResult<Server>> {
+    async updateServer(values:serverUpdateForm, serverId:string):Promise<OperationResult<Server>> {
         const response = await super.patch<serverUpdateForm, Server>(`/servers/${serverId}`, values);
         return response.data;
     }
