@@ -2,6 +2,7 @@ import React, { useState} from 'react';
 import DisabledByDefaultRoundedIcon from '@mui/icons-material/DisabledByDefaultRounded';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import ChangeCircleIcon from '@mui/icons-material/ChangeCircle';
 import HighlightOffTwoToneIcon from '@mui/icons-material/HighlightOffTwoTone';
 import { Breadcrumbs } from '@mui/material';
@@ -24,7 +25,7 @@ const serverService = new ServerService();
 
 export default function ServerUpdateForm(props:ServerUpdatingFormProps) {
     const dispatch = useDispatch();
-    
+    const navigate = useNavigate();
     const [ croppedImage, setCroppedImage ] = useState<string>('');
     const [ cropperImage, setCropperImage] = useState<string>('');
     
@@ -34,7 +35,7 @@ export default function ServerUpdateForm(props:ServerUpdatingFormProps) {
             serverService.deleteServer(props.server.id)
             .then(response => {
                 dispatch(removeServer(props.server.id));
-                props.setIsUpdatingServer(false);
+                navigate('/');
             })
             .catch(error => {
                 console.log(error);
