@@ -22,6 +22,7 @@ export default function Profile() {
     const [passwordEdit, setPasswordEdit] = useState(false);
     const [ croppedImage, setCroppedImage ] = useState<string>('');
     const [ cropperImage, setCropperImage] = useState<string>('');
+    const [ imageSelection, setImageSelection ] = useState<boolean>(false);
 
     const togglePasswordEdit = () => {
         setPasswordEdit(!passwordEdit);
@@ -37,6 +38,12 @@ export default function Profile() {
             setCroppedImage('');
             setCropperImage('');
         })
+    }
+    const cropperProps = {
+        setImage: setCroppedImage,
+        cropperImage: cropperImage,
+        setCropperImage: setCropperImage,
+        previousImage: authStatus.user.picture
     }
 
     return (
@@ -118,12 +125,19 @@ export default function Profile() {
                             </div>
                         }
                         <div className="formgroup-heading">Avatar :</div>
-                        <AvatarCropper setImage={setCroppedImage} cropperImage={cropperImage} setCropperImage={setCropperImage}  previousImage={authStatus.user.picture} />
+                        <AvatarCropper 
+                            setImage={setCroppedImage}
+                            cropperImage={cropperImage}
+                            setCropperImage={setCropperImage}
+                            previousImage={authStatus.user.picture}
+                            imageSelection={imageSelection}
+                            avoidImageSelection={() => setImageSelection(false)}
+                        />
                         {authStatus.user.picture && 
                             <div className="avatar-editor">
                                 <img className="actual-avatar" src={authStatus.user.picture} alt="your actual avatar" />
                                 <Breadcrumbs>
-                                    <ChangeCircleIcon sx={{ color: '#1616c4' }} onClick={askImageSelection} />
+                                    <ChangeCircleIcon sx={{ color: '#1616c4' }} onClick={() => setImageSelection(!imageSelection)} />
                                     <HighlightOffTwoToneIcon sx={{ color: '#800101' }} onClick={deleteAvatar}/>
                                 </Breadcrumbs>
                             </div>

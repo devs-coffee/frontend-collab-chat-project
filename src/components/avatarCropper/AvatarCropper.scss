@@ -18,6 +18,17 @@
         width: 300px;
         margin: auto;
     }
-    
+    & .droparea {
+        width: 70%;
+        background-color: darkgrey;
+        border: 1px solid green;
+        margin: auto;
+        & .image-input-trigger {
+            border: 1px solid black;
+            cursor: pointer;
+            width: fit-content;
+            margin: 0 auto 1rem;
+        }
+    }
     
 }
