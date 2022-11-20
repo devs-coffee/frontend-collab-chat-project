@@ -39,12 +39,7 @@ export default function Profile() {
             setCropperImage('');
         })
     }
-    const cropperProps = {
-        setImage: setCroppedImage,
-        cropperImage: cropperImage,
-        setCropperImage: setCropperImage,
-        previousImage: authStatus.user.picture
-    }
+    
 
     return (
         <div className="Profile">

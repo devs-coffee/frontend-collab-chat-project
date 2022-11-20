@@ -21,6 +21,7 @@ export default function Signup() {
 
     const [ cropperImage, setCropperImage ] = useState<string>('');
     const [ croppedImage, setCroppedImage ] = useState<string>('');
+    const [ imageSelection, setImageSelection ] = useState<boolean>(false);
 
     return (
         <div className="Signup">
@@ -87,7 +88,14 @@ export default function Signup() {
                                 <ErrorMessage name="passwordConfirm" />
                             </div>
                             <div className="avatar-managment">
-                                <AvatarCropper setImage={setCroppedImage} cropperImage={cropperImage} setCropperImage={setCropperImage} previousImage={''}/>
+                                <AvatarCropper
+                                    setImage={setCroppedImage}
+                                    cropperImage={cropperImage}
+                                    setCropperImage={setCropperImage}
+                                    previousImage={''}
+                                    imageSelection={imageSelection}
+                                    avoidImageSelection={() => setImageSelection(false)}
+                                />
                             </div>
                             <button type="submit" >envoi</button>
                         </div>

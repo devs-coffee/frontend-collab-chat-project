@@ -27,6 +27,7 @@ export default function ServerUpdateForm(props:ServerUpdatingFormProps) {
     
     const [ croppedImage, setCroppedImage ] = useState<string>('');
     const [ cropperImage, setCropperImage] = useState<string>('');
+    const [ imageSelection, setImageSelection ] = useState<boolean>(false);
     
     const deleteServer = (event:any) => {
         event.preventDefault();
@@ -99,7 +100,14 @@ export default function ServerUpdateForm(props:ServerUpdatingFormProps) {
                             </div>
                         </div>
                         <div className="formgroup-heading">Avatar :</div>
-                        <AvatarCropper setImage={setCroppedImage} cropperImage={cropperImage} setCropperImage={setCropperImage} previousImage={props.server.picture} />
+                        <AvatarCropper
+                            setImage={setCroppedImage}
+                            cropperImage={cropperImage}
+                            setCropperImage={setCropperImage}
+                            previousImage={props.server.picture}
+                            imageSelection={imageSelection}
+                            avoidImageSelection={() => setImageSelection(false)}
+                        />
                         {props.server.picture &&
                             <div className="avatar-editor">
                                 <img className="actual-avatar" src={props.server.picture} alt="actual server avatar" />

@@ -20,6 +20,7 @@ const serverService = new ServerService();
 export default function ServerCreationForm(props:ServerCreationFormProps) {
     const [ cropperImage, setCropperImage ] = useState<string>('');
     const [ croppedImage, setCroppedImage ] = useState<string>('');
+    const [ imageSelection, setImageSelection ] = useState<boolean>(false);
     
     const dispatch = useDispatch();
     const avoidServerAdding = () => props.setAddingServer(false);
@@ -66,7 +67,14 @@ export default function ServerCreationForm(props:ServerCreationFormProps) {
                             
                         </div>
                         <div className="avatar-managment">
-                            <AvatarCropper setImage={setCroppedImage} cropperImage={cropperImage} setCropperImage={setCropperImage} previousImage={''} />
+                            <AvatarCropper
+                                setImage={setCroppedImage}
+                                cropperImage={cropperImage}
+                                setCropperImage={setCropperImage}
+                                previousImage={''}
+                                imageSelection={imageSelection}
+                                avoidImageSelection={() => setImageSelection(false)}
+                            />
                         </div>
                         <button type="submit" >envoi</button>
                     </Form>
