@@ -3,8 +3,8 @@ import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import ChangeCircleIcon from '@mui/icons-material/ChangeCircle';
 import HighlightOffTwoToneIcon from '@mui/icons-material/HighlightOffTwoTone';
-import { Breadcrumbs } from '@mui/material';
-
+import { Avatar, Breadcrumbs } from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
 
 import { FormValidationService } from '../../utils/formValidationService';
 import { UserService } from '../../services/userService';
@@ -12,6 +12,7 @@ import { setUser } from '../../redux/authSlice';
 import AvatarCropper from '../../components/avatarCropper/AvatarCropper';
 
 import './Profile.scss';
+import Modal from '../../components/Modal/modal';
 
 const formValidationService = new FormValidationService();
 const userService = new UserService();
@@ -21,25 +22,31 @@ export default function Profile() {
     const authStatus = useSelector((state:any) => state.auth);
     const [passwordEdit, setPasswordEdit] = useState(false);
     const [ croppedImage, setCroppedImage ] = useState<string>('');
-    const [ cropperImage, setCropperImage] = useState<string>('');
-    const [ imageSelection, setImageSelection ] = useState<boolean>(false);
-
+    const [ shouldModify, setShouldModify ] = useState<boolean>(false);
+    const [ chooseImage, setChooseImage] = useState<boolean>(false);
+    const [ isOpen, setIsOpen] = useState<boolean>(false);
+    const [ image, setImage] = useState<string>('');
     const togglePasswordEdit = () => {
         setPasswordEdit(!passwordEdit);
     };
-    const askImageSelection = () => {
-        const inputEl = document.querySelector('#imageInput') as HTMLInputElement;
-        inputEl.click();
-    };
+
     const deleteAvatar = () => {
         userService.updateProfile({picture: null}, authStatus.user.id)
         .then(response => {
             dispatch(setUser(response.result));
             setCroppedImage('');
-            setCropperImage('');
         })
     }
     
+    const selectImage = () => {
+        setShouldModify(true);
+    };
+
+    const updateImage = (image: string) => {
+        setCroppedImage(image);
+        setIsOpen(false);
+        return image;
+    }
 
     return (
         <div className="Profile">
@@ -66,12 +73,13 @@ export default function Profile() {
                     .then(response => {
                         dispatch(setUser(response.result));
                         setCroppedImage('');
-                        setCropperImage('');
+                        setShouldModify(false);
                     })
                     .catch(error => {
                         console.log(error);
                     });
                 }}
+                
             >
                 {formik => (
                     <Form className='profile-update-form'>
@@ -120,23 +128,42 @@ export default function Profile() {
                             </div>
                         }
                         <div className="formgroup-heading">Avatar :</div>
-                        <AvatarCropper 
-                            setImage={setCroppedImage}
-                            cropperImage={cropperImage}
-                            setCropperImage={setCropperImage}
-                            previousImage={authStatus.user.picture}
-                            imageSelection={imageSelection}
-                            avoidImageSelection={() => setImageSelection(false)}
-                        />
-                        {authStatus.user.picture && 
-                            <div className="avatar-editor">
-                                <img className="actual-avatar" src={authStatus.user.picture} alt="your actual avatar" />
-                                <Breadcrumbs>
-                                    <ChangeCircleIcon sx={{ color: '#1616c4' }} onClick={() => setImageSelection(!imageSelection)} />
-                                    <HighlightOffTwoToneIcon sx={{ color: '#800101' }} onClick={deleteAvatar}/>
-                                </Breadcrumbs>
+                        <div className='avatar-action picture'>
+                            {(authStatus.user.picture && authStatus.user.picture !== '')
+                                ? 
+                                    <div className="avatar-editor">
+                                        <img className="actual-avatar" src={authStatus.user.picture} alt="your actual avatar" />
+                                        <Breadcrumbs>
+                                            <ChangeCircleIcon sx={{ color: '#1616c4' }} onClick={() => selectImage()} />
+                                            <HighlightOffTwoToneIcon sx={{ color: '#800101' }} onClick={deleteAvatar}/>
+                                        </Breadcrumbs>
+                                    </div>
+                                :
+                                <div>
+                                    <Avatar onClick={selectImage}>{authStatus.user.pseudo.substring(0, 1).toUpperCase()}</Avatar>
+                                    <EditIcon className='edit' onClick={() => setIsOpen(true)}></EditIcon>
+                                    {isOpen && <Modal setIsOpen={setIsOpen} childComponent={<AvatarCropper setImage={updateImage}/>} />}
+                                </div>
+                            } 
+                            {
+                            croppedImage && croppedImage !== '' &&
+                            <div>
+                              <span>image séléctionnée</span>
+                                <div className="avatar-editor">
+                                    <img className="actual-avatar" src={croppedImage} alt="your actual avatar" />
+                                    <Breadcrumbs>
+                                        <ChangeCircleIcon sx={{ color: '#1616c4' }} onClick={() => selectImage()} />
+                                        <HighlightOffTwoToneIcon sx={{ color: '#800101' }} onClick={deleteAvatar}/>
+                                    </Breadcrumbs>
+                                </div>
                             </div>
-                        }
+                            }
+                        </div>
+
+
+                        {shouldModify && <AvatarCropper 
+                            setImage={updateImage}
+                        />}
                         <br />
                         <br />
                         <br />

@@ -67,14 +67,14 @@ export default function ServerCreationForm(props:ServerCreationFormProps) {
                             
                         </div>
                         <div className="avatar-managment">
-                            <AvatarCropper
+                            {/* <AvatarCropper
                                 setImage={setCroppedImage}
                                 cropperImage={cropperImage}
                                 setCropperImage={setCropperImage}
                                 previousImage={''}
                                 imageSelection={imageSelection}
                                 avoidImageSelection={() => setImageSelection(false)}
-                            />
+                            /> */}
                         </div>
                         <button type="submit" >envoi</button>
                     </Form>

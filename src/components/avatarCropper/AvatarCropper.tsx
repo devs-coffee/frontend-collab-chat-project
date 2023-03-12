@@ -1,30 +1,35 @@
 import Cropper from 'react-easy-crop';
 import { Field } from 'formik';
-import { Button, Slider } from '@mui/material';
-import { useState } from 'react';
+import { Slider } from '@mui/material';
+import { Dispatch, SetStateAction, useCallback, useState } from 'react';
 import { Point, Area } from 'react-easy-crop/types';
 import HighlightOffTwoToneIcon from '@mui/icons-material/HighlightOffTwoTone';
-import AddAPhotoTwoToneIcon from '@mui/icons-material/AddAPhotoTwoTone';
-
 import getCroppedImg from '../../utils/canvasUtils';
 
 import './AvatarCropper.scss';
+type avatar = {
+    // setImage: Dispatch<SetStateAction<string>>
+    setImage: (image: string) => string
+    // validate: () => void;
+}
 
-export default function AvatarCropper(props:any) {
+
+
+export default function AvatarCropper({setImage}: avatar) {
     const [ crop, setCrop ] = useState<Point>({ x:0, y: 0 });
     const [ zoom, setZoom ] = useState<number>(1);
-    const [baseImage , setBaseImage] = useState<string>('');
-    const inputEl = document.querySelector('#imageInput') as HTMLInputElement;
-
+    const [image, setBaseImage] = useState<string>('');
+    const [croppedImage, setCroppedImage] = useState<string>('');
+    // const [cancel, setCancel] = useState<boolean>(false);
     //accepted images mime types
     const mimeTypes = ['image/gif', 'image/jpeg', 'image/png', 'image/webp'];
-    
-    const onCropComplete = async (croppedArea: Area, croppedAreaPixels: Area) => {
-        const crop = await getCroppedImg(baseImage, croppedAreaPixels);
-        if(crop) {
-            props.setImage(crop);
+
+    const onCropComplete = useCallback(async (croppedArea: Area, croppedAreaPixels: Area) => {
+        const croppedImage = await getCroppedImg(image, croppedAreaPixels);
+        if(croppedImage){
+            setCroppedImage(croppedImage);
         }
-    };
+    }, [image])
 
     const askImageSelection = () => {
         const inputEl = document.querySelector('#imageInput') as HTMLInputElement;
@@ -35,14 +40,12 @@ export default function AvatarCropper(props:any) {
         const reader = new FileReader();
         const file = event.target.files ? event.target.files[0] : event.dataTransfer.files[0];
         reader.readAsDataURL(file);
-        reader.onload = function () {
+        reader.onload =  () => {
             if(reader.result) {
                 if(event.target.files) {
                     event.target.value="";
                 }
-                props.setImage(reader.result.toString());
                 setBaseImage(reader.result.toString());
-                props.setCropperImage(reader.result.toString())
             }
         };
         reader.onerror = function (error) {
@@ -51,9 +54,8 @@ export default function AvatarCropper(props:any) {
     };
 
     const avoidImageEdition = () => {
-        inputEl.value="";
-        props.setImage('');
-        props.setCropperImage('');
+        setBaseImage('');
+        // setCancel(true);
     };
 
     const handleDrop = (event:any) => {
@@ -61,7 +63,7 @@ export default function AvatarCropper(props:any) {
         event.stopPropagation();
         if(mimeTypes.includes(event.dataTransfer.files[0].type)) {
             onFileSelected(event);
-            props.avoidImageSelection();
+            // props.avoidImageSelection();
         } else {
             console.log('invalid type');
         }
@@ -82,48 +84,54 @@ export default function AvatarCropper(props:any) {
         event.stopPropagation();
     }
 
+    const selectImage = () => {
+        const inputEl = document.querySelector('#imageInput') as HTMLInputElement;
+        inputEl.click();
+    };
+
+    const validate = () => {
+        setImage(croppedImage);
+    }
+
+
+
     return (
         <div className="AvatarCropper">
-            {props.cropperImage &&
+            {image && image !== '' &&
+            <>
                 <div className="crop-container">
                     <Cropper
-                        image={props.cropperImage}
+                        image={image}
                         crop={crop}
                         cropShape="round"
-                        showGrid={false}
                         zoom={zoom}
                         aspect={1}
                         onCropChange={setCrop}
                         onCropComplete={onCropComplete}
                         onZoomChange={setZoom}
                     />
-                    <div className="avoid-badge" title="annuler" onClick={avoidImageEdition} >
-                        <HighlightOffTwoToneIcon sx={{ color: '#800101' }} />
-                    </div>
                 </div>
+                <div className="slider-box">
+                    <Slider
+                    value={zoom}
+                    min={1}
+                    max={3}
+                    step={0.1}
+                    aria-labelledby="zoom"
+                    onChange={(e, zoom) => setZoom(Number(zoom))}
+                    />
+                </div>
+                <div onClick={() => validate()}>Valider</div>
+            </>
             }
-            {props.cropperImage && <div className="slider-box"><Slider
-                value={zoom}
-                min={1}
-                max={3}
-                step={0.1}
-                aria-labelledby="zoom"
-                onChange={(e, zoom) => setZoom(Number(zoom))}
-            /></div>}
-            <Field type="file" id="imageInput" name="image" onChange={onFileSelected} />
-            
-            {!props.cropperImage && !props.previousImage &&
-                <Button variant="contained" startIcon={<AddAPhotoTwoToneIcon />} onClick={askImageSelection}>
-                    Ajouter
-                </Button>
-            }
-            {props.imageSelection &&
+
+            <input type="file" id="imageInput" name="image" onChange={onFileSelected} style={{display: "none"}} />
+            {(!image || image === '') &&
                 <div className="droparea" onDrop={handleDrop} onDragEnter={handleDragIn} onDragLeave={handleDragOut} onDragOver={handleDrag}>
                     <p>déposer une image<br/><br/>ou</p>
                     <p className="image-input-trigger" onClick={askImageSelection}>sélectionner un fichier</p>
-                </div>
-            }
-            
+                    <p onClick={avoidImageEdition}>X</p>
+                </div>}
         </div>
     )
 }

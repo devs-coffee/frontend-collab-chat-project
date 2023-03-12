@@ -100,14 +100,14 @@ export default function ServerUpdateForm(props:ServerUpdatingFormProps) {
                             </div>
                         </div>
                         <div className="formgroup-heading">Avatar :</div>
-                        <AvatarCropper
+                        {/* <AvatarCropper
                             setImage={setCroppedImage}
                             cropperImage={cropperImage}
                             setCropperImage={setCropperImage}
                             previousImage={props.server.picture}
                             imageSelection={imageSelection}
                             avoidImageSelection={() => setImageSelection(false)}
-                        />
+                        /> */}
                         {props.server.picture &&
                             <div className="avatar-editor">
                                 <img className="actual-avatar" src={props.server.picture} alt="actual server avatar" />
