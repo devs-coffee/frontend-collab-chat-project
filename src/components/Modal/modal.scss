@@ -14,16 +14,16 @@
     padding: 20px;
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-    max-width: 80%;
-    max-height: 80%;
+    width: 80%;
+    height: auto;
     overflow: auto;
     position: relative;
     z-index: 1;
 
     &-close {
       position: absolute;
-      top: 10px;
-      right: 10px;
+      top: 50px;
+      right: 50px;
       border: none;
       background: transparent;
       font-size: 20px;

@@ -22,10 +22,7 @@ export default function Profile() {
     const authStatus = useSelector((state:any) => state.auth);
     const [passwordEdit, setPasswordEdit] = useState(false);
     const [ croppedImage, setCroppedImage ] = useState<string>('');
-    const [ shouldModify, setShouldModify ] = useState<boolean>(false);
-    const [ chooseImage, setChooseImage] = useState<boolean>(false);
     const [ isOpen, setIsOpen] = useState<boolean>(false);
-    const [ image, setImage] = useState<string>('');
     const togglePasswordEdit = () => {
         setPasswordEdit(!passwordEdit);
     };
@@ -38,10 +35,6 @@ export default function Profile() {
         })
     }
     
-    const selectImage = () => {
-        setShouldModify(true);
-    };
-
     const updateImage = (image: string) => {
         setCroppedImage(image);
         setIsOpen(false);
@@ -73,7 +66,6 @@ export default function Profile() {
                     .then(response => {
                         dispatch(setUser(response.result));
                         setCroppedImage('');
-                        setShouldModify(false);
                     })
                     .catch(error => {
                         console.log(error);
@@ -128,21 +120,20 @@ export default function Profile() {
                             </div>
                         }
                         <div className="formgroup-heading">Avatar :</div>
-                        <div className='avatar-action picture'>
+                        <div className='avatar-action'>
                             {(authStatus.user.picture && authStatus.user.picture !== '')
                                 ? 
                                     <div className="avatar-editor">
                                         <img className="actual-avatar" src={authStatus.user.picture} alt="your actual avatar" />
                                         <Breadcrumbs>
-                                            <ChangeCircleIcon sx={{ color: '#1616c4' }} onClick={() => selectImage()} />
+                                            <EditIcon sx={{ color: '#1616c4' }} onClick={() => setIsOpen(true)} />
                                             <HighlightOffTwoToneIcon sx={{ color: '#800101' }} onClick={deleteAvatar}/>
                                         </Breadcrumbs>
                                     </div>
                                 :
-                                <div>
-                                    <Avatar onClick={selectImage}>{authStatus.user.pseudo.substring(0, 1).toUpperCase()}</Avatar>
-                                    <EditIcon className='edit' onClick={() => setIsOpen(true)}></EditIcon>
-                                    {isOpen && <Modal setIsOpen={setIsOpen} childComponent={<AvatarCropper setImage={updateImage}/>} />}
+                                <div className='picture'>
+                                        <Avatar>{authStatus.user.pseudo.substring(0, 1).toUpperCase()}</Avatar>
+                                        <EditIcon className='edit' sx={{ color: '#1616c4' }} onClick={() => setIsOpen(true)} />
                                 </div>
                             } 
                             {
@@ -151,19 +142,13 @@ export default function Profile() {
                               <span>image séléctionnée</span>
                                 <div className="avatar-editor">
                                     <img className="actual-avatar" src={croppedImage} alt="your actual avatar" />
-                                    <Breadcrumbs>
-                                        <ChangeCircleIcon sx={{ color: '#1616c4' }} onClick={() => selectImage()} />
-                                        <HighlightOffTwoToneIcon sx={{ color: '#800101' }} onClick={deleteAvatar}/>
-                                    </Breadcrumbs>
+                                    <button onClick={() => setCroppedImage('')}>Cancel</button>
                                 </div>
                             </div>
                             }
                         </div>
+                        {isOpen && <Modal setIsOpen={setIsOpen} childComponent={<AvatarCropper setImage={updateImage}/>} />}
 
-
-                        {shouldModify && <AvatarCropper 
-                            setImage={updateImage}
-                        />}
                         <br />
                         <br />
                         <br />

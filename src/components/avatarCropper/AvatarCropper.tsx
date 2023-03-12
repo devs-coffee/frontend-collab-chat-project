@@ -8,9 +8,7 @@ import getCroppedImg from '../../utils/canvasUtils';
 
 import './AvatarCropper.scss';
 type avatar = {
-    // setImage: Dispatch<SetStateAction<string>>
-    setImage: (image: string) => string
-    // validate: () => void;
+    setImage: (image: string) => void
 }
 
 
@@ -121,7 +119,7 @@ export default function AvatarCropper({setImage}: avatar) {
                     onChange={(e, zoom) => setZoom(Number(zoom))}
                     />
                 </div>
-                <div onClick={() => validate()}>Valider</div>
+                <button onClick={() => validate()}>Valider</button>
             </>
             }
 
@@ -130,7 +128,6 @@ export default function AvatarCropper({setImage}: avatar) {
                 <div className="droparea" onDrop={handleDrop} onDragEnter={handleDragIn} onDragLeave={handleDragOut} onDragOver={handleDrag}>
                     <p>déposer une image<br/><br/>ou</p>
                     <p className="image-input-trigger" onClick={askImageSelection}>sélectionner un fichier</p>
-                    <p onClick={avoidImageEdition}>X</p>
                 </div>}
         </div>
     )
