@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
-
+import { getServerById } from "../../redux/serversSlice";
 import ServerUpdateForm from "../../components/ServerUpdateForm/ServerUpdateForm";
-import { Server } from "../../interfaces/IServer";
 import { User } from "../../interfaces/IUser";
 import { ServerService } from "../../services/serverService";
 
@@ -16,7 +15,7 @@ export default function ServerDisplay() {
     
     const params = useParams();
     const servers = useSelector((state:any) => state.servers);
-    const server:Server = servers.find((server:Server) => server.id === params.serverId);
+    const server = getServerById(servers, params.serverId!);
 
     const getServerUsers = async () => {
         try {

@@ -1,24 +1,20 @@
 import Cropper from 'react-easy-crop';
-import { Field } from 'formik';
 import { Slider } from '@mui/material';
-import { Dispatch, SetStateAction, useCallback, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { Point, Area } from 'react-easy-crop/types';
-import HighlightOffTwoToneIcon from '@mui/icons-material/HighlightOffTwoTone';
 import getCroppedImg from '../../utils/canvasUtils';
 
 import './AvatarCropper.scss';
 type avatar = {
-    setImage: (image: string) => void
+    setImage: (image: string) => string
 }
-
-
 
 export default function AvatarCropper({setImage}: avatar) {
     const [ crop, setCrop ] = useState<Point>({ x:0, y: 0 });
     const [ zoom, setZoom ] = useState<number>(1);
     const [image, setBaseImage] = useState<string>('');
     const [croppedImage, setCroppedImage] = useState<string>('');
-    // const [cancel, setCancel] = useState<boolean>(false);
+
     //accepted images mime types
     const mimeTypes = ['image/gif', 'image/jpeg', 'image/png', 'image/webp'];
 
@@ -82,13 +78,9 @@ export default function AvatarCropper({setImage}: avatar) {
         event.stopPropagation();
     }
 
-    const selectImage = () => {
-        const inputEl = document.querySelector('#imageInput') as HTMLInputElement;
-        inputEl.click();
-    };
-
-    const validate = () => {
-        setImage(croppedImage);
+    const validate = (e: Event, isValidate = false) => {
+        e.preventDefault();
+        isValidate ? setImage(croppedImage) : setBaseImage('');
     }
 
 
@@ -119,7 +111,8 @@ export default function AvatarCropper({setImage}: avatar) {
                     onChange={(e, zoom) => setZoom(Number(zoom))}
                     />
                 </div>
-                <button onClick={() => validate()}>Valider</button>
+                <button onClick={(e: any) => validate(e, true)}>Valider</button>
+                <button onClick={(e: any) => validate(e)}>Annuler</button>
             </>
             }
 

@@ -57,6 +57,12 @@ export default function ServerUpdateForm(props:ServerUpdatingFormProps) {
             console.log(error);
         })
     }
+
+    const updateImage = (image: string) => {
+        setCroppedImage(image);
+        return image;
+    }
+
     return (
         <div className="ServerUpdateForm">
             <Formik
@@ -100,14 +106,9 @@ export default function ServerUpdateForm(props:ServerUpdatingFormProps) {
                             </div>
                         </div>
                         <div className="formgroup-heading">Avatar :</div>
-                        {/* <AvatarCropper
-                            setImage={setCroppedImage}
-                            cropperImage={cropperImage}
-                            setCropperImage={setCropperImage}
-                            previousImage={props.server.picture}
-                            imageSelection={imageSelection}
-                            avoidImageSelection={() => setImageSelection(false)}
-                        /> */}
+                        {<AvatarCropper
+                            setImage={updateImage}
+                        />}
                         {props.server.picture &&
                             <div className="avatar-editor">
                                 <img className="actual-avatar" src={props.server.picture} alt="actual server avatar" />

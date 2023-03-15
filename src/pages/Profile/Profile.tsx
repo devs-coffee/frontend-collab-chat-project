@@ -132,8 +132,8 @@ export default function Profile() {
                                     </div>
                                 :
                                 <div className='picture'>
-                                        <Avatar>{authStatus.user.pseudo.substring(0, 1).toUpperCase()}</Avatar>
-                                        <EditIcon className='edit' sx={{ color: '#1616c4' }} onClick={() => setIsOpen(true)} />
+                                    <Avatar>{authStatus.user.pseudo.substring(0, 1).toUpperCase()}</Avatar>
+                                    <EditIcon className='edit' sx={{ color: '#1616c4' }} onClick={() => setIsOpen(true)} />
                                 </div>
                             } 
                             {
