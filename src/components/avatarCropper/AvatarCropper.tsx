@@ -1,7 +1,7 @@
-import Cropper from 'react-easy-crop';
 import { Slider } from '@mui/material';
 import { useCallback, useState } from 'react';
-import { Point, Area } from 'react-easy-crop/types';
+import Cropper from 'react-easy-crop';
+import { Area, Point } from 'react-easy-crop/types';
 import getCroppedImg from '../../utils/canvasUtils';
 
 import './AvatarCropper.scss';
@@ -14,7 +14,6 @@ export default function AvatarCropper({setImage}: avatar) {
     const [ zoom, setZoom ] = useState<number>(1);
     const [image, setBaseImage] = useState<string>('');
     const [croppedImage, setCroppedImage] = useState<string>('');
-
     //accepted images mime types
     const mimeTypes = ['image/gif', 'image/jpeg', 'image/png', 'image/webp'];
 
@@ -57,7 +56,6 @@ export default function AvatarCropper({setImage}: avatar) {
         event.stopPropagation();
         if(mimeTypes.includes(event.dataTransfer.files[0].type)) {
             onFileSelected(event);
-            // props.avoidImageSelection();
         } else {
             console.log('invalid type');
         }
@@ -82,8 +80,6 @@ export default function AvatarCropper({setImage}: avatar) {
         e.preventDefault();
         isValidate ? setImage(croppedImage) : setBaseImage('');
     }
-
-
 
     return (
         <div className="AvatarCropper">
@@ -121,7 +117,8 @@ export default function AvatarCropper({setImage}: avatar) {
                 <div className="droparea" onDrop={handleDrop} onDragEnter={handleDragIn} onDragLeave={handleDragOut} onDragOver={handleDrag}>
                     <p>déposer une image<br/><br/>ou</p>
                     <p className="image-input-trigger" onClick={askImageSelection}>sélectionner un fichier</p>
-                </div>}
+                </div>
+            }
         </div>
     )
 }

@@ -1,18 +1,20 @@
-import React, { useState} from 'react';
-import DisabledByDefaultRoundedIcon from '@mui/icons-material/DisabledByDefaultRounded';
-import { ErrorMessage, Field, Form, Formik } from 'formik';
+import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { ErrorMessage, Field, Form, Formik } from 'formik';
+import { useNavigate } from 'react-router-dom';
+
 import ChangeCircleIcon from '@mui/icons-material/ChangeCircle';
+import DisabledByDefaultRoundedIcon from '@mui/icons-material/DisabledByDefaultRounded';
 import HighlightOffTwoToneIcon from '@mui/icons-material/HighlightOffTwoTone';
 import { Breadcrumbs } from '@mui/material';
 
-import { FormValidationService } from '../../utils/formValidationService';
-import { ServerService } from '../../services/serverService';
-import { removeServer, updateServer } from '../../redux/serversSlice';
 import { Server } from '../../interfaces/IServer';
+import { removeServer, updateServer } from '../../redux/serversSlice';
+import { ServerService } from '../../services/serverService';
+import { FormValidationService } from '../../utils/formValidationService';
+import AvatarCropper from '../avatarCropper/AvatarCropper';
 
 import './ServerUpdateForm.scss';
-import AvatarCropper from '../avatarCropper/AvatarCropper';
 
 type ServerUpdatingFormProps = {
     setIsUpdatingServer: React.Dispatch<React.SetStateAction<boolean>>
@@ -24,10 +26,8 @@ const serverService = new ServerService();
 
 export default function ServerUpdateForm(props:ServerUpdatingFormProps) {
     const dispatch = useDispatch();
-    
+    const navigate = useNavigate();
     const [ croppedImage, setCroppedImage ] = useState<string>('');
-    const [ cropperImage, setCropperImage] = useState<string>('');
-    const [ imageSelection, setImageSelection ] = useState<boolean>(false);
     
     const deleteServer = (event:any) => {
         event.preventDefault();
@@ -36,6 +36,7 @@ export default function ServerUpdateForm(props:ServerUpdatingFormProps) {
             .then(response => {
                 dispatch(removeServer(props.server.id));
                 props.setIsUpdatingServer(false);
+                navigate('/');
             })
             .catch(error => {
                 console.log(error);
@@ -51,7 +52,6 @@ export default function ServerUpdateForm(props:ServerUpdatingFormProps) {
         .then(response => {
             dispatch(updateServer(response.result));
             setCroppedImage('');
-            setCropperImage('');
         })
         .catch(error => {
             console.log(error);
@@ -67,7 +67,7 @@ export default function ServerUpdateForm(props:ServerUpdatingFormProps) {
         <div className="ServerUpdateForm">
             <Formik
                 initialValues={{
-                    name: props.server.name
+                    name: props.server?.name
                 }}
                 validate={formValidationService.validateServerUpdate}
                 onSubmit={(values) => {
@@ -79,8 +79,8 @@ export default function ServerUpdateForm(props:ServerUpdatingFormProps) {
                         if(response.isSucceed) {
                             dispatch(updateServer(response.result));
                             setCroppedImage('');
-                            setCropperImage('');
                             props.setIsUpdatingServer(false);
+                            navigate('/');
                         }
                         else {
                             console.log(response.errorMessage);
@@ -109,7 +109,7 @@ export default function ServerUpdateForm(props:ServerUpdatingFormProps) {
                         {<AvatarCropper
                             setImage={updateImage}
                         />}
-                        {props.server.picture &&
+                        {props.server?.picture &&
                             <div className="avatar-editor">
                                 <img className="actual-avatar" src={props.server.picture} alt="actual server avatar" />
                                 <Breadcrumbs>

@@ -42,6 +42,7 @@ export default function ServerCreationForm(props:ServerCreationFormProps) {
                     serverService.createServer(values)
                     .then(response => {
                         if(response.isSucceed) {
+                            console.log(response.result);
                             dispatch(addServer(response.result));
                             avoidServerAdding();
                         }
@@ -70,6 +71,7 @@ export default function ServerCreationForm(props:ServerCreationFormProps) {
                             
                         </div>
                         <div className="avatar-managment">
+                        <span>Avatar :</span><br/>
                         {croppedImage && croppedImage !== '' 
                             ? 
                             <Avatar alt="server picture" src={croppedImage}/>

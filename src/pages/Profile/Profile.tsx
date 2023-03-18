@@ -1,18 +1,19 @@
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import ChangeCircleIcon from '@mui/icons-material/ChangeCircle';
-import HighlightOffTwoToneIcon from '@mui/icons-material/HighlightOffTwoTone';
-import { Avatar, Breadcrumbs } from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
 
 import { FormValidationService } from '../../utils/formValidationService';
 import { UserService } from '../../services/userService';
 import { setUser } from '../../redux/authSlice';
 import AvatarCropper from '../../components/avatarCropper/AvatarCropper';
+import Modal from '../../components/Modal/modal';
+
+//import ChangeCircleIcon from '@mui/icons-material/ChangeCircle';
+import { Avatar, Breadcrumbs } from '@mui/material';
+import HighlightOffTwoToneIcon from '@mui/icons-material/HighlightOffTwoTone';
+import EditIcon from '@mui/icons-material/Edit';
 
 import './Profile.scss';
-import Modal from '../../components/Modal/modal';
 
 const formValidationService = new FormValidationService();
 const userService = new UserService();
@@ -54,10 +55,10 @@ export default function Profile() {
                 }}
                 validate={formValidationService.validateProfileUpdate}
                 onSubmit={(values) => {
-                    ////
-                    // TODO : filtrer les valeurs à envoyer, doivent être différentes du authStatus
-                    // voir avec les touched
-                    ////
+                    /*
+                    * //TODO : filtrer les valeurs à envoyer, doivent être différentes du authStatus
+                    * // voir avec les touched
+                    */
                     if(croppedImage !== '') {
                         values.picture = croppedImage;
                     }
@@ -138,13 +139,10 @@ export default function Profile() {
                             } 
                             {
                             croppedImage && croppedImage !== '' &&
-                            <div>
-                              <span>image séléctionnée</span>
                                 <div className="avatar-editor">
                                     <img className="actual-avatar" src={croppedImage} alt="your actual avatar" />
                                     <button onClick={() => setCroppedImage('')}>Cancel</button>
                                 </div>
-                            </div>
                             }
                         </div>
                         {isOpen && <Modal setIsOpen={setIsOpen} childComponent={<AvatarCropper setImage={updateImage}/>} />}
