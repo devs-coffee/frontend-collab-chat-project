@@ -3,16 +3,18 @@ import { useDispatch } from 'react-redux';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import { useNavigate } from 'react-router-dom';
 
-import ChangeCircleIcon from '@mui/icons-material/ChangeCircle';
-import DisabledByDefaultRoundedIcon from '@mui/icons-material/DisabledByDefaultRounded';
-import HighlightOffTwoToneIcon from '@mui/icons-material/HighlightOffTwoTone';
-import { Breadcrumbs } from '@mui/material';
-
 import { Server } from '../../interfaces/IServer';
 import { removeServer, updateServer } from '../../redux/serversSlice';
 import { ServerService } from '../../services/serverService';
 import { FormValidationService } from '../../utils/formValidationService';
 import AvatarCropper from '../avatarCropper/AvatarCropper';
+import Modal from '../../components/Modal/modal';
+
+import ChangeCircleIcon from '@mui/icons-material/ChangeCircle';
+import DisabledByDefaultRoundedIcon from '@mui/icons-material/DisabledByDefaultRounded';
+import HighlightOffTwoToneIcon from '@mui/icons-material/HighlightOffTwoTone';
+import EditIcon from '@mui/icons-material/Edit';
+import { Avatar, Breadcrumbs } from '@mui/material';
 
 import './ServerUpdateForm.scss';
 
@@ -28,12 +30,13 @@ export default function ServerUpdateForm(props:ServerUpdatingFormProps) {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [ croppedImage, setCroppedImage ] = useState<string>('');
+    const [ isOpen, setIsOpen] = useState<boolean>(false);
     
     const deleteServer = (event:any) => {
         event.preventDefault();
         if(props.server) {
             serverService.deleteServer(props.server.id)
-            .then(response => {
+            .then(() => {
                 dispatch(removeServer(props.server.id));
                 props.setIsUpdatingServer(false);
                 navigate('/');
@@ -43,10 +46,12 @@ export default function ServerUpdateForm(props:ServerUpdatingFormProps) {
             })
         }
     };
+
     const askImageSelection = () => {
         const inputEl = document.querySelector('#imageInput') as HTMLInputElement;
         inputEl.click();
     };
+
     const deleteAvatar = () => {
         serverService.updateServer({picture: null}, props.server.id)
         .then(response => {
@@ -60,7 +65,7 @@ export default function ServerUpdateForm(props:ServerUpdatingFormProps) {
 
     const updateImage = (image: string) => {
         setCroppedImage(image);
-        //* setIsOpen(false);
+        setIsOpen(false);
         return image;
     }
 
@@ -68,7 +73,8 @@ export default function ServerUpdateForm(props:ServerUpdatingFormProps) {
         <div className="ServerUpdateForm">
             <Formik
                 initialValues={{
-                    name: props.server?.name
+                    name: props.server?.name,
+                    picture: ''
                 }}
                 validate={formValidationService.validateServerUpdate}
                 onSubmit={(values) => {
@@ -81,7 +87,6 @@ export default function ServerUpdateForm(props:ServerUpdatingFormProps) {
                             dispatch(updateServer(response.result));
                             setCroppedImage('');
                             props.setIsUpdatingServer(false);
-                            navigate('/');
                         }
                         else {
                             console.log(response.errorMessage);
@@ -107,7 +112,7 @@ export default function ServerUpdateForm(props:ServerUpdatingFormProps) {
                             </div>
                         </div>
                         <div className="formgroup-heading">Avatar :</div>
-                        {<AvatarCropper
+                        {/* {<AvatarCropper
                             setImage={updateImage}
                         />}
                         {props.server?.picture &&
@@ -118,7 +123,35 @@ export default function ServerUpdateForm(props:ServerUpdatingFormProps) {
                                     <HighlightOffTwoToneIcon sx={{ color: '#800101' }} onClick={deleteAvatar}/>
                                 </Breadcrumbs>
                             </div>
-                        }
+                        } */}
+                        <div className='avatar-action'>
+                            {(props.server.picture && props.server.picture !== '')
+                                ?
+                                    <div className='avatar-editor'>
+                                        <img className="actual-avatar" src={props.server.picture} alt="server's actual avatar" />
+                                        <Breadcrumbs>
+                                            <EditIcon sx={{ color: '#1616c4' }} onClick={() => setIsOpen(true)} />
+                                            <HighlightOffTwoToneIcon sx={{ color: '#800101' }} onClick={deleteAvatar}/>
+                                        </Breadcrumbs>
+                                    </div>
+                                :
+                                    <div className='picture'>
+                                        <Avatar>{props.server.name.substring(0, 1).toUpperCase()}</Avatar>
+                                        <EditIcon className='edit' sx={{ color: '#1616c4' }} onClick={() => setIsOpen(true)} />
+                                    </div>
+                            }
+                            {croppedImage && croppedImage !== '' &&
+                                <>
+                                <div><span>=&gt;</span></div>
+                                <div className="avatar-editor">
+                                    <img className="wanted-avatar" src={croppedImage} alt="new avatar" />
+                                    <button onClick={() => setCroppedImage('')}>Cancel</button>
+                                </div>
+                                </>
+                            }
+                        </div>
+                        {isOpen && <Modal setIsOpen={setIsOpen} childComponent={<AvatarCropper setImage={updateImage}/>} />}
+
                         <br/><br/>
                         <button type="submit" >envoi</button>
                     </Form>

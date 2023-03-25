@@ -14,6 +14,7 @@ import HighlightOffTwoToneIcon from '@mui/icons-material/HighlightOffTwoTone';
 import EditIcon from '@mui/icons-material/Edit';
 
 import './Profile.scss';
+
 const formValidationService = new FormValidationService();
 const userService = new UserService();
 
@@ -102,7 +103,7 @@ export default function Profile() {
                                     <label className='form__labels' htmlFor="profile-update_new-password">Nouveau mot de passe :</label>
                                     <Field 
                                         type="text"
-                                        name="newPassword"
+                                        name="password"
                                         id="profile-update_new-password"
                                     />
                                     <ErrorMessage name="password" />
@@ -140,15 +141,14 @@ export default function Profile() {
                                         </Breadcrumbs>
                                     </div>
                                 :
-                                <div className='picture'>
-                                    <Avatar>{authStatus.user.pseudo.substring(0, 1).toUpperCase()}</Avatar>
-                                    <EditIcon className='edit' sx={{ color: '#1616c4' }} onClick={() => setIsOpen(true)} />
-                                </div>
+                                    <div className='picture'>
+                                        <Avatar>{authStatus.user.pseudo.substring(0, 1).toUpperCase()}</Avatar>
+                                        <EditIcon className='edit' sx={{ color: '#1616c4' }} onClick={() => setIsOpen(true)} />
+                                    </div>
                             } 
-                            {
-                            croppedImage && croppedImage !== '' &&
+                            {croppedImage && croppedImage !== '' &&
                                 <div className="avatar-editor">
-                                    <img className="actual-avatar" src={croppedImage} alt="your actual avatar" />
+                                    <img className="wanted-avatar" src={croppedImage} alt="new avatar" />
                                     <button onClick={() => setCroppedImage('')}>Cancel</button>
                                 </div>
                             }
