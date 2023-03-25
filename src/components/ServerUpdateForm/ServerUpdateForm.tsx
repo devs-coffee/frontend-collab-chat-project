@@ -17,6 +17,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import { Avatar, Breadcrumbs } from '@mui/material';
 
 import './ServerUpdateForm.scss';
+import { object } from 'prop-types';
 
 type ServerUpdatingFormProps = {
     setIsUpdatingServer: React.Dispatch<React.SetStateAction<boolean>>
@@ -32,6 +33,10 @@ export default function ServerUpdateForm(props:ServerUpdatingFormProps) {
     const [ croppedImage, setCroppedImage ] = useState<string>('');
     const [ isOpen, setIsOpen] = useState<boolean>(false);
     
+    const initialValues = {
+        name: props.server?.name,
+        picture: ''
+    }
     const deleteServer = (event:any) => {
         event.preventDefault();
         if(props.server) {
@@ -72,29 +77,31 @@ export default function ServerUpdateForm(props:ServerUpdatingFormProps) {
     return (
         <div className="ServerUpdateForm">
             <Formik
-                initialValues={{
-                    name: props.server?.name,
-                    picture: ''
-                }}
+                initialValues={initialValues}
                 validate={formValidationService.validateServerUpdate}
                 onSubmit={(values) => {
+                    const modifiedValues = formValidationService.getModifiedValues(values, initialValues);
                     if(croppedImage !== '') {
-                        values.picture = croppedImage;
+                        modifiedValues.picture = croppedImage;
                     }
-                    serverService.updateServer(values, props.server.id)
-                    .then(response => {
-                        if(response.isSucceed) {
-                            dispatch(updateServer(response.result));
-                            setCroppedImage('');
-                            props.setIsUpdatingServer(false);
-                        }
-                        else {
-                            console.log(response.errorMessage);
-                        }
-                    })
-                    .catch(error => {
-                        console.log(error);
-                    })
+
+                    if(Object.keys(modifiedValues).length){
+                        serverService.updateServer(modifiedValues, props.server.id)
+                        .then(response => {
+                            if(response.isSucceed) {
+                                dispatch(updateServer(response.result));
+                                setCroppedImage('');
+                                props.setIsUpdatingServer(false);
+                            }
+                            else {
+                                console.log(response.errorMessage);
+                            }
+                        })
+                        .catch(error => {
+                            console.log(error);
+                        })
+                    }
+
                 }}
             >
                 {formik => (
