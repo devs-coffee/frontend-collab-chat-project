@@ -14,7 +14,6 @@ import HighlightOffTwoToneIcon from '@mui/icons-material/HighlightOffTwoTone';
 import EditIcon from '@mui/icons-material/Edit';
 
 import './Profile.scss';
-
 const formValidationService = new FormValidationService();
 const userService = new UserService();
 
@@ -24,9 +23,18 @@ export default function Profile() {
     const [passwordEdit, setPasswordEdit] = useState(false);
     const [ croppedImage, setCroppedImage ] = useState<string>('');
     const [ isOpen, setIsOpen] = useState<boolean>(false);
+    const [errorMessage, setErrorMessage] = useState<string>('');
     const togglePasswordEdit = () => {
         setPasswordEdit(!passwordEdit);
     };
+
+    const initialValues = {
+        pseudo: authStatus.user.pseudo,
+        password: '',
+        passwordConfirm: '',
+        oldPassword: '',
+        picture: ''
+    }
 
     const deleteAvatar = () => {
         userService.updateProfile({picture: null}, authStatus.user.id)
@@ -42,38 +50,34 @@ export default function Profile() {
         return image;
     }
 
+
     return (
         <div className="Profile">
             <h2>Profile works !</h2>
             <Formik
-                initialValues={{
-                    pseudo: authStatus.user.pseudo,
-                    newPassword: '',
-                    passwordConfirm: '',
-                    oldPassword: '',
-                    picture: undefined
-                }}
+                initialValues={initialValues}
                 validate={formValidationService.validateProfileUpdate}
-                onSubmit={(values) => {
-                    /*
-                    * //TODO : filtrer les valeurs à envoyer, doivent être différentes du authStatus
-                    * // voir avec les touched
-                    */
-                    if(croppedImage !== '') {
-                        values.picture = croppedImage;
+                onSubmit={(values, helper) => {
+                    const modifiedValues = formValidationService.getModifiedValues(values, initialValues);
+                    if (croppedImage !== '') {
+                        modifiedValues.picture = croppedImage;
+                    }
+                   
+                    if (Object.keys(modifiedValues).length) {
+                        userService.updateProfile(modifiedValues, authStatus.user.id)
+                        .then(response => {
+                            dispatch(setUser(response.result));
+                            setCroppedImage('');
+                            setPasswordEdit(false);
+                            helper.resetForm();
+                            setErrorMessage('');
+                        })
+                        .catch(error => {
+                            setErrorMessage(error.response.data.message);
+                            console.log(error);
+                        });
                     }
 
-                    console.log(values);
-
-
-                    // userService.updateProfile(values, authStatus.user.id)
-                    // .then(response => {
-                    //     dispatch(setUser(response.result));
-                    //     setCroppedImage('');
-                    // })
-                    // .catch(error => {
-                    //     console.log(error);
-                    // });
                 }}
                 
             >
@@ -101,7 +105,7 @@ export default function Profile() {
                                         name="newPassword"
                                         id="profile-update_new-password"
                                     />
-                                    
+                                    <ErrorMessage name="password" />
                                 </div>
                                 <div className='profile-update-form-new-password-confirm form__fields'>
                                     <label className='form__labels' htmlFor="profile-update_new-password-confirm">Confirmez :</label>
@@ -110,7 +114,7 @@ export default function Profile() {
                                         name="passwordConfirm"
                                         id="profile-update_new-password-confirm"
                                     />
-                                    <ErrorMessage name="newPasswordConfirm" />
+                                    <ErrorMessage name="passwordConfirm" />
                                 </div>
                                 <div className='profile-update-form-old-password form__fields'>
                                     <label className='form__labels' htmlFor="profile-old-password">Mot de passe actuel:</label>
@@ -121,8 +125,7 @@ export default function Profile() {
                                     />
                                     
                                 </div>
-                                <ErrorMessage name="newPassword" />
-                                <ErrorMessage name="oldPassword" />
+                                {errorMessage !== '' ? errorMessage : ''}
                             </div>
                         }
                         <div className="formgroup-heading">Avatar :</div>

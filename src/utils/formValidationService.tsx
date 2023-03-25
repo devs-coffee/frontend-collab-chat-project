@@ -4,7 +4,6 @@ import validationRegexps from "../datas/validationsRegexps";
 import { profileUpdateForm, profileUpdateFormErrors } from "../interfaces/IProfileUpdateForm";
 import { serverCreationForm, serverCreationFormErrors } from "../interfaces/IServerCreationForm";
 import { serverUpdateForm, serverUpdateFormErrors } from "../interfaces/IServerUpdateForm";
-
 export class FormValidationService {
     validateLogin(values:loginForm):loginFormErrors {
         const errors:loginFormErrors = {};
@@ -61,18 +60,18 @@ export class FormValidationService {
             errors.pseudo = 'Trop long ! ( 20 caractères max )';
         }
         //password
-        if(values.newPassword && !validationRegexps.password.test(values.newPassword)) {
-            errors.newPassword = 'Nouveau mot de passe invalide!';
+        if((values.newPassword && !validationRegexps.password.test(values.newPassword))) {
+            errors.newPassword = 'Mot de passe invalide!';
         }
-        if(values.newPassword && values.oldPassword && values.newPassword === values.oldPassword) {
+        if((values.newPassword && values.oldPassword && values.newPassword === values.oldPassword)) {
             errors.newPassword = 'Doit être différent du mot de passe actuel!';
         }
         //passwordConfirm
-        if(values.newPassword && values.passwordConfirm && values.passwordConfirm !== values.newPassword) {
-            errors.passwordConfirm = 'Doit correspondre au nouveau mot de passe';
+        if((values.newPassword !== '' && (values.passwordConfirm === '' || values.passwordConfirm !== values.newPassword))) {
+            errors.passwordConfirm = 'Doit correspondre au mot de passe'
         }
-        if(values.newPassword && !values.oldPassword) {
-            errors.oldPassword = 'Vous devez renseigner votre mot de passe actuel pour valider';
+        if((values.newPassword !== '' || values.passwordConfirm !== '') && values.oldPassword === '') {
+            errors.oldPassword = 'Doit être renseigné'
         }
         //image
         if(values.picture) {
@@ -96,4 +95,21 @@ export class FormValidationService {
         }
         return errors;
     }
+
+
+    getModifiedValues (values: any, initialValues: any) : Record<string, any> {
+        let modifiedValues: Record<string, any> = {};
+        if (values) {
+          Object.entries(values).forEach((entry) => {
+            let key = entry[0];
+            let value = entry[1];
+      
+            if (value !== initialValues[key]) {
+              modifiedValues[key] = value;
+            }
+          });
+        }
+      
+        return modifiedValues;
+      };
 }
