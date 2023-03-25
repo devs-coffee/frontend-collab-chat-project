@@ -1,6 +1,6 @@
 export interface profileUpdateForm {
     pseudo?: string,
-    password?: string,
+    newPassword?: string,
     passwordConfirm?: string,
     oldPassword?: string,
     picture?: string | null,

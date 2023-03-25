@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { useNavigate } from 'react-router-dom';
 
 import { getServerById } from "../../redux/serversSlice";
 import ServerUpdateForm from "../../components/ServerUpdateForm/ServerUpdateForm";
@@ -12,7 +11,6 @@ import './ServerDisplay.scss';
 const serverService = new ServerService();
 
 export default function ServerDisplay() {
-    const navigate = useNavigate();
     const [users, setUsers] = useState<User[]>([]);
     const [isUpdatingServer, setIsUpdatingServer] = useState<boolean>(false);
     
@@ -41,7 +39,7 @@ export default function ServerDisplay() {
         if(users.length < 1) {
             getServerUsers();
         }
-    }, [users]);
+    }, [users ]);
     
     return (
         <div className="ServerDisplay">

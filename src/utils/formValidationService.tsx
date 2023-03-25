@@ -61,15 +61,18 @@ export class FormValidationService {
             errors.pseudo = 'Trop long ! ( 20 caractères max )';
         }
         //password
-        if(values.password && !validationRegexps.password.test(values.password)) {
-            errors.password = 'Mot de passe invalide!';
+        if(values.newPassword && !validationRegexps.password.test(values.newPassword)) {
+            errors.newPassword = 'Nouveau mot de passe invalide!';
         }
-        if(values.password && values.oldPassword && values.password === values.oldPassword) {
-            errors.password = 'Doit être différent du mot de passe actuel!';
+        if(values.newPassword && values.oldPassword && values.newPassword === values.oldPassword) {
+            errors.newPassword = 'Doit être différent du mot de passe actuel!';
         }
         //passwordConfirm
-        if(values.password && values.passwordConfirm && values.passwordConfirm !== values.password) {
-            errors.passwordConfirm = 'Doit correspondre au mot de passe'
+        if(values.newPassword && values.passwordConfirm && values.passwordConfirm !== values.newPassword) {
+            errors.passwordConfirm = 'Doit correspondre au nouveau mot de passe';
+        }
+        if(values.newPassword && !values.oldPassword) {
+            errors.oldPassword = 'Vous devez renseigner votre mot de passe actuel pour valider';
         }
         //image
         if(values.picture) {

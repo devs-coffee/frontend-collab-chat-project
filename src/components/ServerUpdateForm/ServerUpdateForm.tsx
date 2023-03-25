@@ -60,6 +60,7 @@ export default function ServerUpdateForm(props:ServerUpdatingFormProps) {
 
     const updateImage = (image: string) => {
         setCroppedImage(image);
+        //* setIsOpen(false);
         return image;
     }
 

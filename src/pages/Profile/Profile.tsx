@@ -48,9 +48,9 @@ export default function Profile() {
             <Formik
                 initialValues={{
                     pseudo: authStatus.user.pseudo,
-                    password: undefined,
-                    passwordConfirm: undefined,
-                    oldPassword: undefined,
+                    newPassword: '',
+                    passwordConfirm: '',
+                    oldPassword: '',
                     picture: undefined
                 }}
                 validate={formValidationService.validateProfileUpdate}
@@ -62,15 +62,18 @@ export default function Profile() {
                     if(croppedImage !== '') {
                         values.picture = croppedImage;
                     }
-                    
-                    userService.updateProfile(values, authStatus.user.id)
-                    .then(response => {
-                        dispatch(setUser(response.result));
-                        setCroppedImage('');
-                    })
-                    .catch(error => {
-                        console.log(error);
-                    });
+
+                    console.log(values);
+
+
+                    // userService.updateProfile(values, authStatus.user.id)
+                    // .then(response => {
+                    //     dispatch(setUser(response.result));
+                    //     setCroppedImage('');
+                    // })
+                    // .catch(error => {
+                    //     console.log(error);
+                    // });
                 }}
                 
             >
@@ -95,10 +98,10 @@ export default function Profile() {
                                     <label className='form__labels' htmlFor="profile-update_new-password">Nouveau mot de passe :</label>
                                     <Field 
                                         type="text"
-                                        name="password"
+                                        name="newPassword"
                                         id="profile-update_new-password"
                                     />
-                                    <ErrorMessage name="newPassword" />
+                                    
                                 </div>
                                 <div className='profile-update-form-new-password-confirm form__fields'>
                                     <label className='form__labels' htmlFor="profile-update_new-password-confirm">Confirmez :</label>
@@ -116,8 +119,10 @@ export default function Profile() {
                                         name="oldPassword"
                                         id="profile-old-password"
                                     />
-                                    <ErrorMessage name="oldPassword" />
+                                    
                                 </div>
+                                <ErrorMessage name="newPassword" />
+                                <ErrorMessage name="oldPassword" />
                             </div>
                         }
                         <div className="formgroup-heading">Avatar :</div>
