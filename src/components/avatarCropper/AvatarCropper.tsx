@@ -46,11 +46,6 @@ export default function AvatarCropper({setImage}: avatar) {
         };
     };
 
-    const avoidImageEdition = () => {
-        setBaseImage('');
-        // setCancel(true);
-    };
-
     const handleDrop = (event:any) => {
         event.preventDefault();
         event.stopPropagation();

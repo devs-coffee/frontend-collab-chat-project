@@ -1,23 +1,21 @@
+import { ErrorMessage, Field, Form, Formik } from 'formik';
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { ErrorMessage, Field, Form, Formik } from 'formik';
 import { useNavigate } from 'react-router-dom';
 
+import Modal from '../../components/Modal/modal';
 import { Server } from '../../interfaces/IServer';
 import { removeServer, updateServer } from '../../redux/serversSlice';
 import { ServerService } from '../../services/serverService';
 import { FormValidationService } from '../../utils/formValidationService';
 import AvatarCropper from '../avatarCropper/AvatarCropper';
-import Modal from '../../components/Modal/modal';
 
-import ChangeCircleIcon from '@mui/icons-material/ChangeCircle';
 import DisabledByDefaultRoundedIcon from '@mui/icons-material/DisabledByDefaultRounded';
-import HighlightOffTwoToneIcon from '@mui/icons-material/HighlightOffTwoTone';
 import EditIcon from '@mui/icons-material/Edit';
+import HighlightOffTwoToneIcon from '@mui/icons-material/HighlightOffTwoTone';
 import { Avatar, Breadcrumbs } from '@mui/material';
 
 import './ServerUpdateForm.scss';
-import { object } from 'prop-types';
 
 type ServerUpdatingFormProps = {
     setIsUpdatingServer: React.Dispatch<React.SetStateAction<boolean>>
@@ -50,11 +48,6 @@ export default function ServerUpdateForm(props:ServerUpdatingFormProps) {
                 console.log(error);
             })
         }
-    };
-
-    const askImageSelection = () => {
-        const inputEl = document.querySelector('#imageInput') as HTMLInputElement;
-        inputEl.click();
     };
 
     const deleteAvatar = () => {
@@ -101,7 +94,6 @@ export default function ServerUpdateForm(props:ServerUpdatingFormProps) {
                             console.log(error);
                         })
                     }
-
                 }}
             >
                 {formik => (
@@ -119,18 +111,6 @@ export default function ServerUpdateForm(props:ServerUpdatingFormProps) {
                             </div>
                         </div>
                         <div className="formgroup-heading">Avatar :</div>
-                        {/* {<AvatarCropper
-                            setImage={updateImage}
-                        />}
-                        {props.server?.picture &&
-                            <div className="avatar-editor">
-                                <img className="actual-avatar" src={props.server.picture} alt="actual server avatar" />
-                                <Breadcrumbs>
-                                    <ChangeCircleIcon sx={{ color: '#1616c4' }} onClick={askImageSelection} />
-                                    <HighlightOffTwoToneIcon sx={{ color: '#800101' }} onClick={deleteAvatar}/>
-                                </Breadcrumbs>
-                            </div>
-                        } */}
                         <div className='avatar-action'>
                             {(props.server.picture && props.server.picture !== '')
                                 ?

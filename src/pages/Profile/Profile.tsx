@@ -8,7 +8,6 @@ import { setUser } from '../../redux/authSlice';
 import AvatarCropper from '../../components/avatarCropper/AvatarCropper';
 import Modal from '../../components/Modal/modal';
 
-//import ChangeCircleIcon from '@mui/icons-material/ChangeCircle';
 import { Avatar, Breadcrumbs } from '@mui/material';
 import HighlightOffTwoToneIcon from '@mui/icons-material/HighlightOffTwoTone';
 import EditIcon from '@mui/icons-material/Edit';
@@ -51,7 +50,6 @@ export default function Profile() {
         return image;
     }
 
-
     return (
         <div className="Profile">
             <h2>Profile works !</h2>
@@ -80,7 +78,6 @@ export default function Profile() {
                     }
 
                 }}
-                
             >
                 {formik => (
                     <Form className='profile-update-form'>
@@ -124,7 +121,6 @@ export default function Profile() {
                                         name="oldPassword"
                                         id="profile-old-password"
                                     />
-                                    
                                 </div>
                                 {errorMessage !== '' ? errorMessage : ''}
                             </div>
@@ -147,14 +143,16 @@ export default function Profile() {
                                     </div>
                             } 
                             {croppedImage && croppedImage !== '' &&
+                                <>
+                                <div>=&gt;</div>
                                 <div className="avatar-editor">
                                     <img className="wanted-avatar" src={croppedImage} alt="new avatar" />
                                     <button onClick={() => setCroppedImage('')}>Cancel</button>
                                 </div>
+                                </>
                             }
                         </div>
                         {isOpen && <Modal setIsOpen={setIsOpen} childComponent={<AvatarCropper setImage={updateImage}/>} />}
-
                         <br />
                         <br />
                         <br />
