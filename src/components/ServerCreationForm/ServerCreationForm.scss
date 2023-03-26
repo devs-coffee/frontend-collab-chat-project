@@ -3,5 +3,7 @@
 .ServerCreationForm {
     & Form {
         @include form;
+        text-align: center;
     }
+    
 }

@@ -1,15 +1,16 @@
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import ChangeCircleIcon from '@mui/icons-material/ChangeCircle';
-import HighlightOffTwoToneIcon from '@mui/icons-material/HighlightOffTwoTone';
-import { Breadcrumbs } from '@mui/material';
-
 
 import { FormValidationService } from '../../utils/formValidationService';
 import { UserService } from '../../services/userService';
 import { setUser } from '../../redux/authSlice';
 import AvatarCropper from '../../components/avatarCropper/AvatarCropper';
+import Modal from '../../components/Modal/modal';
+
+import { Avatar, Breadcrumbs } from '@mui/material';
+import HighlightOffTwoToneIcon from '@mui/icons-material/HighlightOffTwoTone';
+import EditIcon from '@mui/icons-material/Edit';
 
 import './Profile.scss';
 
@@ -21,54 +22,61 @@ export default function Profile() {
     const authStatus = useSelector((state:any) => state.auth);
     const [passwordEdit, setPasswordEdit] = useState(false);
     const [ croppedImage, setCroppedImage ] = useState<string>('');
-    const [ cropperImage, setCropperImage] = useState<string>('');
-
+    const [ isOpen, setIsOpen] = useState<boolean>(false);
+    const [errorMessage, setErrorMessage] = useState<string>('');
     const togglePasswordEdit = () => {
         setPasswordEdit(!passwordEdit);
     };
-    const askImageSelection = () => {
-        const inputEl = document.querySelector('#imageInput') as HTMLInputElement;
-        inputEl.click();
-    };
+
+    const initialValues = {
+        pseudo: authStatus.user.pseudo,
+        password: '',
+        passwordConfirm: '',
+        oldPassword: '',
+        picture: ''
+    }
+
     const deleteAvatar = () => {
         userService.updateProfile({picture: null}, authStatus.user.id)
         .then(response => {
             dispatch(setUser(response.result));
             setCroppedImage('');
-            setCropperImage('');
         })
+    }
+    
+    const updateImage = (image: string) => {
+        setCroppedImage(image);
+        setIsOpen(false);
+        return image;
     }
 
     return (
         <div className="Profile">
             <h2>Profile works !</h2>
             <Formik
-                initialValues={{
-                    pseudo: authStatus.user.pseudo,
-                    password: undefined,
-                    passwordConfirm: undefined,
-                    oldPassword: undefined,
-                    picture: undefined
-                }}
+                initialValues={initialValues}
                 validate={formValidationService.validateProfileUpdate}
-                onSubmit={(values) => {
-                    ////
-                    // TODO : filtrer les valeurs à envoyer, doivent être différentes du authStatus
-                    // voir avec les touched
-                    ////
-                    if(croppedImage !== '') {
-                        values.picture = croppedImage;
+                onSubmit={(values, helper) => {
+                    const modifiedValues = formValidationService.getModifiedValues(values, initialValues);
+                    if (croppedImage !== '') {
+                        modifiedValues.picture = croppedImage;
                     }
-                    
-                    userService.updateProfile(values, authStatus.user.id)
-                    .then(response => {
-                        dispatch(setUser(response.result));
-                        setCroppedImage('');
-                        setCropperImage('');
-                    })
-                    .catch(error => {
-                        console.log(error);
-                    });
+                   
+                    if (Object.keys(modifiedValues).length) {
+                        userService.updateProfile(modifiedValues, authStatus.user.id)
+                        .then(response => {
+                            dispatch(setUser(response.result));
+                            setCroppedImage('');
+                            setPasswordEdit(false);
+                            helper.resetForm();
+                            setErrorMessage('');
+                        })
+                        .catch(error => {
+                            setErrorMessage(error.response.data.message);
+                            console.log(error);
+                        });
+                    }
+
                 }}
             >
                 {formik => (
@@ -95,7 +103,7 @@ export default function Profile() {
                                         name="password"
                                         id="profile-update_new-password"
                                     />
-                                    <ErrorMessage name="newPassword" />
+                                    <ErrorMessage name="password" />
                                 </div>
                                 <div className='profile-update-form-new-password-confirm form__fields'>
                                     <label className='form__labels' htmlFor="profile-update_new-password-confirm">Confirmez :</label>
@@ -104,7 +112,7 @@ export default function Profile() {
                                         name="passwordConfirm"
                                         id="profile-update_new-password-confirm"
                                     />
-                                    <ErrorMessage name="newPasswordConfirm" />
+                                    <ErrorMessage name="passwordConfirm" />
                                 </div>
                                 <div className='profile-update-form-old-password form__fields'>
                                     <label className='form__labels' htmlFor="profile-old-password">Mot de passe actuel:</label>
@@ -113,21 +121,38 @@ export default function Profile() {
                                         name="oldPassword"
                                         id="profile-old-password"
                                     />
-                                    <ErrorMessage name="oldPassword" />
                                 </div>
+                                {errorMessage !== '' ? errorMessage : ''}
                             </div>
                         }
                         <div className="formgroup-heading">Avatar :</div>
-                        <AvatarCropper setImage={setCroppedImage} cropperImage={cropperImage} setCropperImage={setCropperImage}  previousImage={authStatus.user.picture} />
-                        {authStatus.user.picture && 
-                            <div className="avatar-editor">
-                                <img className="actual-avatar" src={authStatus.user.picture} alt="your actual avatar" />
-                                <Breadcrumbs>
-                                    <ChangeCircleIcon sx={{ color: '#1616c4' }} onClick={askImageSelection} />
-                                    <HighlightOffTwoToneIcon sx={{ color: '#800101' }} onClick={deleteAvatar}/>
-                                </Breadcrumbs>
-                            </div>
-                        }
+                        <div className='avatar-action'>
+                            {(authStatus.user.picture && authStatus.user.picture !== '')
+                                ? 
+                                    <div className="avatar-editor">
+                                        <img className="actual-avatar" src={authStatus.user.picture} alt="your actual avatar" />
+                                        <Breadcrumbs>
+                                            <EditIcon sx={{ color: '#1616c4' }} onClick={() => setIsOpen(true)} />
+                                            <HighlightOffTwoToneIcon sx={{ color: '#800101' }} onClick={deleteAvatar}/>
+                                        </Breadcrumbs>
+                                    </div>
+                                :
+                                    <div className='picture'>
+                                        <Avatar>{authStatus.user.pseudo.substring(0, 1).toUpperCase()}</Avatar>
+                                        <EditIcon className='edit' sx={{ color: '#1616c4' }} onClick={() => setIsOpen(true)} />
+                                    </div>
+                            } 
+                            {croppedImage && croppedImage !== '' &&
+                                <>
+                                <div>=&gt;</div>
+                                <div className="avatar-editor">
+                                    <img className="wanted-avatar" src={croppedImage} alt="new avatar" />
+                                    <button onClick={() => setCroppedImage('')}>Cancel</button>
+                                </div>
+                                </>
+                            }
+                        </div>
+                        {isOpen && <Modal setIsOpen={setIsOpen} childComponent={<AvatarCropper setImage={updateImage}/>} />}
                         <br />
                         <br />
                         <br />

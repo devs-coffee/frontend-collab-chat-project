@@ -73,5 +73,5 @@ export const fetchServers = createAsyncThunk<
     });
     
     
-export const getServerList = (state:any) => state.data;
-export const getServerById = (state:any, serverId:string) => state.data.find((server:Server) => server.id === serverId);
+export const getServerList = (state:any) => state.data as Server[];
+export const getServerById = (state:any, serverId:string) => state.data.find((server:Server) => server.id === serverId) as Server;

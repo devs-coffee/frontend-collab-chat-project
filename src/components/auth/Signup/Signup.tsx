@@ -3,10 +3,16 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { useState } from 'react';
 
+import { Avatar, Breadcrumbs, Button } from '@mui/material';
+import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
+import HighlightOffTwoToneIcon from '@mui/icons-material/HighlightOffTwoTone';
+import EditIcon from '@mui/icons-material/Edit';
+
 import { setLogs } from '../../../redux/authSlice';
 import { signupForm } from '../../../interfaces/ISignupForm';
 import { AuthenticationService } from '../../../services/authenticationService';
 import { FormValidationService } from '../../../utils/formValidationService';
+import Modal from '../../../components/Modal/modal';
 import AvatarCropper from '../../avatarCropper/AvatarCropper';
 
 import "./Signup.scss";
@@ -18,9 +24,14 @@ export default function Signup() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [loginError, setLoginError] = useState<boolean>(false);
-
-    const [ cropperImage, setCropperImage ] = useState<string>('');
     const [ croppedImage, setCroppedImage ] = useState<string>('');
+    const [ isOpen, setIsOpen] = useState<boolean>(false);
+    
+    const updateImage = (image: string) => {
+        setCroppedImage(image);
+        setIsOpen(false);
+        return image;
+    }
 
     return (
         <div className="Signup">
@@ -87,8 +98,24 @@ export default function Signup() {
                                 <ErrorMessage name="passwordConfirm" />
                             </div>
                             <div className="avatar-managment">
-                                <AvatarCropper setImage={setCroppedImage} cropperImage={cropperImage} setCropperImage={setCropperImage} previousImage={''}/>
+                                <span>Avatar :</span><br/>
+                                {(croppedImage === '')
+                                    ?
+                                        <Button variant="contained" startIcon={<AddPhotoAlternateIcon />} onClick={() => setIsOpen(true)}>
+                                            Ajouter
+                                        </Button>
+                                    :
+                                        <>
+                                        <Avatar alt="avatar serveur demandé" src={croppedImage} />
+                                        <Breadcrumbs>
+                                            <EditIcon sx={{ color: '#1616c4' }} onClick={() => setIsOpen(true)} />
+                                            <HighlightOffTwoToneIcon sx={{ color: '#800101' }} onClick={() => setCroppedImage('')}/>
+                                        </Breadcrumbs>
+                                        </>
+                                }
+                                
                             </div>
+                            {isOpen && <Modal setIsOpen={setIsOpen} childComponent={<AvatarCropper setImage={updateImage}/>} />}
                             <button type="submit" >envoi</button>
                         </div>
                     </Form>

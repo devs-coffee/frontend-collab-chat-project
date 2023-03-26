@@ -11,9 +11,17 @@
         width: fit-content;
         margin: auto;
     }
-    & .actual-avatar {
+    & .actual-avatar, & .wanted-avatar {
         width: 200px;
         height: 200px;
         border-radius: 100px;
     }
+
+    & .avatar-action {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+
 }

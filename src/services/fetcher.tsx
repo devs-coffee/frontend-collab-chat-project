@@ -34,8 +34,8 @@ export abstract class Fetcher {
         const response = await axios.post(url, body, config);
         return response;
     }
-    async patch<T, U>(url: string, body?:T, config?: AxiosRequestConfig<T>):Promise<AxiosResponse<OperationResult<U>>> {
-        const response = await axios.patch(url, body, config);
+    async put<T, U>(url: string, body?:T, config?: AxiosRequestConfig<T>):Promise<AxiosResponse<OperationResult<U>>> {
+        const response = await axios.put(url, body, config);
         return response;
     }
     async delete<T>(url: string, config?: AxiosRequestConfig<T>):Promise<AxiosResponse<OperationResult<T>>> {

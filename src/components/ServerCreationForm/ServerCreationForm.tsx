@@ -9,6 +9,7 @@ import { addServer } from '../../redux/serversSlice';
 import AvatarCropper from '../avatarCropper/AvatarCropper';
 
 import "./ServerCreationForm.scss";
+import { Avatar } from '@mui/material';
 
 type ServerCreationFormProps = {
     setAddingServer: React.Dispatch<React.SetStateAction<boolean>>
@@ -18,11 +19,14 @@ const formValidationService = new FormValidationService();
 const serverService = new ServerService();
 
 export default function ServerCreationForm(props:ServerCreationFormProps) {
-    const [ cropperImage, setCropperImage ] = useState<string>('');
     const [ croppedImage, setCroppedImage ] = useState<string>('');
-    
     const dispatch = useDispatch();
     const avoidServerAdding = () => props.setAddingServer(false);
+    
+    const setImage = (image: string) => {
+        setCroppedImage(image);
+        return image;
+    }
 
     return (
         <div className="ServerCreationForm">
@@ -38,6 +42,7 @@ export default function ServerCreationForm(props:ServerCreationFormProps) {
                     serverService.createServer(values)
                     .then(response => {
                         if(response.isSucceed) {
+                            console.log(response.result);
                             dispatch(addServer(response.result));
                             avoidServerAdding();
                         }
@@ -66,7 +71,16 @@ export default function ServerCreationForm(props:ServerCreationFormProps) {
                             
                         </div>
                         <div className="avatar-managment">
-                            <AvatarCropper setImage={setCroppedImage} cropperImage={cropperImage} setCropperImage={setCropperImage} previousImage={''} />
+                        <span>Avatar :</span><br/>
+                        {croppedImage && croppedImage !== '' 
+                            ? 
+                            <Avatar alt="server picture" src={croppedImage}/>
+                            : 
+                            <AvatarCropper
+                                setImage={(image: string) => setImage(image)}
+                            />
+                        }
+
                         </div>
                         <button type="submit" >envoi</button>
                     </Form>

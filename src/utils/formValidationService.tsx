@@ -68,13 +68,13 @@ export class FormValidationService {
             errors.password = 'Doit être différent du mot de passe actuel!';
         }
         //passwordConfirm
-        if(values.password && values.passwordConfirm && values.passwordConfirm !== values.password) {
+        if(values.password !== '' && (values.passwordConfirm === '' || values.passwordConfirm !== values.password)) {
             errors.passwordConfirm = 'Doit correspondre au mot de passe'
         }
-        //image
-        if(values.picture) {
-            //console.log(values.picture);
+        if((values.password !== '' || values.passwordConfirm !== '') && values.oldPassword === '') {
+            errors.oldPassword = 'Doit être renseigné'
         }
+        
         return errors
     }
     validateServerCreation(values: serverCreationForm):serverCreationFormErrors {
@@ -93,4 +93,20 @@ export class FormValidationService {
         }
         return errors;
     }
+
+    getModifiedValues (values: any, initialValues: any) : Record<string, any> {
+        let modifiedValues: Record<string, any> = {};
+        if (values) {
+          Object.entries(values).forEach((entry) => {
+            let key = entry[0];
+            let value = entry[1];
+      
+            if (value !== initialValues[key]) {
+              modifiedValues[key] = value;
+            }
+          });
+        }
+      
+        return modifiedValues;
+    };
 }

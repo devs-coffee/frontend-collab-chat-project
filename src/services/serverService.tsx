@@ -15,7 +15,7 @@ export class ServerService extends Fetcher {
         return response.data;
     }
     async updateServer(values:serverUpdateForm, serverId:string):Promise<OperationResult<Server>> {
-        const response = await super.patch<serverUpdateForm, Server>(`/servers/${serverId}`, values);
+        const response = await super.put<serverUpdateForm, Server>(`/servers/${serverId}`, values);
         return response.data;
     }
     async deleteServer(id:string):Promise<OperationResult<boolean>> {
