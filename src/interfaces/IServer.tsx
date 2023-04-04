@@ -2,5 +2,6 @@ export interface Server {
     id: string,
     name: string,
     picture?: string,
-    isPrivate: boolean
+    isPrivate: boolean,
+    categories: string[]
 }

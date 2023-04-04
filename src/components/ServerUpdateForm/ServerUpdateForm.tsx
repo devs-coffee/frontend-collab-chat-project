@@ -16,6 +16,8 @@ import HighlightOffTwoToneIcon from '@mui/icons-material/HighlightOffTwoTone';
 import { Avatar, Breadcrumbs } from '@mui/material';
 
 import './ServerUpdateForm.scss';
+import { serverUpdateForm } from '../../interfaces/IServerUpdateForm';
+import Search from '../commons/Search';
 
 type ServerUpdatingFormProps = {
     setIsUpdatingServer: React.Dispatch<React.SetStateAction<boolean>>
@@ -30,11 +32,22 @@ export default function ServerUpdateForm(props:ServerUpdatingFormProps) {
     const navigate = useNavigate();
     const [ croppedImage, setCroppedImage ] = useState<string>('');
     const [ isOpen, setIsOpen] = useState<boolean>(false);
-    
-    const initialValues = {
+    const [ categories, setCategories ] = useState<string[]>(props.server?.categories);
+
+    const initialValues: serverUpdateForm = {
         name: props.server?.name,
-        picture: ''
+        picture: '',
+        categories: categories,
     }
+
+    const createCategories = (value: string) => {
+        setCategories([...categories, value]);
+    }
+
+    const remove = (value: string) => {
+        setCategories(categories.filter(t => t !== value));
+    }
+
     const deleteServer = (event:any) => {
         event.preventDefault();
         if(props.server) {
@@ -78,6 +91,7 @@ export default function ServerUpdateForm(props:ServerUpdatingFormProps) {
                         modifiedValues.picture = croppedImage;
                     }
 
+                    modifiedValues.categories = categories.map(c => c.toLowerCase());
                     if(Object.keys(modifiedValues).length){
                         serverService.updateServer(modifiedValues, props.server.id)
                         .then(response => {
@@ -138,7 +152,7 @@ export default function ServerUpdateForm(props:ServerUpdatingFormProps) {
                             }
                         </div>
                         {isOpen && <Modal setIsOpen={setIsOpen} childComponent={<AvatarCropper setImage={updateImage}/>} />}
-
+                        <Search searchElements={categories} title={"Catégories de serveur"} sendData={createCategories} remove={remove}/>
                         <br/><br/>
                         <button type="submit" >envoi</button>
                     </Form>

@@ -10,6 +10,7 @@ import AvatarCropper from '../avatarCropper/AvatarCropper';
 
 import "./ServerCreationForm.scss";
 import { Avatar } from '@mui/material';
+import Search from '../commons/Search';
 
 type ServerCreationFormProps = {
     setAddingServer: React.Dispatch<React.SetStateAction<boolean>>
@@ -20,6 +21,8 @@ const serverService = new ServerService();
 
 export default function ServerCreationForm(props:ServerCreationFormProps) {
     const [ croppedImage, setCroppedImage ] = useState<string>('');
+    const [ categories, setCategories ] = useState<string[]>([]);
+
     const dispatch = useDispatch();
     const avoidServerAdding = () => props.setAddingServer(false);
     
@@ -27,18 +30,30 @@ export default function ServerCreationForm(props:ServerCreationFormProps) {
         setCroppedImage(image);
         return image;
     }
+    
+    const initialValues = {
+        name: '',
+        categories: []
+    }
+
+    const remove = (value: string) => {
+        setCategories(categories.filter(t => t !== value));
+    }
+
+    const getDatas = (data: string) => {
+        setCategories([...categories, data]);
+    }
 
     return (
         <div className="ServerCreationForm">
             <Formik
-                initialValues={{
-                    name: ''
-                }}
+                initialValues={initialValues}
                 validate={formValidationService.validateServerCreation}
                 onSubmit={(values) => {
                     if(croppedImage) {
                         values.picture = croppedImage;
                     }
+                    values.categories = categories;
                     serverService.createServer(values)
                     .then(response => {
                         if(response.isSucceed) {
@@ -82,6 +97,7 @@ export default function ServerCreationForm(props:ServerCreationFormProps) {
                         }
 
                         </div>
+                        <Search searchElements={categories} title={"Catégories de serveur"} sendData={getDatas} remove={remove}/>
                         <button type="submit" >envoi</button>
                     </Form>
                 )}

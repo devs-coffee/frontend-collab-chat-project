@@ -25,11 +25,12 @@ export const serversSlice = createSlice({
             return state;
         },
         updateServer: (state, action) => {
-            const { id, name, picture } = action.payload;
+            const { id, name, picture, categories } = action.payload;
             const oldServer = state.data.find(server => server.id === id);
             if(oldServer) {
                 oldServer.name = name;
                 oldServer.picture = picture;
+                oldServer.categories = categories;
             }
             return state;
         },
