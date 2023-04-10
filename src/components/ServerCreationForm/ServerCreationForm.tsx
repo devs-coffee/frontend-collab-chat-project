@@ -36,12 +36,8 @@ export default function ServerCreationForm(props:ServerCreationFormProps) {
         categories: []
     }
 
-    const remove = (value: string) => {
-        setCategories(categories.filter(t => t !== value));
-    }
-
-    const getDatas = (data: string) => {
-        setCategories([...categories, data]);
+    const addCategory = (datas: string[]) => {
+        setCategories(datas);
     }
 
     return (
@@ -97,7 +93,7 @@ export default function ServerCreationForm(props:ServerCreationFormProps) {
                         }
 
                         </div>
-                        <Search searchElements={categories} title={"Catégories de serveur"} sendData={getDatas} remove={remove}/>
+                        <Search onListChange={addCategory}/>
                         <button type="submit" >envoi</button>
                     </Form>
                 )}

@@ -40,12 +40,8 @@ export default function ServerUpdateForm(props:ServerUpdatingFormProps) {
         categories: categories,
     }
 
-    const createCategories = (value: string) => {
-        setCategories([...categories, value]);
-    }
-
-    const remove = (value: string) => {
-        setCategories(categories.filter(t => t !== value));
+    const addCategory = (values: string[]) => {
+        setCategories(values);
     }
 
     const deleteServer = (event:any) => {
@@ -152,7 +148,7 @@ export default function ServerUpdateForm(props:ServerUpdatingFormProps) {
                             }
                         </div>
                         {isOpen && <Modal setIsOpen={setIsOpen} childComponent={<AvatarCropper setImage={updateImage}/>} />}
-                        <Search searchElements={categories} title={"Catégories de serveur"} sendData={createCategories} remove={remove}/>
+                        <Search onListChange={addCategory} initialList={categories}/>
                         <br/><br/>
                         <button type="submit" >envoi</button>
                     </Form>

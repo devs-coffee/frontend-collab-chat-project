@@ -1,42 +1,39 @@
-import {  MouseEvent } from 'react';
-type elementToSearch = {
-    searchElements: any[],
-    title: string,
-    sendData: (element: string) => void,
-    remove: (element: string) => void
+import React, { useEffect, useState, MouseEvent } from 'react';
+
+interface ElementToSearch {
+  onListChange: (list: string[]) => void;
+  initialList?: string[]
 }
 
+const Search: React.FC<ElementToSearch> = ({ onListChange, initialList = [] }) => {
+  const [searchInput, setSearchInput] = useState('');
+  const [list, setList] = useState<string[]>(initialList);
 
+  const add = (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    setList([...list, searchInput]);
+    setSearchInput('');
+  };
 
-function Search({ searchElements, title, sendData, remove } : elementToSearch) {
-    const create = (e: React.MouseEvent<HTMLButtonElement>) => {
-        e.preventDefault();
-        const element = document.querySelector(".tag") as HTMLInputElement;
-        if(element && element.value.trim() !== ''){
-            let value = element.value;
-            sendData(value);
-            element.value = '';
-        }
-    }
+  const remove = (index: number) => {
+    const newList = [...list];
+    newList.splice(index, 1);
+    setList(newList);
+  };
 
-    const removeItem = (value: string) => {
-        remove(value);
-    }
+  useEffect(() => {
+    onListChange(list);
+  }, [list]);
 
-    return (
-        <div>
-            <div>
-                <p>{title}</p>
-                <input placeholder='Entrer une catégorie' type="text" className="tag"/>
-                <button onClick={(e: MouseEvent<HTMLButtonElement>) => create(e)}>Ajouter</button>
-            </div>
-            <div>
-                {searchElements && searchElements.map((element, key) => {
-                    return <p key={key} id={element}>{element}<span onClick={() => removeItem(element)}> x</span></p>
-                })}
-            </div>
-        </div>
-    );
-}
+  return (
+    <div>
+      <input type="text" value={searchInput} onChange={(e) => setSearchInput(e.target.value)} />
+      <button onClick={(e: MouseEvent<HTMLButtonElement>) => add(e)}>Ajouter</button>
+        {list.map((item, index) => (
+            <p key={index}>{item} <span onClick={() => remove(index)}> x</span></p>
+        ))}
+    </div>
+  );
+};
 
 export default Search;
