@@ -23,7 +23,7 @@ const Search: React.FC<ElementToSearch> = ({ onListChange, initialList = [] }) =
 
   useEffect(() => {
     onListChange(list);
-  }, [list]);
+  }, [list, onListChange]);
 
   return (
     <div>

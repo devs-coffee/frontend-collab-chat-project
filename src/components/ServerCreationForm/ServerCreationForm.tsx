@@ -1,19 +1,20 @@
 import { useState } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
-import DisabledByDefaultRoundedIcon from '@mui/icons-material/DisabledByDefaultRounded';
 import { useDispatch } from 'react-redux';
+
+import { Avatar } from '@mui/material';
+import DisabledByDefaultRoundedIcon from '@mui/icons-material/DisabledByDefaultRounded';
 
 import { FormValidationService } from '../../utils/formValidationService';
 import { ServerService } from '../../services/serverService';
 import { addServer } from '../../redux/serversSlice';
 import AvatarCropper from '../avatarCropper/AvatarCropper';
-
-import "./ServerCreationForm.scss";
-import { Avatar } from '@mui/material';
 import Search from '../commons/Search';
 
+import "./ServerCreationForm.scss";
+
 type ServerCreationFormProps = {
-    setAddingServer: React.Dispatch<React.SetStateAction<boolean>>
+    setDashboardContent: React.Dispatch<React.SetStateAction<string>>
 }
 
 const formValidationService = new FormValidationService();
@@ -24,7 +25,7 @@ export default function ServerCreationForm(props:ServerCreationFormProps) {
     const [ categories, setCategories ] = useState<string[]>([]);
 
     const dispatch = useDispatch();
-    const avoidServerAdding = () => props.setAddingServer(false);
+    const closeServerAdding = () => props.setDashboardContent('');
     
     const setImage = (image: string) => {
         setCroppedImage(image);
@@ -55,7 +56,7 @@ export default function ServerCreationForm(props:ServerCreationFormProps) {
                         if(response.isSucceed) {
                             console.log(response.result);
                             dispatch(addServer(response.result));
-                            avoidServerAdding();
+                            closeServerAdding();
                         }
                         else {
                             console.log(response.errorMessage)
@@ -68,7 +69,7 @@ export default function ServerCreationForm(props:ServerCreationFormProps) {
             >
                 {formik => (
                     <Form className="server-creation-form">
-                        <h2>Nouveau serveur <DisabledByDefaultRoundedIcon color="warning" onClick={avoidServerAdding}/></h2>
+                        <h2>Nouveau serveur <DisabledByDefaultRoundedIcon color="warning" onClick={closeServerAdding}/></h2>
                         <div className="field-box">
                             <div className="server-creation-form-name form__fields">
                                 <label className="form__labels" htmlFor="newserver-name">Nom :</label>
@@ -79,10 +80,9 @@ export default function ServerCreationForm(props:ServerCreationFormProps) {
                                 />
                                 <ErrorMessage name="name" />
                             </div>
-                            
                         </div>
                         <div className="avatar-managment">
-                        <span>Avatar :</span><br/>
+                        <h3>Avatar :</h3>
                         {croppedImage && croppedImage !== '' 
                             ? 
                             <Avatar alt="server picture" src={croppedImage}/>
@@ -91,8 +91,8 @@ export default function ServerCreationForm(props:ServerCreationFormProps) {
                                 setImage={(image: string) => setImage(image)}
                             />
                         }
-
                         </div>
+                        <h3>Mots-clés :</h3>
                         <Search onListChange={addCategory}/>
                         <button type="submit" >envoi</button>
                     </Form>

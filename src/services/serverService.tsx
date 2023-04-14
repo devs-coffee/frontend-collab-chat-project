@@ -26,4 +26,9 @@ export class ServerService extends Fetcher {
         const response = await super.get<User[]>(`/servers/${id}/users`);
         return response.data;
     }
+
+    async searchServers(keyword: string):Promise<OperationResult<Server[]>> {
+        const response = await super.get<Server[]>(`/servers/search?name=${keyword}`);
+        return response.data;
+    }
 }
