@@ -13,9 +13,8 @@ export default function ServerSearching() {
     const [searchInput, setSearchInput] = useState('');
     const [foundServers, setFoundServers] = useState<Server[] | null>(null);
     
-    const searchServers = async (e: MouseEvent<HTMLButtonElement>) => {
+    const searchServers = async () => {
         const response = await serverService.searchServers(searchInput);
-        console.log(response);
         setFoundServers(response.result);
     }
     
@@ -23,7 +22,7 @@ export default function ServerSearching() {
         <div>
             <div>SearchServer works !</div>
             <input value={searchInput} onChange={(e) => setSearchInput(e.target.value)} type='text' />
-            <button onClick={(e: MouseEvent<HTMLButtonElement>) => searchServers(e)}>envoyer</button>
+            <button onClick={() => searchServers()}>envoyer</button>
             {foundServers && (
                 <div>
                     {foundServers.length > 0 && (
