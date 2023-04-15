@@ -1,7 +1,20 @@
 .ServerDisplay {
-    & .server-avatar {
-        width: 100px;
-        height: 100px;
-        border-radius: 100px;
+    & .server-heading {
+        width: fit-content;
+        margin: auto;
+        display: flex;
+        align-items: center;
+        & .MuiAvatar-root {
+            margin-right: 20px;
+        }
+        & .MuiSvgIcon-root {
+            align-self: flex-start;
+            color: lightgray;
+            margin-left: 20px;
+            &:hover {
+                cursor: pointer;
+                color: grey;
+            }
+        }
     }
 }

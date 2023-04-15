@@ -32,6 +32,7 @@ export default function ServerUpdateForm(props:ServerUpdatingFormProps) {
     const navigate = useNavigate();
     const [ croppedImage, setCroppedImage ] = useState<string>('');
     const [ isOpen, setIsOpen] = useState<boolean>(false);
+    console.log(props.server);
     const [ categories, setCategories ] = useState<string[]>(props.server?.categories);
 
     const initialValues: serverUpdateForm = {

@@ -1,4 +1,8 @@
-import React, { useState, MouseEvent } from 'react';
+import { useState, MouseEvent } from 'react';
+import { Link } from 'react-router-dom';
+
+import { Avatar } from '@mui/material';
+
 
 import { ServerService } from '../../services/serverService';
 import { Server } from '../../interfaces/IServer';
@@ -26,7 +30,16 @@ export default function ServerSearching() {
                         <>
                         <p>Trouvé {foundServers.length} serveurs :</p>
                         {foundServers.map((server, index) => (
-                            <p key={index}>{server.name}</p>
+                            <div key={index}>
+                                <Link to={`/server/${server.id}`} title={server.name}>
+                                    {server.picture ?
+                                        (<Avatar alt="avatar server" src={server.picture} />)
+                                        :
+                                        (<Avatar>{server.name.substring(0, 1).toUpperCase()}</Avatar>)
+                                    }
+                                </Link>
+                                {server.name}
+                            </div>
                         ))}
                         </>
                     )}
