@@ -19,7 +19,6 @@ export default function ServerDisplay() {
     const [isUpdatingServer, setIsUpdatingServer] = useState<boolean>(false);
     
     const urlSearchParams = useParams();
-    //const servers = useSelector((state:any) => state.servers);
     
     const getServerData = async() => {
         try {
@@ -58,8 +57,6 @@ export default function ServerDisplay() {
         if(users.length < 1) {
             getServerUsers();
         }
-        
-
     }, [ users, server ]);
     
     return (
@@ -68,7 +65,6 @@ export default function ServerDisplay() {
             {server === null && <p>Patientez</p> }
             {server !== null && (
                 <>
-                
                 <div className="server-heading">
                     {server.picture ? 
                         (<Avatar alt="avatar server" src={server.picture} />)
@@ -83,9 +79,6 @@ export default function ServerDisplay() {
                 <p>users: {users.map(user => (`| ${user.pseudo} `))}</p>
                 </>
             )}
-            {/* {server?.isCurrentUserAdmin &&
-                <button onClick={() => setIsUpdatingServer(true)}>update</button>
-            } */}
             {server && isUpdatingServer && (<ServerUpdateForm setIsUpdatingServer={setIsUpdatingServer} server={server}/>)}
         </div>
     )
