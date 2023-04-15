@@ -1,26 +1,25 @@
 import { useState } from "react";
-import { useSelector } from "react-redux";
 
-import DashboardServersHeading from "../../components/DashboardServersHeading/DashboardServersHeading";
 import DashboardPanel from "../../components/DashboardPanel/DashboardPanel";
+import DashboardServersHeading from "../../components/DashboardServersHeading/DashboardServersHeading";
 import ServerCreationForm from "../../components/ServerCreationForm/ServerCreationForm";
+import ServerSearching from '../../components/ServerSearching/ServerSearching';
 
 import "./Dashboard.scss";
 
 export default function Dashboard() {
-    const [isAddingServer, setAddingServer] = useState<boolean>(false);
-    
+    const [dashboardContent, setDashboardContent] = useState<string>('');
 
     return (
         <div className="Dashboard">
+            <DashboardServersHeading setDashboardContent={setDashboardContent} />
             <h2>Dashboard works !</h2>
-            <DashboardServersHeading addingServer={setAddingServer} />
-            {!isAddingServer && <DashboardPanel />}
-            {isAddingServer && (
-                <div>
-                    <span onClick={() => setAddingServer(false)}>demande d'ajout de serveur</span>
-                    <ServerCreationForm setAddingServer={setAddingServer}/>
-                </div>
+            {dashboardContent === '' && <DashboardPanel />}
+            {dashboardContent === 'addServer' && (
+                <ServerCreationForm setDashboardContent={setDashboardContent}/>
+            )}
+            {dashboardContent === 'searchServer' && (
+                <ServerSearching />
             )}
         </div>
     )

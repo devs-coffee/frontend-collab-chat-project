@@ -10,6 +10,10 @@ export class ServerService extends Fetcher {
         const response = await super.get<Server[]>(`/servers`);
         return response.data;
     }
+    async getServerById(id: string):Promise<OperationResult<Server>> {
+        const response = await super.get<Server>(`/servers/${id}`);
+        return response.data;
+    }
     async createServer(values:serverCreationForm):Promise<OperationResult<Server>> {
         const response = await super.post<serverCreationForm, Server>(`/servers`, values);
         return response.data;
@@ -24,6 +28,11 @@ export class ServerService extends Fetcher {
     }
     async getServerUsers(id:string):Promise<OperationResult<User[]>> {
         const response = await super.get<User[]>(`/servers/${id}/users`);
+        return response.data;
+    }
+
+    async searchServers(keyword: string):Promise<OperationResult<Server[]>> {
+        const response = await super.get<Server[]>(`/servers/search?keyword=${keyword}`);
         return response.data;
     }
 }

@@ -86,7 +86,6 @@ export default function ServerUpdateForm(props:ServerUpdatingFormProps) {
                     if(croppedImage !== '') {
                         modifiedValues.picture = croppedImage;
                     }
-
                     modifiedValues.categories = categories.map(c => c.toLowerCase());
                     if(Object.keys(modifiedValues).length){
                         serverService.updateServer(modifiedValues, props.server.id)
@@ -120,7 +119,7 @@ export default function ServerUpdateForm(props:ServerUpdatingFormProps) {
                                 <ErrorMessage name="name" />
                             </div>
                         </div>
-                        <div className="formgroup-heading">Avatar :</div>
+                        <h3 className="formgroup-heading">Avatar :</h3>
                         <div className='avatar-action'>
                             {(props.server.picture && props.server.picture !== '')
                                 ?
@@ -148,6 +147,7 @@ export default function ServerUpdateForm(props:ServerUpdatingFormProps) {
                             }
                         </div>
                         {isOpen && <Modal setIsOpen={setIsOpen} childComponent={<AvatarCropper setImage={updateImage}/>} />}
+                        <h3>Mots-clés :</h3>
                         <Search onListChange={addCategory} initialList={categories}/>
                         <br/><br/>
                         <button type="submit" >envoi</button>

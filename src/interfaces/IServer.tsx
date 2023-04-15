@@ -3,5 +3,6 @@ export interface Server {
     name: string,
     picture?: string,
     isPrivate: boolean,
-    categories: string[]
+    categories: string[],
+    isCurrentUserAdmin: boolean
 }

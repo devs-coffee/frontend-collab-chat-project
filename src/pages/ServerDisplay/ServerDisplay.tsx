@@ -1,28 +1,43 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
 
-import { getServerById } from "../../redux/serversSlice";
+import { Avatar } from "@mui/material";
+import SettingsIcon from '@mui/icons-material/Settings';
+
 import ServerUpdateForm from "../../components/ServerUpdateForm/ServerUpdateForm";
 import { User } from "../../interfaces/IUser";
+import { Server } from "../../interfaces/IServer";
 import { ServerService } from "../../services/serverService";
 
 import './ServerDisplay.scss';
+
 const serverService = new ServerService();
 
 export default function ServerDisplay() {
+    const [server, setServer] = useState<Server | null>(null);
     const [users, setUsers] = useState<User[]>([]);
     const [isUpdatingServer, setIsUpdatingServer] = useState<boolean>(false);
     
-    const params = useParams();
-    const servers = useSelector((state:any) => state.servers);
-    const server = getServerById(servers, params.serverId!);
-
+    const urlSearchParams = useParams();
     
+    const getServerData = async() => {
+        try {
+            const response = await serverService.getServerById(urlSearchParams.serverId!)
+            if(response.isSucceed) {
+                setServer(response.result);
+            }
+            else {
+                console.log(response.errorMessage);
+            }
+        } catch (error) {
+            console.log(error);
+            return;
+        }
+    }
 
     const getServerUsers = async () => {
         try {
-            const response = await serverService.getServerUsers(server.id);
+            const response = await serverService.getServerUsers(urlSearchParams.serverId!);
             if(response.isSucceed) {
                 setUsers(response.result);
             }
@@ -36,25 +51,35 @@ export default function ServerDisplay() {
     }
 
     useEffect(() => {
+        if(!server) {
+            getServerData();
+        }
         if(users.length < 1) {
             getServerUsers();
         }
-    }, [users ]);
+    }, [ users, server ]);
     
     return (
         <div className="ServerDisplay">
-            <p>Server display works !<br/>
-            server id : {params.serverId} <br/>
-            {server?.picture && 
-                (<span>Avatar :<br/>
-                <img className="server-avatar" alt="avatar serveur" src={server.picture} />
-                <br/></span>)
-            }
-            name: {server?.name}<br/>
-            users: {users.map(user => (`| ${user.pseudo}`))}
-            </p>
-            <button onClick={() => setIsUpdatingServer(true)}>update</button>
-            {isUpdatingServer && (<ServerUpdateForm setIsUpdatingServer={setIsUpdatingServer} server={server}/>)}
+            <h2>Server display works !</h2>
+            {server === null && <p>Patientez</p> }
+            {server !== null && (
+                <>
+                <div className="server-heading">
+                    {server.picture ? 
+                        (<Avatar alt="avatar server" src={server.picture} />)
+                        :
+                        (<Avatar>{server.name.substring(0, 1).toUpperCase()}</Avatar>)
+                    }
+                    <h3>{server.name}</h3>
+                    {server?.isCurrentUserAdmin && 
+                        <SettingsIcon onClick={() => setIsUpdatingServer(true)} />
+                    }
+                </div>
+                <p>users: {users.map(user => (`| ${user.pseudo} `))}</p>
+                </>
+            )}
+            {server && isUpdatingServer && (<ServerUpdateForm setIsUpdatingServer={setIsUpdatingServer} server={server}/>)}
         </div>
     )
 }
