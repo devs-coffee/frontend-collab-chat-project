@@ -35,4 +35,8 @@ export class ServerService extends Fetcher {
         const response = await super.get<Server[]>(`/servers/search?keyword=${keyword}`);
         return response.data;
     }
+    async joinServer(id: string):Promise<OperationResult<boolean>> {
+        const response = await super.post<object, boolean>(`/servers/join`, {serverId: id});
+        return response.data;
+    }
 }

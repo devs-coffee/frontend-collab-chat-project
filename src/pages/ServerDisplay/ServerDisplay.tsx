@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 
 import { Avatar } from "@mui/material";
 import SettingsIcon from '@mui/icons-material/Settings';
@@ -8,12 +9,16 @@ import ServerUpdateForm from "../../components/ServerUpdateForm/ServerUpdateForm
 import { User } from "../../interfaces/IUser";
 import { Server } from "../../interfaces/IServer";
 import { ServerService } from "../../services/serverService";
+import { addServer, removeServer } from "../../redux/serversSlice";
 
 import './ServerDisplay.scss';
 
 const serverService = new ServerService();
 
 export default function ServerDisplay() {
+    const dispatch = useDispatch();
+    const authStatus = useSelector((state:any) => state.auth);
+    const servers = useSelector((state: any) => state.servers);
     const [server, setServer] = useState<Server | null>(null);
     const [users, setUsers] = useState<User[]>([]);
     const [isUpdatingServer, setIsUpdatingServer] = useState<boolean>(false);
@@ -40,6 +45,25 @@ export default function ServerDisplay() {
             const response = await serverService.getServerUsers(urlSearchParams.serverId!);
             if(response.isSucceed) {
                 setUsers(response.result);
+            }
+            else {
+                console.log(response.errorMessage);
+            }
+        } catch (error) {
+            console.log(error);
+            return;
+        }
+    }
+
+    const joinServer = async () => {
+        document.getElementsByClassName("joinOrLeaveButton")[0].setAttribute("disabled", "true");
+        try {
+            const response = await serverService.joinServer(urlSearchParams.serverId!);
+            if(response.isSucceed) {
+                console.log(response);
+                response.result ? dispatch(addServer(server)) : dispatch(removeServer(server?.id));
+                getServerUsers();
+                document.getElementsByClassName("joinOrLeaveButton")[0].removeAttribute("disabled");
             }
             else {
                 console.log(response.errorMessage);
@@ -77,6 +101,15 @@ export default function ServerDisplay() {
                     }
                 </div>
                 <p>users: {users.map(user => (`| ${user.pseudo} `))}</p>
+                {users.length > 0 && (
+                    <button className="joinOrLeaveButton" onClick={joinServer} >
+                        {users.map(u => u.pseudo).includes(authStatus.user.pseudo) ? 
+                            ("leave")
+                            :
+                            ("join")
+                        }
+                    </button>
+                )}
                 </>
             )}
             {server && isUpdatingServer && (<ServerUpdateForm setIsUpdatingServer={setIsUpdatingServer} server={server}/>)}
