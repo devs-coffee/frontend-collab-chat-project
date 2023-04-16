@@ -12,6 +12,7 @@ import { ServerService } from "../../services/serverService";
 import { addServer, removeServer } from "../../redux/serversSlice";
 
 import './ServerDisplay.scss';
+import { AxiosError } from "axios";
 
 const serverService = new ServerService();
 
@@ -69,7 +70,11 @@ export default function ServerDisplay() {
                 console.log(response.errorMessage);
             }
         } catch (error) {
-            console.log(error);
+            if(error instanceof AxiosError) {
+                console.log(error.response?.data.message);
+            } else {
+                console.log(error);
+            }
             return;
         }
     }
