@@ -22,7 +22,7 @@ export default function ServerDisplay() {
     const [server, setServer] = useState<Server | null>(null);
     const [users, setUsers] = useState<User[]>([]);
     const [isUpdatingServer, setIsUpdatingServer] = useState<boolean>(false);
-    
+    const [isDisabled, setIsDisabled] = useState<boolean>(false);
     const urlSearchParams = useParams();
     
     const getServerData = async() => {
@@ -56,14 +56,14 @@ export default function ServerDisplay() {
     }
 
     const joinServer = async () => {
-        document.getElementsByClassName("joinOrLeaveButton")[0].setAttribute("disabled", "true");
         try {
+            setIsDisabled(true);
             const response = await serverService.joinServer(urlSearchParams.serverId!);
             if(response.isSucceed) {
                 console.log(response);
                 response.result ? dispatch(addServer(server)) : dispatch(removeServer(server?.id));
                 getServerUsers();
-                document.getElementsByClassName("joinOrLeaveButton")[0].removeAttribute("disabled");
+                setIsDisabled(false)
             }
             else {
                 console.log(response.errorMessage);
@@ -75,13 +75,9 @@ export default function ServerDisplay() {
     }
 
     useEffect(() => {
-        if(!server) {
-            getServerData();
-        }
-        if(users.length < 1) {
-            getServerUsers();
-        }
-    }, [ users, server ]);
+        getServerData();
+        getServerUsers();
+    }, []);
     
     return (
         <div className="ServerDisplay">
@@ -102,7 +98,7 @@ export default function ServerDisplay() {
                 </div>
                 <p>users: {users.map(user => (`| ${user.pseudo} `))}</p>
                 {users.length > 0 && (
-                    <button className="joinOrLeaveButton" onClick={joinServer} >
+                    <button className="joinOrLeaveButton" onClick={joinServer} disabled={isDisabled}>
                         {users.map(u => u.pseudo).includes(authStatus.user.pseudo) ? 
                             ("leave")
                             :
