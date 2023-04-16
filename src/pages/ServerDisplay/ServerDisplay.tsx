@@ -19,7 +19,6 @@ const serverService = new ServerService();
 export default function ServerDisplay() {
     const dispatch = useDispatch();
     const authStatus = useSelector((state:any) => state.auth);
-    const servers = useSelector((state: any) => state.servers);
     const [server, setServer] = useState<Server | null>(null);
     const [users, setUsers] = useState<User[]>([]);
     const [isUpdatingServer, setIsUpdatingServer] = useState<boolean>(false);
