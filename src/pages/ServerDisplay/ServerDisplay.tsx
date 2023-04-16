@@ -103,7 +103,7 @@ export default function ServerDisplay() {
                 <p>users: {users.map(user => (`| ${user.pseudo} `))}</p>
                 {users.length > 0 && (
                     <button className="joinOrLeaveButton" onClick={joinServer} disabled={isDisabled}>
-                        {users.map(u => u.pseudo).includes(authStatus.user.pseudo) ? 
+                        {users.map(u => u.id).includes(authStatus.user.id) ? 
                             ("leave")
                             :
                             ("join")
