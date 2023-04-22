@@ -3,6 +3,8 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { useDispatch } from 'react-redux';
 import { useState } from 'react';
 
+import { Snackbar } from '@mui/material';
+
 import { setLogs } from '../../../redux/authSlice';
 import { AuthenticationService } from '../../../services/authenticationService';
 import { FormValidationService } from '../../../utils/formValidationService';
@@ -16,6 +18,13 @@ export default function Login(props:any) {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [loginError, setLoginError] = useState(false);
+
+    const handleToastClose = (event: React.SyntheticEvent | Event, reason?: string) => {
+        if(reason === 'clickaway') {
+            return;
+        }
+        setLoginError(false);
+    }
     
     return (
         <div className="Login">
@@ -64,7 +73,13 @@ export default function Login(props:any) {
                     </Form>
                 )}
             </Formik>
-            {loginError && <span className='login-error'>Email et / ou mot de passe invalide !</span>}
+            {/* {loginError && <span className='login-error'>Email et / ou mot de passe invalide !</span>} */}
+            {loginError && <Snackbar 
+                open={loginError}
+                autoHideDuration={4000}
+                onClose={handleToastClose}
+                message="Email et / ou mot de passe invalide !"
+            />}
         </div>
     )
 }

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
 import { Avatar } from "@mui/material";
@@ -100,7 +100,9 @@ export default function ServerDisplay() {
                         <SettingsIcon onClick={() => setIsUpdatingServer(true)} />
                     }
                 </div>
-                <p>users: {users.map(user => (`| ${user.pseudo} `))}</p>
+                <p>users: {users.map(user => (
+                    <Link to={`/user/${user.id}`}>| {user.pseudo} </Link>
+                ))}</p>
                 {users.length > 0 && (
                     <button className="joinOrLeaveButton" onClick={joinServer} disabled={isDisabled}>
                         {users.map(u => u.id).includes(authStatus.user.id) ? 
