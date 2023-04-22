@@ -10,6 +10,7 @@ import Profile from './pages/Profile/Profile';
 import Error from "./pages/Error/Error";
 import Auth from "./pages/Auth/Auth";
 import Dashboard from './pages/Dashboard/Dashboard';
+import UserDisplay from './pages/UserDisplay/UserDisplay';
 
 import './styles/index.scss';
 import ServerDisplay from './pages/ServerDisplay/ServerDisplay';
@@ -29,6 +30,7 @@ root.render(
           <Route path="/" element={<Dashboard />} />
           <Route path="profile" element={<Profile />} />
           <Route path="server/:serverId" element={<ServerDisplay />} />
+          <Route path="/user/:userId" element={<UserDisplay />} />
         </Route>
         <Route path="/auth" element={<Auth />} />
         <Route path="/error" element={<Error />} />

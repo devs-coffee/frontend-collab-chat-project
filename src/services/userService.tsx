@@ -8,4 +8,8 @@ export class UserService extends Fetcher {
         const response = await super.put<profileUpdateForm, User>(`/users/${id}`, values);
         return response.data;
     }
+    async getUser(id:string):Promise<OperationResult<User>> {
+        const response = await super.get<User>(`/users/${id}`);
+        return response.data;
+    }
 }
