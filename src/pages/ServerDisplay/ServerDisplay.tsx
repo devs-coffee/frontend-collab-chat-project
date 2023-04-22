@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
+import { AxiosError } from "axios";
 
 import { Avatar } from "@mui/material";
 import SettingsIcon from '@mui/icons-material/Settings';
@@ -12,7 +13,6 @@ import { ServerService } from "../../services/serverService";
 import { addServer, removeServer } from "../../redux/serversSlice";
 
 import './ServerDisplay.scss';
-import { AxiosError } from "axios";
 
 const serverService = new ServerService();
 
@@ -100,7 +100,10 @@ export default function ServerDisplay() {
                         <SettingsIcon onClick={() => setIsUpdatingServer(true)} />
                     }
                 </div>
-                <p>users: {users.map(user => (`| ${user.pseudo} `))}</p>
+                <p>users: {users.map(user => (
+                    <Link to={`/user/${user.id}`}>| {user.pseudo} </Link>
+                    // <span key={`user-${user.id}`} onClick={() => {console.log('click')}}>| {user.pseudo} </span>
+                ))}</p>
                 {users.length > 0 && (
                     <button className="joinOrLeaveButton" onClick={joinServer} disabled={isDisabled}>
                         {users.map(u => u.id).includes(authStatus.user.id) ? 

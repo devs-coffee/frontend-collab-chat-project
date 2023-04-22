@@ -1,4 +1,11 @@
 .ServerDisplay {
+    & a {
+        text-decoration: none;
+        color: black;
+        &:hover {
+            font-weight: bold;
+        }
+    }
     & .server-heading {
         width: fit-content;
         margin: auto;
