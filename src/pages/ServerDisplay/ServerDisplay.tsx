@@ -29,6 +29,7 @@ export default function ServerDisplay() {
         try {
             const response = await serverService.getServerById(urlSearchParams.serverId!)
             if(response.isSucceed) {
+                console.log(response.result);
                 setServer(response.result);
             }
             else {
@@ -60,7 +61,6 @@ export default function ServerDisplay() {
             setIsDisabled(true);
             const response = await serverService.joinServer(urlSearchParams.serverId!);
             if(response.isSucceed) {
-                console.log(response);
                 response.result ? dispatch(addServer(server)) : dispatch(removeServer(server?.id));
                 getServerUsers();
                 setIsDisabled(false)
