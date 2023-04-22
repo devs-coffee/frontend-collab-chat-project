@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { useDispatch } from 'react-redux';
+import { AxiosError } from 'axios';
 
-import { Avatar } from '@mui/material';
+import { Avatar, Snackbar } from '@mui/material';
 import DisabledByDefaultRoundedIcon from '@mui/icons-material/DisabledByDefaultRounded';
 
 import { FormValidationService } from '../../utils/formValidationService';
@@ -23,6 +24,8 @@ const serverService = new ServerService();
 export default function ServerCreationForm(props:ServerCreationFormProps) {
     const [ croppedImage, setCroppedImage ] = useState<string>('');
     const [ categories, setCategories ] = useState<string[]>([]);
+    const [serverCreationError, setServerCreationError] = useState<boolean>(false);
+    const [ axiosErrorMessage, setAxiosErrorMessage ] = useState<string>('');
 
     const dispatch = useDispatch();
     const closeServerAdding = () => props.setDashboardContent('');
@@ -41,30 +44,45 @@ export default function ServerCreationForm(props:ServerCreationFormProps) {
         setCategories(datas);
     }
 
+    const handleToastClose = (event: React.SyntheticEvent | Event, reason?: string) => {
+        if(reason === 'clickaway') {
+            return;
+        }
+        setServerCreationError(false);
+        setAxiosErrorMessage('');
+    }
+
     return (
         <div className="ServerCreationForm">
             <Formik
                 initialValues={initialValues}
                 validate={formValidationService.validateServerCreation}
-                onSubmit={(values) => {
+                onSubmit={async (values) => {
                     if(croppedImage) {
                         values.picture = croppedImage;
                     }
                     values.categories = categories;
-                    serverService.createServer(values)
-                    .then(response => {
+                    setAxiosErrorMessage('');
+                    setServerCreationError(false);
+                    try {
+                        const response = await serverService.createServer(values);
                         if(response.isSucceed) {
-                            console.log(response.result);
                             dispatch(addServer(response.result));
                             closeServerAdding();
+                        } else {
+                            console.log(response.errorMessage);
+                            setAxiosErrorMessage(response.errorMessage!);
+                            setServerCreationError(true);
                         }
-                        else {
-                            console.log(response.errorMessage)
-                        }
-                    })
-                    .catch(error => {
+                    } catch(error) {
                         console.log(error);
-                    })
+                        if(error instanceof AxiosError) {
+                            setAxiosErrorMessage(error.response?.data.message);
+                        } else {
+                            setAxiosErrorMessage('Une erreur est survenue, veuillez réessayer');
+                        }
+                        setServerCreationError(true);
+                    }
                 }}
             >
                 {formik => (
@@ -82,15 +100,15 @@ export default function ServerCreationForm(props:ServerCreationFormProps) {
                             </div>
                         </div>
                         <div className="avatar-managment">
-                        <h3>Avatar :</h3>
-                        {croppedImage && croppedImage !== '' 
-                            ? 
-                            <Avatar alt="server picture" src={croppedImage}/>
-                            : 
-                            <AvatarCropper
-                                setImage={(image: string) => setImage(image)}
-                            />
-                        }
+                            <h3>Avatar :</h3>
+                            {croppedImage && croppedImage !== '' 
+                                ? 
+                                <Avatar alt="server picture" src={croppedImage}/>
+                                : 
+                                <AvatarCropper
+                                    setImage={(image: string) => setImage(image)}
+                                />
+                            }
                         </div>
                         <h3>Mots-clés :</h3>
                         <Search onListChange={addCategory}/>
@@ -98,6 +116,12 @@ export default function ServerCreationForm(props:ServerCreationFormProps) {
                     </Form>
                 )}
             </Formik>
+            <Snackbar 
+                open={serverCreationError}
+                autoHideDuration={4000}
+                onClose={handleToastClose}
+                message={axiosErrorMessage}
+            />
         </div>
     )
 }

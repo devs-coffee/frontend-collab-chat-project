@@ -23,6 +23,7 @@ export default function ServerDisplay() {
     const [users, setUsers] = useState<User[]>([]);
     const [isUpdatingServer, setIsUpdatingServer] = useState<boolean>(false);
     const [isDisabled, setIsDisabled] = useState<boolean>(false);
+    
     const urlSearchParams = useParams();
     
     const getServerData = async() => {

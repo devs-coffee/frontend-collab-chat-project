@@ -1,21 +1,50 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import { Avatar } from '@mui/material';
+import { Avatar, Snackbar } from '@mui/material';
 
 
 import { ServerService } from '../../services/serverService';
 import { Server } from '../../interfaces/IServer';
+import { AxiosError } from 'axios';
 
 const serverService = new ServerService();
 
 export default function ServerSearching() {
     const [searchInput, setSearchInput] = useState('');
     const [foundServers, setFoundServers] = useState<Server[] | null>(null);
+    const [ searchError, setSearchError ] = useState<boolean>(false);
+    const [ axiosErrorMessage, setAxiosErrorMessage ] = useState<string>('');
     
     const searchServers = async () => {
-        const response = await serverService.searchServers(searchInput);
-        setFoundServers(response.result);
+        setAxiosErrorMessage('');
+        setSearchError(false);
+        try {
+            const response = await serverService.searchServers(searchInput);
+            if(response.isSucceed) {
+                setFoundServers(response.result);
+            } else {
+                console.log(response.errorMessage);
+                setAxiosErrorMessage(response.errorMessage!)
+                setSearchError(true);
+            }
+        } catch(error) {
+            console.log(error);
+            if(error instanceof AxiosError) {
+                setAxiosErrorMessage(error.response?.data.message);
+            } else {
+                setAxiosErrorMessage('Une erreur est survenue, veuillez réessayer');
+            }
+            setSearchError(true)
+        }
+    }
+
+    const handleToastClose = (event: React.SyntheticEvent | Event, reason?: string) => {
+        if(reason === 'clickaway') {
+            return;
+        }
+        setSearchError(false);
+        setAxiosErrorMessage('');
     }
     
     return (
@@ -47,7 +76,13 @@ export default function ServerSearching() {
                     )}
                 </div>
             )}
-            
+            <Snackbar 
+                open={searchError}
+                autoHideDuration={4000}
+                onClose={handleToastClose}
+                message={axiosErrorMessage}
+            />
         </div>
+        
     )
 }

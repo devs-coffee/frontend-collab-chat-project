@@ -2,17 +2,18 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
+import { Avatar, Breadcrumbs, Snackbar } from '@mui/material';
+import HighlightOffTwoToneIcon from '@mui/icons-material/HighlightOffTwoTone';
+import EditIcon from '@mui/icons-material/Edit';
+
 import { FormValidationService } from '../../utils/formValidationService';
 import { UserService } from '../../services/userService';
 import { setUser } from '../../redux/authSlice';
 import AvatarCropper from '../../components/avatarCropper/AvatarCropper';
 import Modal from '../../components/Modal/modal';
 
-import { Avatar, Breadcrumbs } from '@mui/material';
-import HighlightOffTwoToneIcon from '@mui/icons-material/HighlightOffTwoTone';
-import EditIcon from '@mui/icons-material/Edit';
-
 import './Profile.scss';
+import { AxiosError } from 'axios';
 
 const formValidationService = new FormValidationService();
 const userService = new UserService();
@@ -23,10 +24,35 @@ export default function Profile() {
     const [passwordEdit, setPasswordEdit] = useState(false);
     const [ croppedImage, setCroppedImage ] = useState<string>('');
     const [ isOpen, setIsOpen] = useState<boolean>(false);
-    const [errorMessage, setErrorMessage] = useState<string>('');
+    const [ profileUpdateError, setProfileUpdateError ] = useState<boolean>(false);
+    const [ axiosErrorMessage, setAxiosErrorMessage ] = useState<string>('');
+
+
     const togglePasswordEdit = () => {
         setPasswordEdit(!passwordEdit);
     };
+
+    const deleteAvatar = () => {
+        userService.updateProfile({picture: null}, authStatus.user.id)
+        .then(response => {
+            dispatch(setUser(response.result));
+            setCroppedImage('');
+        })
+    }
+
+    const updateImage = (image: string) => {
+        setCroppedImage(image);
+        setIsOpen(false);
+        return image;
+    }
+
+    const handleToastClose = (event: React.SyntheticEvent | Event, reason?: string) => {
+        if(reason === 'clickaway') {
+            return;
+        }
+        setProfileUpdateError(false);
+        setAxiosErrorMessage('');
+    }
 
     const initialValues = {
         pseudo: authStatus.user.pseudo,
@@ -36,45 +62,44 @@ export default function Profile() {
         picture: ''
     }
 
-    const deleteAvatar = () => {
-        userService.updateProfile({picture: null}, authStatus.user.id)
-        .then(response => {
-            dispatch(setUser(response.result));
-            setCroppedImage('');
-        })
-    }
-    
-    const updateImage = (image: string) => {
-        setCroppedImage(image);
-        setIsOpen(false);
-        return image;
-    }
-
     return (
         <div className="Profile">
             <h2>Profile works !</h2>
             <Formik
                 initialValues={initialValues}
                 validate={formValidationService.validateProfileUpdate}
-                onSubmit={(values, helper) => {
+                onSubmit={async (values, helper) => {
+                    setProfileUpdateError(false);
+                    setAxiosErrorMessage('');
                     const modifiedValues = formValidationService.getModifiedValues(values, initialValues);
                     if (croppedImage !== '') {
                         modifiedValues.picture = croppedImage;
                     }
-                   
                     if (Object.keys(modifiedValues).length) {
-                        userService.updateProfile(modifiedValues, authStatus.user.id)
-                        .then(response => {
-                            dispatch(setUser(response.result));
-                            setCroppedImage('');
-                            setPasswordEdit(false);
-                            helper.resetForm();
-                            setErrorMessage('');
-                        })
-                        .catch(error => {
-                            setErrorMessage(error.response.data.message);
+                        try {
+                            const response = await userService.updateProfile(modifiedValues, authStatus.user.id);
+                            if(response.isSucceed) {
+                                dispatch(setUser(response.result));
+                                setCroppedImage('');
+                                setPasswordEdit(false);
+                                helper.resetForm();
+                            } else {
+                                console.log(response.errorMessage);
+                                setAxiosErrorMessage(response.errorMessage!);
+                                setProfileUpdateError(false);
+                            }
+                        } catch(error) {
                             console.log(error);
-                        });
+                            if(error instanceof AxiosError) {
+                                setAxiosErrorMessage(error.response?.data.message);
+                            } else {
+                                setAxiosErrorMessage('Une erreur est survenue, veuillez réessayer');
+                            }
+                            setProfileUpdateError(true);
+                        }
+                        
+                        
+                        
                     }
 
                 }}
@@ -122,7 +147,6 @@ export default function Profile() {
                                         id="profile-old-password"
                                     />
                                 </div>
-                                {errorMessage !== '' ? errorMessage : ''}
                             </div>
                         }
                         <div className="formgroup-heading">Avatar :</div>
@@ -160,6 +184,12 @@ export default function Profile() {
                     </Form>
                 )}
             </Formik>
+            <Snackbar 
+                open={profileUpdateError}
+                autoHideDuration={4000}
+                onClose={handleToastClose}
+                message={axiosErrorMessage}
+            />
         </div>
     )
 }

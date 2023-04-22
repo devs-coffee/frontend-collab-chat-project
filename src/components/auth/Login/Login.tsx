@@ -57,8 +57,8 @@ export default function Login(props:any) {
                                     name="email"
                                     id="login-email"
                                 />
-                                <ErrorMessage name="email" />
                             </div>
+                            <ErrorMessage name="email" />
                             <div className='login-form-password form__fields'>
                                 <label className="form__labels" htmlFor="login-password">Mot de passe :</label>
                                 <Field
@@ -66,14 +66,13 @@ export default function Login(props:any) {
                                     name="password"
                                     id="login-password"
                                 />
-                                <ErrorMessage name="password" />
                             </div>
-                            <button type="submit" >envoi</button>
+                            <ErrorMessage name="password" />
+                            <div><button type="submit" >envoi</button></div>
                         </div>
                     </Form>
                 )}
             </Formik>
-            {/* {loginError && <span className='login-error'>Email et / ou mot de passe invalide !</span>} */}
             {loginError && <Snackbar 
                 open={loginError}
                 autoHideDuration={4000}
