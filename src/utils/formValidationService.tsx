@@ -11,6 +11,9 @@ export class FormValidationService {
     if(!values.email || values.email === '') {
         errors.email = 'Obligatoire !';
     }
+    if(values.email && !validationRegexps.email.test(values.email)) {
+        errors.email = 'Adresse mail non valide !';
+    }
     if(!values.password || values.password === '') {
         errors.password = 'Obligatoire !';
     }

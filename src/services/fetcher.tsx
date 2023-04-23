@@ -5,6 +5,7 @@ import { OperationResult } from "../interfaces/IOperationResult";
 export abstract class Fetcher {
     constructor(){
         this.initializeRequestInterceptors();
+        // TODO : this.initializeResponseInterceptor();
     }
 
     private initializeRequestInterceptors = () => {
@@ -13,6 +14,14 @@ export abstract class Fetcher {
             this.handleError
         )
     }
+
+    // TODO :
+    // private initializeResponseInterceptors = () => {
+    //     axios.interceptors.response.use(
+    //         this.handleResponse,
+    //         this.handleError
+    //     )
+    // }
 
     private handleRequest = (config:AxiosRequestConfig) => {
         if(this.token){
@@ -23,7 +32,23 @@ export abstract class Fetcher {
         }
         return config;
     }
+
+    // TODO
+    // private handleResponse = (response: any) => {
+    //     return response;
+    // }
+
     private handleError = (error: any) => Promise.reject(error);
+    // TODO
+    // private handleError = (error:any) => {
+    //     if(error instanceof AxiosError) {
+    //         throw new Error(error.response?.data.message);
+    //     }
+    //     else {
+    //         throw new Error("Une erreur est survenue, veuillez réessayer");
+    //     }
+    // }
+    
     private readonly token = localStorage.getItem('access_token');
 
     async get<T>(url: string, config?: AxiosRequestConfig<T>):Promise<AxiosResponse<OperationResult<T>>> {

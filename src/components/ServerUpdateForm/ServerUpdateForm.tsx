@@ -2,6 +2,12 @@ import { ErrorMessage, Field, Form, Formik } from 'formik';
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { AxiosError } from 'axios';
+
+import DisabledByDefaultRoundedIcon from '@mui/icons-material/DisabledByDefaultRounded';
+import EditIcon from '@mui/icons-material/Edit';
+import HighlightOffTwoToneIcon from '@mui/icons-material/HighlightOffTwoTone';
+import { Avatar, Breadcrumbs, Snackbar } from '@mui/material';
 
 import Modal from '../../components/Modal/modal';
 import { Server } from '../../interfaces/IServer';
@@ -9,15 +15,10 @@ import { removeServer, updateServer } from '../../redux/serversSlice';
 import { ServerService } from '../../services/serverService';
 import { FormValidationService } from '../../utils/formValidationService';
 import AvatarCropper from '../avatarCropper/AvatarCropper';
-
-import DisabledByDefaultRoundedIcon from '@mui/icons-material/DisabledByDefaultRounded';
-import EditIcon from '@mui/icons-material/Edit';
-import HighlightOffTwoToneIcon from '@mui/icons-material/HighlightOffTwoTone';
-import { Avatar, Breadcrumbs } from '@mui/material';
-
-import './ServerUpdateForm.scss';
 import { serverUpdateForm } from '../../interfaces/IServerUpdateForm';
 import Search from '../commons/Search';
+
+import './ServerUpdateForm.scss';
 
 type ServerUpdatingFormProps = {
     setIsUpdatingServer: React.Dispatch<React.SetStateAction<boolean>>
@@ -33,6 +34,7 @@ export default function ServerUpdateForm(props:ServerUpdatingFormProps) {
     const [ croppedImage, setCroppedImage ] = useState<string>('');
     const [ isOpen, setIsOpen] = useState<boolean>(false);
     const [ categories, setCategories ] = useState<string[]>(props.server?.categories);
+    const [serverUpdateError, setServerUpdateError] = useState<{isError:boolean, errorMessage:string}>({isError: false, errorMessage: ''});
 
     const initialValues: serverUpdateForm = {
         name: props.server?.name,
@@ -76,32 +78,38 @@ export default function ServerUpdateForm(props:ServerUpdatingFormProps) {
         return image;
     }
 
+    const handleToastClose = (event: React.SyntheticEvent | Event, reason?: string) => {
+        if(reason === 'clickaway') {
+            return;
+        }
+        setServerUpdateError({isError: false, errorMessage: ''});
+    }
+
     return (
         <div className="ServerUpdateForm">
             <Formik
                 initialValues={initialValues}
                 validate={formValidationService.validateServerUpdate}
-                onSubmit={(values) => {
+                onSubmit={async (values) => {
                     const modifiedValues = formValidationService.getModifiedValues(values, initialValues);
                     if(croppedImage !== '') {
                         modifiedValues.picture = croppedImage;
                     }
                     modifiedValues.categories = categories.map(c => c.toLowerCase());
                     if(Object.keys(modifiedValues).length){
-                        serverService.updateServer(modifiedValues, props.server.id)
-                        .then(response => {
-                            if(response.isSucceed) {
-                                dispatch(updateServer(response.result));
-                                setCroppedImage('');
-                                props.setIsUpdatingServer(false);
+                        setServerUpdateError({isError: false, errorMessage: ''});
+                        try {
+                            const response = await serverService.updateServer(modifiedValues, props.server.id);
+                            dispatch(updateServer(response.result));
+                            setCroppedImage('');
+                            props.setIsUpdatingServer(false);
+                        } catch(error) {
+                            let errorMessage:string = 'Une erreur est survenue, veuillez réessayer';
+                            if(error instanceof AxiosError) {
+                                errorMessage = error.response?.data.message;
                             }
-                            else {
-                                console.log(response.errorMessage);
-                            }
-                        })
-                        .catch(error => {
-                            console.log(error);
-                        })
+                            setServerUpdateError({isError: true, errorMessage});
+                        }
                     }
                 }}
             >
@@ -155,6 +163,12 @@ export default function ServerUpdateForm(props:ServerUpdatingFormProps) {
                 )}
             </Formik>
             <button onClick={deleteServer} >Supprimer serveur</button>
+            <Snackbar 
+                open={serverUpdateError.isError}
+                autoHideDuration={4000}
+                onClose={handleToastClose}
+                message={serverUpdateError.errorMessage}
+            />
         </div>
     )
 }

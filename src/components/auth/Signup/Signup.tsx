@@ -7,6 +7,7 @@ import { Avatar, Breadcrumbs, Button } from '@mui/material';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import HighlightOffTwoToneIcon from '@mui/icons-material/HighlightOffTwoTone';
 import EditIcon from '@mui/icons-material/Edit';
+import { Snackbar } from '@mui/material';
 
 import { setLogs } from '../../../redux/authSlice';
 import { signupForm } from '../../../interfaces/ISignupForm';
@@ -16,6 +17,7 @@ import Modal from '../../../components/Modal/modal';
 import AvatarCropper from '../../avatarCropper/AvatarCropper';
 
 import "./Signup.scss";
+import { AxiosError } from 'axios';
 
 const authenticationService = new AuthenticationService();
 const formValidationService = new FormValidationService();
@@ -23,14 +25,23 @@ const formValidationService = new FormValidationService();
 export default function Signup() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const [loginError, setLoginError] = useState<boolean>(false);
+    const [signupError, setSignupError] = useState<{isError:boolean, errorMessage:string}>({isError:false, errorMessage:''});
     const [ croppedImage, setCroppedImage ] = useState<string>('');
     const [ isOpen, setIsOpen] = useState<boolean>(false);
+    //const [ axiosError, setAxiosError] = useState<string>('');
+    
     
     const updateImage = (image: string) => {
         setCroppedImage(image);
         setIsOpen(false);
         return image;
+    }
+
+    const handleToastClose = (event: React.SyntheticEvent | Event, reason?: string) => {
+        if(reason === 'clickaway') {
+            return;
+        }
+        setSignupError({isError:false, errorMessage:''});
     }
 
     return (
@@ -44,17 +55,21 @@ export default function Signup() {
                     picture: ''
                 }}
                 validate={formValidationService.validateSignup}
-                onSubmit={(values:signupForm) => {
+                onSubmit={async (values:signupForm) => {
                     values.picture = croppedImage;
-                    setLoginError(false);
-                    authenticationService.signup(values)
-                    .then(response => {
+                    setSignupError({isError:false, errorMessage:''});
+                    try {
+                        const response = await authenticationService.signup(values);
                         dispatch(setLogs(response.result));
                         navigate('/');
-                    })
-                    .catch(error => {
-                        setLoginError(true);
-                    })
+                    } catch(error) {
+                        let errorMessage:string = 'Une erreur est survenue, c\'est ballot.';
+                        if(error instanceof AxiosError) {
+                            console.log(error.response?.data.message);
+                            errorMessage = error.response?.data.message;
+                        }
+                        setSignupError({isError:true, errorMessage});
+                    }
                 }}
             >
                 {formik => (
@@ -68,8 +83,8 @@ export default function Signup() {
                                     name="pseudo"
                                     id="signup_pseudo"
                                 />
-                                <ErrorMessage name="pseudo" />
                             </div>
+                            <ErrorMessage name="pseudo" />
                             <div className='signup-form-email form__fields'>
                                 <label className='signup-form__labels' htmlFor="signup-email">Email :</label>
                                 <Field
@@ -77,8 +92,8 @@ export default function Signup() {
                                     name="email"
                                     id="signup_email"
                                 />
-                                <ErrorMessage name="email" />
                             </div>
+                            <ErrorMessage name="email" />
                             <div className="signup-form-password form__fields">
                                 <label className="form__labels" htmlFor="signup-password">Mot de passe :</label>
                                 <Field
@@ -86,8 +101,8 @@ export default function Signup() {
                                     name="password"
                                     id="signup_password"
                                 />
-                                <ErrorMessage name="password" />
                             </div>
+                            <ErrorMessage name="password" />
                             <div className="signup-form-passwordconfirm form__fields">
                                 <label className="form__labels" htmlFor="signup-passwordconfirm">Confirmez :</label>
                                 <Field
@@ -95,8 +110,8 @@ export default function Signup() {
                                     name="passwordConfirm"
                                     id="signup_passwordconfirm"
                                 />
-                                <ErrorMessage name="passwordConfirm" />
                             </div>
+                            <ErrorMessage name="passwordConfirm" />
                             <div className="avatar-managment">
                                 <span>Avatar :</span><br/>
                                 {(croppedImage === '')
@@ -113,7 +128,6 @@ export default function Signup() {
                                         </Breadcrumbs>
                                         </>
                                 }
-                                
                             </div>
                             {isOpen && <Modal setIsOpen={setIsOpen} childComponent={<AvatarCropper setImage={updateImage}/>} />}
                             <button type="submit" >envoi</button>
@@ -121,7 +135,12 @@ export default function Signup() {
                     </Form>
                 )}
             </Formik>
-            {loginError && <span className='login-error'>Email et / ou mot de passe invalide !</span>}
+            <Snackbar 
+                open={signupError.isError}
+                autoHideDuration={4000}
+                onClose={handleToastClose}
+                message={signupError.errorMessage}
+            />
         </div>
     )
 }

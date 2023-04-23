@@ -1,16 +1,17 @@
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { AxiosError } from 'axios';
+
+import { Avatar, Breadcrumbs, Snackbar } from '@mui/material';
+import HighlightOffTwoToneIcon from '@mui/icons-material/HighlightOffTwoTone';
+import EditIcon from '@mui/icons-material/Edit';
 
 import { FormValidationService } from '../../utils/formValidationService';
 import { UserService } from '../../services/userService';
 import { setUser } from '../../redux/authSlice';
 import AvatarCropper from '../../components/avatarCropper/AvatarCropper';
 import Modal from '../../components/Modal/modal';
-
-import { Avatar, Breadcrumbs } from '@mui/material';
-import HighlightOffTwoToneIcon from '@mui/icons-material/HighlightOffTwoTone';
-import EditIcon from '@mui/icons-material/Edit';
 
 import './Profile.scss';
 
@@ -23,10 +24,32 @@ export default function Profile() {
     const [passwordEdit, setPasswordEdit] = useState(false);
     const [ croppedImage, setCroppedImage ] = useState<string>('');
     const [ isOpen, setIsOpen] = useState<boolean>(false);
-    const [errorMessage, setErrorMessage] = useState<string>('');
+    const [ profileUpdateError, setProfileUpdateError ] = useState<{isError:boolean, errorMessage:string}>({isError: false, errorMessage: ''});
+
     const togglePasswordEdit = () => {
         setPasswordEdit(!passwordEdit);
     };
+
+    const deleteAvatar = () => {
+        userService.updateProfile({picture: null}, authStatus.user.id)
+        .then(response => {
+            dispatch(setUser(response.result));
+            setCroppedImage('');
+        })
+    }
+
+    const updateImage = (image: string) => {
+        setCroppedImage(image);
+        setIsOpen(false);
+        return image;
+    }
+
+    const handleToastClose = (event: React.SyntheticEvent | Event, reason?: string) => {
+        if(reason === 'clickaway') {
+            return;
+        }
+        setProfileUpdateError({isError: false, errorMessage: ''});
+    }
 
     const initialValues = {
         pseudo: authStatus.user.pseudo,
@@ -36,47 +59,33 @@ export default function Profile() {
         picture: ''
     }
 
-    const deleteAvatar = () => {
-        userService.updateProfile({picture: null}, authStatus.user.id)
-        .then(response => {
-            dispatch(setUser(response.result));
-            setCroppedImage('');
-        })
-    }
-    
-    const updateImage = (image: string) => {
-        setCroppedImage(image);
-        setIsOpen(false);
-        return image;
-    }
-
     return (
         <div className="Profile">
             <h2>Profile works !</h2>
             <Formik
                 initialValues={initialValues}
                 validate={formValidationService.validateProfileUpdate}
-                onSubmit={(values, helper) => {
+                onSubmit={async (values, helper) => {
+                    setProfileUpdateError({isError: false, errorMessage: ''});
                     const modifiedValues = formValidationService.getModifiedValues(values, initialValues);
                     if (croppedImage !== '') {
                         modifiedValues.picture = croppedImage;
                     }
-                   
                     if (Object.keys(modifiedValues).length) {
-                        userService.updateProfile(modifiedValues, authStatus.user.id)
-                        .then(response => {
+                        try {
+                            const response = await userService.updateProfile(modifiedValues, authStatus.user.id);
                             dispatch(setUser(response.result));
                             setCroppedImage('');
                             setPasswordEdit(false);
                             helper.resetForm();
-                            setErrorMessage('');
-                        })
-                        .catch(error => {
-                            setErrorMessage(error.response.data.message);
-                            console.log(error);
-                        });
+                        } catch(error) {
+                            let errorMessage:string = 'Une erreur est survenue, veuillez réessayer';
+                            if(error instanceof AxiosError) {
+                                errorMessage = error.response?.data.message;
+                            }
+                            setProfileUpdateError({isError: true, errorMessage});
+                        }
                     }
-
                 }}
             >
                 {formik => (
@@ -122,7 +131,6 @@ export default function Profile() {
                                         id="profile-old-password"
                                     />
                                 </div>
-                                {errorMessage !== '' ? errorMessage : ''}
                             </div>
                         }
                         <div className="formgroup-heading">Avatar :</div>
@@ -160,6 +168,12 @@ export default function Profile() {
                     </Form>
                 )}
             </Formik>
+            <Snackbar 
+                open={profileUpdateError.isError}
+                autoHideDuration={4000}
+                onClose={handleToastClose}
+                message={profileUpdateError.errorMessage}
+            />
         </div>
     )
 }

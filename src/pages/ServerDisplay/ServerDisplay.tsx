@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { ReactNode, useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { AxiosError } from "axios";
 
-import { Avatar } from "@mui/material";
+import { Avatar, Snackbar } from "@mui/material";
 import SettingsIcon from '@mui/icons-material/Settings';
 
 import ServerUpdateForm from "../../components/ServerUpdateForm/ServerUpdateForm";
@@ -23,20 +23,21 @@ export default function ServerDisplay() {
     const [users, setUsers] = useState<User[]>([]);
     const [isUpdatingServer, setIsUpdatingServer] = useState<boolean>(false);
     const [isDisabled, setIsDisabled] = useState<boolean>(false);
+    const [serverError, setServerError] = useState<string>('');
+    const [usersError, setUsersError] = useState<string>('');
+    const [ joinServerError, setJoinServerError ] = useState<{isError:boolean, errorMessage:string}>({isError: false, errorMessage: ''});
+    
     const urlSearchParams = useParams();
     
     const getServerData = async() => {
         try {
             const response = await serverService.getServerById(urlSearchParams.serverId!)
-            if(response.isSucceed) {
-                console.log(response.result);
-                setServer(response.result);
-            }
-            else {
-                console.log(response.errorMessage);
-            }
+            setServer(response.result);
         } catch (error) {
-            console.log(error);
+            setServerError('Données du serveur non récupérées, veuillez réessayer');
+            if(error instanceof AxiosError) {
+                setServerError(error.response?.data.message);
+            }
             return;
         }
     }
@@ -44,14 +45,13 @@ export default function ServerDisplay() {
     const getServerUsers = async () => {
         try {
             const response = await serverService.getServerUsers(urlSearchParams.serverId!);
-            if(response.isSucceed) {
-                setUsers(response.result);
-            }
-            else {
-                console.log(response.errorMessage);
-            }
+            setUsers(response.result);
         } catch (error) {
             console.log(error);
+            setUsersError('membres du serveur non récupérés, veuillez réessayer');
+            if(error instanceof AxiosError) {
+                setUsersError(error.response?.data.message);
+            }
             return;
         }
     }
@@ -60,22 +60,45 @@ export default function ServerDisplay() {
         try {
             setIsDisabled(true);
             const response = await serverService.joinServer(urlSearchParams.serverId!);
-            if(response.isSucceed) {
-                response.result ? dispatch(addServer(server)) : dispatch(removeServer(server?.id));
-                getServerUsers();
-                setIsDisabled(false)
-            }
-            else {
-                console.log(response.errorMessage);
-            }
+            response.result ? dispatch(addServer(server)) : dispatch(removeServer(server?.id));
+            getServerUsers();
+            setIsDisabled(false)
         } catch (error) {
+            let errorMessage:string;
             if(error instanceof AxiosError) {
-                console.log(error.response?.data.message);
+                errorMessage = error.response?.data.message;
+
             } else {
-                console.log(error);
+                errorMessage = 'une erreur est survenue, veuillez réessayer';
             }
+            setJoinServerError({isError: true, errorMessage});
             return;
         }
+    }
+
+    const handleDataToastClose = (event: React.SyntheticEvent | Event, reason?: string) => {
+        if(reason === 'clickaway') {
+            return;
+        }
+        setServerError('');
+        setUsersError('');
+    }
+
+    const handleJoinToastClose = (event: React.SyntheticEvent | Event, reason?: string) => {
+        if(reason === 'clickaway') {
+            return;
+        }
+        setJoinServerError({isError:false, errorMessage:''});
+    }
+
+    const getFullError = ():ReactNode => {
+        return (
+            <>
+                {!server && (serverError)}
+                {!server && users.length < 1 && (<br/>)}
+                {users.length <1 && (usersError)}
+            </>
+        )
     }
 
     useEffect(() => {
@@ -102,7 +125,6 @@ export default function ServerDisplay() {
                 </div>
                 <p>users: {users.map(user => (
                     <Link to={`/user/${user.id}`}>| {user.pseudo} </Link>
-                    // <span key={`user-${user.id}`} onClick={() => {console.log('click')}}>| {user.pseudo} </span>
                 ))}</p>
                 {users.length > 0 && (
                     <button className="joinOrLeaveButton" onClick={joinServer} disabled={isDisabled}>
@@ -116,6 +138,19 @@ export default function ServerDisplay() {
                 </>
             )}
             {server && isUpdatingServer && (<ServerUpdateForm setIsUpdatingServer={setIsUpdatingServer} server={server}/>)}
+            <Snackbar
+                open={serverError !== '' || usersError !== ''}
+                autoHideDuration={4000}
+                onClose={handleDataToastClose}
+                message={getFullError()}
+            />
+            <Snackbar 
+                open={joinServerError.isError}
+                autoHideDuration={4000}
+                onClose={handleJoinToastClose}
+                message={joinServerError.errorMessage}
+            />
         </div>
+
     )
 }
