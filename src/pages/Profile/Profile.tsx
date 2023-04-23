@@ -1,6 +1,7 @@
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { AxiosError } from 'axios';
 
 import { Avatar, Breadcrumbs, Snackbar } from '@mui/material';
 import HighlightOffTwoToneIcon from '@mui/icons-material/HighlightOffTwoTone';
@@ -13,7 +14,6 @@ import AvatarCropper from '../../components/avatarCropper/AvatarCropper';
 import Modal from '../../components/Modal/modal';
 
 import './Profile.scss';
-import { AxiosError } from 'axios';
 
 const formValidationService = new FormValidationService();
 const userService = new UserService();
@@ -24,9 +24,7 @@ export default function Profile() {
     const [passwordEdit, setPasswordEdit] = useState(false);
     const [ croppedImage, setCroppedImage ] = useState<string>('');
     const [ isOpen, setIsOpen] = useState<boolean>(false);
-    const [ profileUpdateError, setProfileUpdateError ] = useState<boolean>(false);
-    const [ axiosErrorMessage, setAxiosErrorMessage ] = useState<string>('');
-
+    const [ profileUpdateError, setProfileUpdateError ] = useState<{isError:boolean, errorMessage:string}>({isError: false, errorMessage: ''});
 
     const togglePasswordEdit = () => {
         setPasswordEdit(!passwordEdit);
@@ -50,8 +48,7 @@ export default function Profile() {
         if(reason === 'clickaway') {
             return;
         }
-        setProfileUpdateError(false);
-        setAxiosErrorMessage('');
+        setProfileUpdateError({isError: false, errorMessage: ''});
     }
 
     const initialValues = {
@@ -69,8 +66,7 @@ export default function Profile() {
                 initialValues={initialValues}
                 validate={formValidationService.validateProfileUpdate}
                 onSubmit={async (values, helper) => {
-                    setProfileUpdateError(false);
-                    setAxiosErrorMessage('');
+                    setProfileUpdateError({isError: false, errorMessage: ''});
                     const modifiedValues = formValidationService.getModifiedValues(values, initialValues);
                     if (croppedImage !== '') {
                         modifiedValues.picture = croppedImage;
@@ -78,30 +74,18 @@ export default function Profile() {
                     if (Object.keys(modifiedValues).length) {
                         try {
                             const response = await userService.updateProfile(modifiedValues, authStatus.user.id);
-                            if(response.isSucceed) {
-                                dispatch(setUser(response.result));
-                                setCroppedImage('');
-                                setPasswordEdit(false);
-                                helper.resetForm();
-                            } else {
-                                console.log(response.errorMessage);
-                                setAxiosErrorMessage(response.errorMessage!);
-                                setProfileUpdateError(false);
-                            }
+                            dispatch(setUser(response.result));
+                            setCroppedImage('');
+                            setPasswordEdit(false);
+                            helper.resetForm();
                         } catch(error) {
-                            console.log(error);
+                            let errorMessage:string = 'Une erreur est survenue, veuillez réessayer';
                             if(error instanceof AxiosError) {
-                                setAxiosErrorMessage(error.response?.data.message);
-                            } else {
-                                setAxiosErrorMessage('Une erreur est survenue, veuillez réessayer');
+                                errorMessage = error.response?.data.message;
                             }
-                            setProfileUpdateError(true);
+                            setProfileUpdateError({isError: true, errorMessage});
                         }
-                        
-                        
-                        
                     }
-
                 }}
             >
                 {formik => (
@@ -185,10 +169,10 @@ export default function Profile() {
                 )}
             </Formik>
             <Snackbar 
-                open={profileUpdateError}
+                open={profileUpdateError.isError}
                 autoHideDuration={4000}
                 onClose={handleToastClose}
-                message={axiosErrorMessage}
+                message={profileUpdateError.errorMessage}
             />
         </div>
     )

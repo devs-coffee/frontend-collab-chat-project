@@ -25,10 +25,11 @@ const formValidationService = new FormValidationService();
 export default function Signup() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const [signupError, setSignupError] = useState<boolean>(false);
+    const [signupError, setSignupError] = useState<{isError:boolean, errorMessage:string}>({isError:false, errorMessage:''});
     const [ croppedImage, setCroppedImage ] = useState<string>('');
     const [ isOpen, setIsOpen] = useState<boolean>(false);
-    const [ axiosError, setAxiosError] = useState<string>('');
+    //const [ axiosError, setAxiosError] = useState<string>('');
+    
     
     const updateImage = (image: string) => {
         setCroppedImage(image);
@@ -40,8 +41,7 @@ export default function Signup() {
         if(reason === 'clickaway') {
             return;
         }
-        setSignupError(false);
-        setAxiosError('');
+        setSignupError({isError:false, errorMessage:''});
     }
 
     return (
@@ -57,25 +57,18 @@ export default function Signup() {
                 validate={formValidationService.validateSignup}
                 onSubmit={async (values:signupForm) => {
                     values.picture = croppedImage;
-                    setSignupError(false);
+                    setSignupError({isError:false, errorMessage:''});
                     try {
                         const response = await authenticationService.signup(values);
-                        if(response.isSucceed) {
-                            dispatch(setLogs(response.result));
-                            navigate('/');
-                        }
-                        else {
-                            setAxiosError(response.errorMessage!);
-                            setSignupError(true);
-                        }
+                        dispatch(setLogs(response.result));
+                        navigate('/');
                     } catch(error) {
-                        console.log(error);
+                        let errorMessage:string = 'Une erreur est survenue, c\'est ballot.';
                         if(error instanceof AxiosError) {
-                            setAxiosError(error.response?.data.message);
-                        } else {
-                            setAxiosError('Une erreur est survenue, veuillez réessayer.');
+                            console.log(error.response?.data.message);
+                            errorMessage = error.response?.data.message;
                         }
-                        setSignupError(true);
+                        setSignupError({isError:true, errorMessage});
                     }
                 }}
             >
@@ -143,10 +136,10 @@ export default function Signup() {
                 )}
             </Formik>
             <Snackbar 
-                open={signupError}
+                open={signupError.isError}
                 autoHideDuration={4000}
                 onClose={handleToastClose}
-                message={axiosError}
+                message={signupError.errorMessage}
             />
         </div>
     )

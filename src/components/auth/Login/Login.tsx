@@ -34,16 +34,15 @@ export default function Login(props:any) {
                     password: ''
                 }}
                 validate={formValidationService.validateLogin}
-                onSubmit={(values) => {
+                onSubmit={async (values) => {
                     setLoginError(false);
-                    authenticationService.login(values)
-                    .then(response => {
+                    try {
+                        const response = await authenticationService.login(values);
                         dispatch(setLogs(response.result));
                         navigate('/');
-                    })
-                    .catch(error => {
+                    } catch(error) {
                         setLoginError(true);
-                    })
+                    }
                 }}
             >
                 {formik => (

@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 
 import { Avatar, Snackbar } from '@mui/material';
 
-
 import { ServerService } from '../../services/serverService';
 import { Server } from '../../interfaces/IServer';
 import { AxiosError } from 'axios';
@@ -13,29 +12,19 @@ const serverService = new ServerService();
 export default function ServerSearching() {
     const [searchInput, setSearchInput] = useState('');
     const [foundServers, setFoundServers] = useState<Server[] | null>(null);
-    const [ searchError, setSearchError ] = useState<boolean>(false);
-    const [ axiosErrorMessage, setAxiosErrorMessage ] = useState<string>('');
+    const [ searchError, setSearchError ] = useState<{isError:boolean, errorMessage:string}>({isError: false, errorMessage: ''});
     
     const searchServers = async () => {
-        setAxiosErrorMessage('');
-        setSearchError(false);
+        setSearchError({isError: false, errorMessage: ''});
         try {
             const response = await serverService.searchServers(searchInput);
-            if(response.isSucceed) {
-                setFoundServers(response.result);
-            } else {
-                console.log(response.errorMessage);
-                setAxiosErrorMessage(response.errorMessage!)
-                setSearchError(true);
-            }
+            setFoundServers(response.result);
         } catch(error) {
-            console.log(error);
+            let errorMessage: string = 'Une erreur est survenue, veuillez réessayer';
             if(error instanceof AxiosError) {
-                setAxiosErrorMessage(error.response?.data.message);
-            } else {
-                setAxiosErrorMessage('Une erreur est survenue, veuillez réessayer');
+                errorMessage = error.response?.data.message;
             }
-            setSearchError(true)
+            setSearchError({isError:true, errorMessage});
         }
     }
 
@@ -43,8 +32,7 @@ export default function ServerSearching() {
         if(reason === 'clickaway') {
             return;
         }
-        setSearchError(false);
-        setAxiosErrorMessage('');
+        setSearchError({isError: false, errorMessage: ''});
     }
     
     return (
@@ -77,12 +65,11 @@ export default function ServerSearching() {
                 </div>
             )}
             <Snackbar 
-                open={searchError}
+                open={searchError.isError}
                 autoHideDuration={4000}
                 onClose={handleToastClose}
-                message={axiosErrorMessage}
+                message={searchError.errorMessage}
             />
         </div>
-        
     )
 }

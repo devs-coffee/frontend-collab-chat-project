@@ -24,8 +24,8 @@ const serverService = new ServerService();
 export default function ServerCreationForm(props:ServerCreationFormProps) {
     const [ croppedImage, setCroppedImage ] = useState<string>('');
     const [ categories, setCategories ] = useState<string[]>([]);
-    const [serverCreationError, setServerCreationError] = useState<boolean>(false);
-    const [ axiosErrorMessage, setAxiosErrorMessage ] = useState<string>('');
+    const [serverCreationError, setServerCreationError] = useState<{isError:boolean, errorMessage:string}>({isError:false, errorMessage:''});
+    
 
     const dispatch = useDispatch();
     const closeServerAdding = () => props.setDashboardContent('');
@@ -48,8 +48,7 @@ export default function ServerCreationForm(props:ServerCreationFormProps) {
         if(reason === 'clickaway') {
             return;
         }
-        setServerCreationError(false);
-        setAxiosErrorMessage('');
+        setServerCreationError({isError:false, errorMessage:''});
     }
 
     return (
@@ -62,26 +61,17 @@ export default function ServerCreationForm(props:ServerCreationFormProps) {
                         values.picture = croppedImage;
                     }
                     values.categories = categories;
-                    setAxiosErrorMessage('');
-                    setServerCreationError(false);
+                    setServerCreationError({isError:false, errorMessage:''});
                     try {
                         const response = await serverService.createServer(values);
-                        if(response.isSucceed) {
-                            dispatch(addServer(response.result));
-                            closeServerAdding();
-                        } else {
-                            console.log(response.errorMessage);
-                            setAxiosErrorMessage(response.errorMessage!);
-                            setServerCreationError(true);
-                        }
+                        dispatch(addServer(response.result));
+                        closeServerAdding();
                     } catch(error) {
-                        console.log(error);
+                        let errorMessage:string = 'Une erreur est survenue, veuillez réessayer';
                         if(error instanceof AxiosError) {
-                            setAxiosErrorMessage(error.response?.data.message);
-                        } else {
-                            setAxiosErrorMessage('Une erreur est survenue, veuillez réessayer');
+                            errorMessage = error.response?.data.message;
                         }
-                        setServerCreationError(true);
+                        setServerCreationError({isError:true, errorMessage});
                     }
                 }}
             >
@@ -117,10 +107,10 @@ export default function ServerCreationForm(props:ServerCreationFormProps) {
                 )}
             </Formik>
             <Snackbar 
-                open={serverCreationError}
+                open={serverCreationError.isError}
                 autoHideDuration={4000}
                 onClose={handleToastClose}
-                message={axiosErrorMessage}
+                message={serverCreationError.errorMessage}
             />
         </div>
     )

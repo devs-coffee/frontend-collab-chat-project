@@ -34,8 +34,7 @@ export default function ServerUpdateForm(props:ServerUpdatingFormProps) {
     const [ croppedImage, setCroppedImage ] = useState<string>('');
     const [ isOpen, setIsOpen] = useState<boolean>(false);
     const [ categories, setCategories ] = useState<string[]>(props.server?.categories);
-    const [serverUpdateError, setServerUpdateError] = useState<boolean>(false);
-    const [axiosErrorMessage, setAxiosErrorMessage] = useState<string>('');
+    const [serverUpdateError, setServerUpdateError] = useState<{isError:boolean, errorMessage:string}>({isError: false, errorMessage: ''});
 
     const initialValues: serverUpdateForm = {
         name: props.server?.name,
@@ -83,8 +82,7 @@ export default function ServerUpdateForm(props:ServerUpdatingFormProps) {
         if(reason === 'clickaway') {
             return;
         }
-        setServerUpdateError(false);
-        setAxiosErrorMessage('');
+        setServerUpdateError({isError: false, errorMessage: ''});
     }
 
     return (
@@ -99,27 +97,18 @@ export default function ServerUpdateForm(props:ServerUpdatingFormProps) {
                     }
                     modifiedValues.categories = categories.map(c => c.toLowerCase());
                     if(Object.keys(modifiedValues).length){
-                        setAxiosErrorMessage('')
-                        setServerUpdateError(false);
+                        setServerUpdateError({isError: false, errorMessage: ''});
                         try {
                             const response = await serverService.updateServer(modifiedValues, props.server.id);
-                            if(response.isSucceed) {
-                                dispatch(updateServer(response.result));
-                                setCroppedImage('');
-                                props.setIsUpdatingServer(false);
-                            } else {
-                                console.log(response.errorMessage);
-                                setAxiosErrorMessage(response.errorMessage!);
-                                setServerUpdateError(true);
-                            }
+                            dispatch(updateServer(response.result));
+                            setCroppedImage('');
+                            props.setIsUpdatingServer(false);
                         } catch(error) {
-                            console.log(error);
+                            let errorMessage:string = 'Une erreur est survenue, veuillez réessayer';
                             if(error instanceof AxiosError) {
-                                setAxiosErrorMessage(error.response?.data.message);
-                            } else {
-                                setAxiosErrorMessage('Une erreur est survenue, veuillez réessayer');
+                                errorMessage = error.response?.data.message;
                             }
-                            setServerUpdateError(true);
+                            setServerUpdateError({isError: true, errorMessage});
                         }
                     }
                 }}
@@ -175,10 +164,10 @@ export default function ServerUpdateForm(props:ServerUpdatingFormProps) {
             </Formik>
             <button onClick={deleteServer} >Supprimer serveur</button>
             <Snackbar 
-                open={serverUpdateError}
+                open={serverUpdateError.isError}
                 autoHideDuration={4000}
                 onClose={handleToastClose}
-                message={axiosErrorMessage}
+                message={serverUpdateError.errorMessage}
             />
         </div>
     )
