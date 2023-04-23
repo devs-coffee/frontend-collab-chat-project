@@ -13,12 +13,10 @@ import "./Home.scss";
 export default function Home() {
   const { ioClose } = useIoSocket() as IoProvider;
   
-  ////redux thunk
   const dispatch = useDispatch<AppDispatch>();
   const serversStatus = useSelector((state:any) => state.servers.status)
 
   useEffect(() => {
-    ////redux thunk
     if(serversStatus === "idle") {
       dispatch(fetchServers());
     }

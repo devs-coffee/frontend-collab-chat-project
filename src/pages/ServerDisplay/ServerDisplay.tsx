@@ -1,6 +1,7 @@
 import { ReactNode, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
+import { AxiosError } from "axios";
 
 import { Avatar, Snackbar } from "@mui/material";
 import SettingsIcon from '@mui/icons-material/Settings';
@@ -12,7 +13,6 @@ import { ServerService } from "../../services/serverService";
 import { addServer, removeServer } from "../../redux/serversSlice";
 
 import './ServerDisplay.scss';
-import { AxiosError } from "axios";
 
 const serverService = new ServerService();
 
