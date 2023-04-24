@@ -159,10 +159,10 @@ export default function ServerUpdateForm(props:ServerUpdatingFormProps) {
                         <Search onListChange={addCategory} initialList={categories}/>
                         <br/><br/>
                         <button type="submit" >envoi</button>
+                        <button onClick={deleteServer} >Supprimer serveur</button>
                     </Form>
                 )}
             </Formik>
-            <button onClick={deleteServer} >Supprimer serveur</button>
             <Snackbar 
                 open={serverUpdateError.isError}
                 autoHideDuration={4000}

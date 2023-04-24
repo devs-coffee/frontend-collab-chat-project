@@ -24,4 +24,35 @@
             }
         }
     }
+    &__main-content {
+        display: flex;
+        &__members-box {
+            border: 1px solid lightgray;
+            width: fit-content;
+            text-align: center;
+            & .members-heading {
+                margin: 10px;
+            }
+            & .members-stack {
+                width:fit-content;
+                padding: 5px 10px;
+                text-align: left;
+            }
+            
+        }
+        &__chat-box {
+            flex-grow: 1;
+            & h4 {
+                text-align: center;
+            }
+        }
+        &__channels-box {
+            border: 1px solid lightgray;
+            & h4 {
+                margin: 10px;
+            }
+        }
+        
+    }
+    
 }

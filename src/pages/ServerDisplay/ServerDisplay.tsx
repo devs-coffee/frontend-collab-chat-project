@@ -3,7 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { AxiosError } from "axios";
 
-import { Avatar, Snackbar } from "@mui/material";
+import { Avatar, Snackbar, Stack } from "@mui/material";
 import SettingsIcon from '@mui/icons-material/Settings';
 
 import ServerUpdateForm from "../../components/ServerUpdateForm/ServerUpdateForm";
@@ -108,7 +108,6 @@ export default function ServerDisplay() {
     
     return (
         <div className="ServerDisplay">
-            <h2>Server display works !</h2>
             {server === null && <p>Patientez</p> }
             {server !== null && (
                 <>
@@ -123,18 +122,41 @@ export default function ServerDisplay() {
                         <SettingsIcon onClick={() => setIsUpdatingServer(true)} />
                     }
                 </div>
-                <p>users: {users.map(user => (
-                    <Link to={`/user/${user.id}`}>| {user.pseudo} </Link>
-                ))}</p>
-                {users.length > 0 && (
-                    <button className="joinOrLeaveButton" onClick={joinServer} disabled={isDisabled}>
-                        {users.map(u => u.id).includes(authStatus.user.id) ? 
-                            ("leave")
-                            :
-                            ("join")
-                        }
-                    </button>
-                )}
+
+                <div className="ServerDisplay__main-content">
+                    <div className="ServerDisplay__main-content__channels-box">
+                        <h4>Channels :</h4>
+
+                    </div>
+                    <div className="ServerDisplay__main-content__chat-box">
+                        <h4>Chat-box</h4>
+                    </div>
+                    <div className="ServerDisplay__main-content__members-box">
+                        <h4 className="members-heading">Users :</h4>
+                        <Stack className="members-stack" spacing={0.8}>
+                            {users.map(user => (
+                                <Link to={`/user/${user.id}`}>{user.pseudo}</Link>
+                            ))}
+                        </Stack>
+                        {users.length > 0 && (
+                            <button className="joinOrLeaveButton" onClick={joinServer} disabled={isDisabled}>
+                                {users.map(u => u.id).includes(authStatus.user.id) ? 
+                                    ("leave")
+                                    :
+                                    ("join")
+                                }
+                            </button>
+                        )}
+                    </div>
+                    
+                    
+
+                </div>
+
+                
+                
+
+                
                 </>
             )}
             {server && isUpdatingServer && (<ServerUpdateForm setIsUpdatingServer={setIsUpdatingServer} server={server}/>)}
