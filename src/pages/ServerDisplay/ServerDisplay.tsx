@@ -13,6 +13,7 @@ import { ServerService } from "../../services/serverService";
 import { addServer, removeServer } from "../../redux/serversSlice";
 
 import './ServerDisplay.scss';
+import Modal from "../../components/Modal/modal";
 
 const serverService = new ServerService();
 
@@ -26,6 +27,7 @@ export default function ServerDisplay() {
     const [serverError, setServerError] = useState<string>('');
     const [usersError, setUsersError] = useState<string>('');
     const [ joinServerError, setJoinServerError ] = useState<{isError:boolean, errorMessage:string}>({isError: false, errorMessage: ''});
+    const [isManagingChannels, setIsManagingChannels] = useState<boolean>(false);
     
     const urlSearchParams = useParams();
     
@@ -125,11 +127,25 @@ export default function ServerDisplay() {
 
                 <div className="ServerDisplay__main-content">
                     <div className="ServerDisplay__main-content__channels-box">
-                        <h4>Channels :</h4>
-
+                        <h4>
+                            Channels :
+                            {server?.isCurrentUserAdmin && 
+                                <SettingsIcon onClick={() => setIsManagingChannels(true)} />
+                            }
+                        </h4>
+                        <Stack className="channels-stack" spacing={0.8}>
+                            {server?.channels && (
+                            server.channels.map(channel => (
+                                <span>{channel.title}</span>
+                            ))
+                        )}
+                        </Stack>
+                        
                     </div>
                     <div className="ServerDisplay__main-content__chat-box">
                         <h4>Chat-box</h4>
+
+                        {isManagingChannels && <Modal setIsOpen={setIsManagingChannels} childComponent={<span>managing channels</span>} />}
                     </div>
                     <div className="ServerDisplay__main-content__members-box">
                         <h4 className="members-heading">Users :</h4>
