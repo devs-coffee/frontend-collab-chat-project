@@ -15,7 +15,7 @@ import { removeServer, updateServer } from '../../redux/serversSlice';
 import { ServerService } from '../../services/serverService';
 import { FormValidationService } from '../../utils/formValidationService';
 import AvatarCropper from '../avatarCropper/AvatarCropper';
-import { serverUpdateForm } from '../../interfaces/IServerUpdateForm';
+import { ServerUpdateValues } from '../../interfaces/IServerUpdateValues';
 import Search from '../commons/Search';
 
 import './ServerUpdateForm.scss';
@@ -36,7 +36,7 @@ export default function ServerUpdateForm(props:ServerUpdatingFormProps) {
     const [ categories, setCategories ] = useState<string[]>(props.server?.categories);
     const [serverUpdateError, setServerUpdateError] = useState<{isError:boolean, errorMessage:string}>({isError: false, errorMessage: ''});
 
-    const initialValues: serverUpdateForm = {
+    const initialValues: ServerUpdateValues = {
         name: props.server?.name,
         picture: '',
         categories: categories,

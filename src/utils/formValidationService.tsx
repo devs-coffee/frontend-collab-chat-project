@@ -3,7 +3,7 @@ import { signupForm, signupFormErrors } from "../interfaces/ISignupForm";
 import validationRegexps from "../datas/validationsRegexps";
 import { profileUpdateForm, profileUpdateFormErrors } from "../interfaces/IProfileUpdateForm";
 import { serverCreationForm, serverCreationFormErrors } from "../interfaces/IServerCreationForm";
-import { serverUpdateForm, serverUpdateFormErrors } from "../interfaces/IServerUpdateForm";
+import { ServerUpdateValues, ServerUpdateFormErrors } from "../interfaces/IServerUpdateValues";
 
 export class FormValidationService {
     validateLogin(values:loginForm):loginFormErrors {
@@ -88,8 +88,8 @@ export class FormValidationService {
         }
         return errors;
     }
-    validateServerUpdate(values: serverUpdateForm):serverUpdateFormErrors {
-        const errors:serverUpdateFormErrors = {};
+    validateServerUpdate(values: ServerUpdateValues):ServerUpdateFormErrors {
+        const errors:ServerUpdateFormErrors = {};
         //name
         if(values.name && values.name.length < 4) {
             errors.name = 'trop court ! ( 4 caractères minimum )';

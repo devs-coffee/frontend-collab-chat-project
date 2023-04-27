@@ -1,19 +1,20 @@
-import { ReactNode, useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
 import { AxiosError } from "axios";
+import { ReactNode, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useParams } from "react-router-dom";
 
-import { Avatar, Snackbar, Stack } from "@mui/material";
 import SettingsIcon from '@mui/icons-material/Settings';
+import { Avatar, Snackbar, Stack } from "@mui/material";
 
 import ServerUpdateForm from "../../components/ServerUpdateForm/ServerUpdateForm";
-import { User } from "../../interfaces/IUser";
+import ChannelManager from "../../components/ChannelManager/ChannelManager";
 import { Server } from "../../interfaces/IServer";
-import { ServerService } from "../../services/serverService";
+import { User } from "../../interfaces/IUser";
 import { addServer, removeServer } from "../../redux/serversSlice";
+import { ServerService } from "../../services/serverService";
 
 import './ServerDisplay.scss';
-import Modal from "../../components/Modal/modal";
+import { ChannelBase } from "../../interfaces/IChannel.base";
 
 const serverService = new ServerService();
 
@@ -27,7 +28,8 @@ export default function ServerDisplay() {
     const [serverError, setServerError] = useState<string>('');
     const [usersError, setUsersError] = useState<string>('');
     const [ joinServerError, setJoinServerError ] = useState<{isError:boolean, errorMessage:string}>({isError: false, errorMessage: ''});
-    const [isManagingChannels, setIsManagingChannels] = useState<boolean>(false);
+    //const [isManagingChannel, setIsManagingChannel] = useState<string>('');
+    const [mainContent, setMainContent] = useState<string>('chat');
     
     const urlSearchParams = useParams();
     
@@ -103,6 +105,16 @@ export default function ServerDisplay() {
         )
     }
 
+    const updateChannels = (channels: ChannelBase[]) => {
+        //setIsManagingChannel(id);
+        setMainContent('updateChannel');
+    }
+
+    const avoidManagingChannel = () => {
+        //setIsManagingChannel('');
+        setMainContent('chat');
+    }
+
     useEffect(() => {
         getServerData();
         getServerUsers();
@@ -129,29 +141,38 @@ export default function ServerDisplay() {
                     <div className="ServerDisplay__main-content__channels-box">
                         <h4>
                             Channels :
-                            {server?.isCurrentUserAdmin && 
-                                <SettingsIcon onClick={() => setIsManagingChannels(true)} />
-                            }
+                            {server?.channels && server.isCurrentUserAdmin && (
+                                <SettingsIcon fontSize={"inherit"} onClick={() => updateChannels(server?.channels)} />
+                            )}
+                            
                         </h4>
                         <Stack className="channels-stack" spacing={0.8}>
                             {server?.channels && (
                             server.channels.map(channel => (
-                                <span>{channel.title}</span>
+                                <span className="channels-stack__items" key={`span-${channel.id}`}>
+                                    {channel.title}
+                                    
+                                </span>
                             ))
                         )}
                         </Stack>
-                        
                     </div>
-                    <div className="ServerDisplay__main-content__chat-box">
+                    {mainContent === 'chat' && (
+                        <div className="ServerDisplay__main-content__middle-box">
                         <h4>Chat-box</h4>
 
-                        {isManagingChannels && <Modal setIsOpen={setIsManagingChannels} childComponent={<span>managing channels</span>} />}
                     </div>
+                    )}
+                    {mainContent === 'updateChannel' && (
+                        <div className="ServerDisplay__main-content__middle-box">
+                            <ChannelManager  channels={server.channels} avoidManaging={avoidManagingChannel}/>
+                        </div>
+                    )}
                     <div className="ServerDisplay__main-content__members-box">
                         <h4 className="members-heading">Users :</h4>
                         <Stack className="members-stack" spacing={0.8}>
                             {users.map(user => (
-                                <Link to={`/user/${user.id}`}>{user.pseudo}</Link>
+                                <Link key={`link-${user.id}`} to={`/user/${user.id}`}>{user.pseudo}</Link>
                             ))}
                         </Stack>
                         {users.length > 0 && (
@@ -164,15 +185,7 @@ export default function ServerDisplay() {
                             </button>
                         )}
                     </div>
-                    
-                    
-
                 </div>
-
-                
-                
-
-                
                 </>
             )}
             {server && isUpdatingServer && (<ServerUpdateForm setIsUpdatingServer={setIsUpdatingServer} server={server}/>)}
@@ -189,6 +202,5 @@ export default function ServerDisplay() {
                 message={joinServerError.errorMessage}
             />
         </div>
-
     )
 }
