@@ -1,6 +1,7 @@
 export interface ChannelBase {
     id: string,
-    title: string
+    title: string,
+    serverId: string
 }
 
 export interface ChannelCreationValues {

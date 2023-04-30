@@ -5,6 +5,7 @@ import { profileUpdateForm, profileUpdateFormErrors } from "../interfaces/IProfi
 import { serverCreationForm, serverCreationFormErrors } from "../interfaces/IServerCreationForm";
 import { ServerUpdateValues, ServerUpdateFormErrors } from "../interfaces/IServerUpdateValues";
 import { ChannelCreationValues, ChannelCreationErrors } from "../interfaces/IChannel.base";
+import { ChannelUpdateErrors, ChannelUpdateValues } from "../interfaces/IChannelUpdateValues";
 
 export class FormValidationService {
     validateLogin(values:loginForm):loginFormErrors {
@@ -101,6 +102,15 @@ export class FormValidationService {
     //* Channels
     validateChannelCreation(values: ChannelCreationValues):ChannelCreationErrors {
         const errors:ChannelCreationErrors = {};
+        //title
+        if(values.title && values.title.length < 4) {
+            errors.title = 'Trop court ! ( 4 craractères minimum )';
+        }
+        return errors;
+    }
+
+    validateChannelUpdate(values: ChannelUpdateValues) {
+        const errors:ChannelUpdateErrors = {};
         //title
         if(values.title && values.title.length < 4) {
             errors.title = 'Trop court ! ( 4 craractères minimum )';

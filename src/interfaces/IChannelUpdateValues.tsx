@@ -1,4 +1,8 @@
 export interface ChannelUpdateValues {
-    id: string;
+    id: string
+    title?: string
+}
+
+export interface ChannelUpdateErrors {
     title?: string
 }

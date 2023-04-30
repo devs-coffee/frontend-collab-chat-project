@@ -1,6 +1,6 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-
+import { createAsyncThunk, createSlice, current } from "@reduxjs/toolkit";
 import data from "../datas/reduxDefault";
+
 import { OperationResult } from "../interfaces/IOperationResult";
 import { Server } from "../interfaces/IServer";
 import { ServerService } from "../services/serverService";
@@ -45,6 +45,20 @@ export const serversSlice = createSlice({
             state.data.find(server => server.id === serverId)?.channels.push(newChannel);
             return state;
         },
+        removeChannel: (state, action) => {
+            const server = state.data.find(server => server.id === action.payload.serverId);
+            if(server) {
+                server.channels = server.channels.filter(chan => chan.id !== action.payload.id);
+            }
+            return state;
+        },
+        updateChannel: (state, action) => {
+            const channel = state.data.find(server => server.id === action.payload.serverId)?.channels.find(chan => chan.id === action.payload.id);
+            if(channel) {
+                channel.title = action.payload.title;
+            }
+            return state;
+        },
         unsetServers: (state) => {
             state.status = "idle";
             state.error = null;
@@ -67,7 +81,7 @@ export const serversSlice = createSlice({
             })
     }
 })
-export const { setServers, addServer, removeServer, updateServer, unsetServers, addChannel } = serversSlice.actions;
+export const { setServers, addServer, removeServer, updateServer, unsetServers, addChannel, removeChannel, updateChannel } = serversSlice.actions;
 export default serversSlice.reducer;
 
 export const fetchServers = createAsyncThunk<
