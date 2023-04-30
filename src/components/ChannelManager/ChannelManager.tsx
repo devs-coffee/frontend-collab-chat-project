@@ -1,20 +1,16 @@
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { AxiosError } from "axios";
+import { useDispatch } from "react-redux";
 
 import DisabledByDefaultRoundedIcon from '@mui/icons-material/DisabledByDefaultRounded';
+import { Button, Stack } from "@mui/material";
 import { red } from "@mui/material/colors";
-import { Button, Snackbar, Stack } from "@mui/material";
 
 import { ChannelBase } from "../../interfaces/IChannel.base";
-import ChannelCreationForm from "../ChannelCreationForm/ChannelCreationForm";
-import { removeChannel } from "../../redux/serversSlice";
 import { ChannelService } from "../../services/channelService";
+import ChannelCreationForm from "../ChannelCreationForm/ChannelCreationForm";
 
-import './ChannelManager.scss';
 import ChannelUpdateForm from "../ChannelUpdateForm/ChannelUpdateForm";
-
-const channelService = new ChannelService();
+import './ChannelManager.scss';
 
 interface channelManagingProps {
     channels: ChannelBase[]
@@ -54,7 +50,6 @@ const ChannelManager: React.FC<channelManagingProps> = ({channels, avoidManaging
                             
                         </span>
                     ))}
-                
                 </Stack>
                 </>
             )}

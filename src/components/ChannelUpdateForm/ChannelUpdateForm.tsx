@@ -9,9 +9,9 @@ import { Button, Snackbar } from '@mui/material';
 import { FormValidationService } from '../../utils/formValidationService';
 import { ChannelService } from '../../services/channelService';
 import { ChannelBase } from '../../interfaces/IChannel.base';
+import { removeChannel, updateChannel } from '../../redux/serversSlice';
 
 import "./ChannelUpdateForm.scss";
-import { removeChannel, updateChannel } from '../../redux/serversSlice';
 
 type ChannelUpdateFormProps = {
     channel: ChannelBase,
@@ -24,7 +24,6 @@ const channelService = new ChannelService();
 export default function ChannelUpdateForm(props: ChannelUpdateFormProps) {
     const [ channelUpdateError, setChannelUpdateError ] = useState<{isError:boolean, errorMessage:string}>({isError: false, errorMessage: ''});
     const [ deleteChannelError, setDeleteChannelError ] = useState<{isError:boolean, errorMessage:string}>({isError: false, errorMessage: ''});
-
 
     const dispatch = useDispatch();
 
@@ -84,7 +83,6 @@ export default function ChannelUpdateForm(props: ChannelUpdateFormProps) {
                                     name='title'
                                     id='newchannel-title'
                                 />
-                                
                             </div>
                             <ErrorMessage name='title' />
                         </div>
@@ -107,5 +105,4 @@ export default function ChannelUpdateForm(props: ChannelUpdateFormProps) {
             />
         </div>
     )
-
 }
