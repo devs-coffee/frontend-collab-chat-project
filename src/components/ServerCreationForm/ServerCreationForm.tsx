@@ -86,8 +86,8 @@ export default function ServerCreationForm(props:ServerCreationFormProps) {
                                     name="name"
                                     id="newserver-name"
                                 />
-                                <ErrorMessage name="name" />
                             </div>
+                            <ErrorMessage name="name" />
                         </div>
                         <div className="avatar-managment">
                             <h3>Avatar :</h3>

@@ -11,9 +11,9 @@ import Error from "./pages/Error/Error";
 import Auth from "./pages/Auth/Auth";
 import Dashboard from './pages/Dashboard/Dashboard';
 import UserDisplay from './pages/UserDisplay/UserDisplay';
+import ServerDisplay from './pages/ServerDisplay/ServerDisplay';
 
 import './styles/index.scss';
-import ServerDisplay from './pages/ServerDisplay/ServerDisplay';
 
 const root = ReactDOM.createRoot(document.getElementById('root')!);
 root.render(

@@ -4,6 +4,7 @@ import validationRegexps from "../datas/validationsRegexps";
 import { profileUpdateForm, profileUpdateFormErrors } from "../interfaces/IProfileUpdateForm";
 import { serverCreationForm, serverCreationFormErrors } from "../interfaces/IServerCreationForm";
 import { ServerUpdateValues, ServerUpdateFormErrors } from "../interfaces/IServerUpdateValues";
+import { ChannelCreationValues, ChannelCreationErrors } from "../interfaces/IChannel.base";
 
 export class FormValidationService {
     validateLogin(values:loginForm):loginFormErrors {
@@ -93,6 +94,16 @@ export class FormValidationService {
         //name
         if(values.name && values.name.length < 4) {
             errors.name = 'trop court ! ( 4 caractères minimum )';
+        }
+        return errors;
+    }
+
+    //* Channels
+    validateChannelCreation(values: ChannelCreationValues):ChannelCreationErrors {
+        const errors:ChannelCreationErrors = {};
+        //title
+        if(values.title && values.title.length < 4) {
+            errors.title = 'Trop court ! ( 4 craractères minimum )';
         }
         return errors;
     }

@@ -8,35 +8,32 @@ import { Avatar, Snackbar, Stack } from "@mui/material";
 
 import ServerUpdateForm from "../../components/ServerUpdateForm/ServerUpdateForm";
 import ChannelManager from "../../components/ChannelManager/ChannelManager";
-import { Server } from "../../interfaces/IServer";
 import { User } from "../../interfaces/IUser";
-import { addServer, removeServer } from "../../redux/serversSlice";
+import { ChannelBase } from "../../interfaces/IChannel.base";
+import { addServer, removeServer, updateServer } from "../../redux/serversSlice";
 import { ServerService } from "../../services/serverService";
 
 import './ServerDisplay.scss';
-import { ChannelBase } from "../../interfaces/IChannel.base";
 
 const serverService = new ServerService();
 
 export default function ServerDisplay() {
     const dispatch = useDispatch();
     const authStatus = useSelector((state:any) => state.auth);
-    const [server, setServer] = useState<Server | null>(null);
+    const urlSearchParams = useParams();
+    const server = useSelector((state:any) => state.servers.data.find((server:any) => server.id === urlSearchParams.serverId));
     const [users, setUsers] = useState<User[]>([]);
     const [isUpdatingServer, setIsUpdatingServer] = useState<boolean>(false);
     const [isDisabled, setIsDisabled] = useState<boolean>(false);
     const [serverError, setServerError] = useState<string>('');
     const [usersError, setUsersError] = useState<string>('');
     const [ joinServerError, setJoinServerError ] = useState<{isError:boolean, errorMessage:string}>({isError: false, errorMessage: ''});
-    //const [isManagingChannel, setIsManagingChannel] = useState<string>('');
     const [mainContent, setMainContent] = useState<string>('chat');
-    
-    const urlSearchParams = useParams();
     
     const getServerData = async() => {
         try {
             const response = await serverService.getServerById(urlSearchParams.serverId!)
-            setServer(response.result);
+            dispatch(updateServer(response.result));
         } catch (error) {
             setServerError('Données du serveur non récupérées, veuillez réessayer');
             if(error instanceof AxiosError) {
@@ -51,7 +48,6 @@ export default function ServerDisplay() {
             const response = await serverService.getServerUsers(urlSearchParams.serverId!);
             setUsers(response.result);
         } catch (error) {
-            console.log(error);
             setUsersError('membres du serveur non récupérés, veuillez réessayer');
             if(error instanceof AxiosError) {
                 setUsersError(error.response?.data.message);
@@ -71,7 +67,6 @@ export default function ServerDisplay() {
             let errorMessage:string;
             if(error instanceof AxiosError) {
                 errorMessage = error.response?.data.message;
-
             } else {
                 errorMessage = 'une erreur est survenue, veuillez réessayer';
             }
@@ -105,13 +100,11 @@ export default function ServerDisplay() {
         )
     }
 
-    const updateChannels = (channels: ChannelBase[]) => {
-        //setIsManagingChannel(id);
+    const updateChannels = () => {
         setMainContent('updateChannel');
     }
 
     const avoidManagingChannel = () => {
-        //setIsManagingChannel('');
         setMainContent('chat');
     }
 
@@ -129,7 +122,7 @@ export default function ServerDisplay() {
                     {server.picture ? 
                         (<Avatar alt="avatar server" src={server.picture} />)
                         :
-                        (<Avatar>{server.name.substring(0, 1).toUpperCase()}</Avatar>)
+                        (<Avatar>{server.name?.substring(0, 1).toUpperCase()}</Avatar>)
                     }
                     <h3>{server.name}</h3>
                     {server?.isCurrentUserAdmin && 
@@ -142,13 +135,12 @@ export default function ServerDisplay() {
                         <h4>
                             Channels :
                             {server?.channels && server.isCurrentUserAdmin && (
-                                <SettingsIcon fontSize={"inherit"} onClick={() => updateChannels(server?.channels)} />
+                                <SettingsIcon fontSize={"inherit"} onClick={() => updateChannels()} />
                             )}
-                            
                         </h4>
                         <Stack className="channels-stack" spacing={0.8}>
                             {server?.channels && (
-                            server.channels.map(channel => (
+                            server.channels.map((channel:ChannelBase) => (
                                 <span className="channels-stack__items" key={`span-${channel.id}`}>
                                     {channel.title}
                                     
@@ -160,7 +152,7 @@ export default function ServerDisplay() {
                     {mainContent === 'chat' && (
                         <div className="ServerDisplay__main-content__middle-box">
                         <h4>Chat-box</h4>
-
+                        <button onClick={() => {console.log(server)}}>test</button>
                     </div>
                     )}
                     {mainContent === 'updateChannel' && (

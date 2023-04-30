@@ -1,9 +1,9 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
-import { ServerService } from "../services/serverService";
 import data from "../datas/reduxDefault";
-import { Server } from "../interfaces/IServer";
 import { OperationResult } from "../interfaces/IOperationResult";
+import { Server } from "../interfaces/IServer";
+import { ServerService } from "../services/serverService";
 
 const serverService = new ServerService();
 
@@ -25,13 +25,24 @@ export const serversSlice = createSlice({
             return state;
         },
         updateServer: (state, action) => {
-            const { id, name, picture, categories } = action.payload;
-            const oldServer = state.data.find(server => server.id === id);
+            const { id, name, picture, categories, channels } = action.payload;
+            const data = [...state.data].map(elt => {return{...elt}});
+            const oldServer = data.find(server => server.id === id);
             if(oldServer) {
                 oldServer.name = name;
                 oldServer.picture = picture;
                 oldServer.categories = categories;
+                oldServer.channels = channels;
             }
+            state.data = data;
+            const newState = {...state, data};
+            state = newState;
+        },
+        addChannel: (state, action) => {
+            const { serverId } = action.payload;
+            const newChannel = {...action.payload};
+            delete newChannel.serverId;
+            state.data.find(server => server.id === serverId)?.channels.push(newChannel);
             return state;
         },
         unsetServers: (state) => {
@@ -56,7 +67,7 @@ export const serversSlice = createSlice({
             })
     }
 })
-export const { setServers, addServer, removeServer, updateServer, unsetServers } = serversSlice.actions;
+export const { setServers, addServer, removeServer, updateServer, unsetServers, addChannel } = serversSlice.actions;
 export default serversSlice.reducer;
 
 export const fetchServers = createAsyncThunk<
