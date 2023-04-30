@@ -5,12 +5,12 @@ import { ChannelBase, ChannelCreationValues } from "../interfaces/IChannel.base"
 
 export class ChannelService extends Fetcher {
     async updateChannel(values: ChannelUpdateValues):Promise<OperationResult<ChannelBase>> {
-        const response = await super.put<ChannelUpdateValues, any>(`/channels/${values.id}`, values);
+        const response = await super.put<ChannelUpdateValues, ChannelBase>(`/channels/${values.id}`, values);
         return response.data;
     }
 
     async createChannel(values: ChannelCreationValues): Promise<OperationResult<ChannelBase>> {
-        const response = await super.post<ChannelCreationValues, any>(`/channels`, values);
+        const response = await super.post<ChannelCreationValues, ChannelBase>(`/channels`, values);
         return response.data;
     }
 

@@ -11,7 +11,7 @@ import { ChannelService } from '../../services/channelService';
 import { ChannelBase } from '../../interfaces/IChannel.base';
 
 import "./ChannelUpdateForm.scss";
-import { updateChannel } from '../../redux/serversSlice';
+import { removeChannel, updateChannel } from '../../redux/serversSlice';
 
 type ChannelUpdateFormProps = {
     channel: ChannelBase,
@@ -23,6 +23,8 @@ const channelService = new ChannelService();
 
 export default function ChannelUpdateForm(props: ChannelUpdateFormProps) {
     const [ channelUpdateError, setChannelUpdateError ] = useState<{isError:boolean, errorMessage:string}>({isError: false, errorMessage: ''});
+    const [ deleteChannelError, setDeleteChannelError ] = useState<{isError:boolean, errorMessage:string}>({isError: false, errorMessage: ''});
+
 
     const dispatch = useDispatch();
 
@@ -31,6 +33,20 @@ export default function ChannelUpdateForm(props: ChannelUpdateFormProps) {
         title: props.channel.title
     }
 
+    async function deleteChannel() {
+        try {
+            const response = await channelService.deleteChannel(props.channel.id);
+            dispatch(removeChannel(props.channel));
+            props.closeChannelUpdate()
+        } catch(error) {
+            let errorMessage = 'Channel non supprimé, veuillez réessayer';
+            if(error instanceof AxiosError) {
+                errorMessage = error.response?.data.message;
+            }
+            setDeleteChannelError({isError:true, errorMessage:'Channel non supprimé, veuillez réessayer'});
+        }
+    }
+    
     const handleToastClose = (event: React.SyntheticEvent | Event, reason?: string) => {
         if(reason === 'clickaway') {
             return;
@@ -54,7 +70,6 @@ export default function ChannelUpdateForm(props: ChannelUpdateFormProps) {
                             errorMessage = error.response?.data.message;
                         }
                         setChannelUpdateError({isError:true, errorMessage});
-                        console.log('error :', errorMessage);
                     }
                 }}
             >
@@ -69,10 +84,12 @@ export default function ChannelUpdateForm(props: ChannelUpdateFormProps) {
                                     name='title'
                                     id='newchannel-title'
                                 />
+                                
                             </div>
                             <ErrorMessage name='title' />
                         </div>
-                        <Button variant="contained" type="submit">Envoyer</Button>
+                        <Button variant="contained" type="submit">Envoyer</Button><br/>
+                        <Button variant="contained" onClick={() => deleteChannel()}>Supprimer</Button>
                     </Form>
                 )}
             </Formik>
@@ -81,6 +98,12 @@ export default function ChannelUpdateForm(props: ChannelUpdateFormProps) {
                 autoHideDuration={4000}
                 onClose={handleToastClose}
                 message={channelUpdateError.errorMessage}
+            />
+            <Snackbar
+                open={deleteChannelError.isError}
+                autoHideDuration={4000}
+                onClose={handleToastClose}
+                message={deleteChannelError.errorMessage}
             />
         </div>
     )

@@ -25,20 +25,10 @@ const ChannelManager: React.FC<channelManagingProps> = ({channels, avoidManaging
     const dispatch = useDispatch();
     const [isUpdatingOne, setIsUpdatingOne] = useState<string>('');
     const [ mainContent, setMainContent ] = useState<string>('home');
-    const [ deleteChannelError, setDeleteChannelError ] = useState<{isError:boolean, errorMessage:string}>({isError:false, errorMessage:''});
     
-    function getChannelName(id:string) {
-        return channels.find(channel => channel.id === isUpdatingOne)?.title;
-    }
-
     function editChannel(id:string) {
         setIsUpdatingOne(id);
         setMainContent('edit')
-    }
-
-    function avoidEditingChannel() {
-        setIsUpdatingOne('');
-        setMainContent('home');
     }
 
     function closeChannelCreation() {
@@ -49,29 +39,6 @@ const ChannelManager: React.FC<channelManagingProps> = ({channels, avoidManaging
     function closeChannelUpdate() {
         setIsUpdatingOne('');
         setMainContent('home');
-    }
-
-    async function deleteChannel() {
-        console.log(channels.find(chan => chan.id === isUpdatingOne));
-        try {
-            const response = await channelService.deleteChannel(isUpdatingOne);
-            dispatch(removeChannel(channels.find(chan => chan.id === isUpdatingOne)));
-            setIsUpdatingOne('');
-            setMainContent('home');
-        } catch(error) {
-            let errorMessage = 'Channel non supprimé, veuillez réessayer';
-            if(error instanceof AxiosError) {
-                errorMessage = error.response?.data.message;
-            }
-            setDeleteChannelError({isError:true, errorMessage:'Channel non supprimé, veuillez réessayer'});
-        }
-    }
-
-    const handledeleteChannelClose = (event: React.SyntheticEvent | Event, reason?: string) => {
-        if(reason === 'clickaway') {
-            return;
-        }
-        setDeleteChannelError({isError:false, errorMessage:''});
     }
 
     return (
@@ -92,27 +59,12 @@ const ChannelManager: React.FC<channelManagingProps> = ({channels, avoidManaging
                 </>
             )}
             {mainContent === 'edit' && (
-                // <>
-                //     <h3>updating channel : {
-                //         getChannelName(isUpdatingOne)
-                //     }
-                //     <DisabledByDefaultRoundedIcon sx={{ color: red[500] }} onClick={() => avoidEditingChannel()} />
-                //     </h3>
-
-                //     <Button variant="contained" onClick={() => deleteChannel()}>Supprimer</Button>
-                // </>
                 <ChannelUpdateForm channel={channels.find(chan => chan.id === isUpdatingOne)!} closeChannelUpdate={closeChannelUpdate} />
                 
             )}
             {mainContent === 'create' && (
                 <ChannelCreationForm closeChannelCreation={closeChannelCreation}/>
             )}
-            <Snackbar 
-                open={deleteChannelError.isError}
-                autoHideDuration={4000}
-                onClose={handledeleteChannelClose}
-                message={deleteChannelError.errorMessage}
-            />
         </div>
     )
 }

@@ -59,7 +59,6 @@ export default function ChannelCreationForm(props: ChannelCreationFormProps) {
                             errorMessage = error.response?.data.message;
                         }
                         setChannelCreationError({isError:true, errorMessage});
-                        console.log('error :', errorMessage);
                     }
                 }}
             >
