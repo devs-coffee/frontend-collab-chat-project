@@ -3,7 +3,8 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { useDispatch } from 'react-redux';
 import { useState } from 'react';
 
-import { Snackbar } from '@mui/material';
+import { Button, Snackbar } from '@mui/material';
+import SendIcon from '@mui/icons-material/Send';
 
 import { setLogs } from '../../../redux/authSlice';
 import { AuthenticationService } from '../../../services/authenticationService';
@@ -67,7 +68,9 @@ export default function Login(props:any) {
                                 />
                             </div>
                             <ErrorMessage name="password" />
-                            <div><button type="submit" >envoi</button></div>
+                            <div>
+                                <Button variant="contained" type='submit' endIcon={<SendIcon />}>Envoyer</Button>
+                            </div>
                         </div>
                     </Form>
                 )}

@@ -5,4 +5,10 @@
     & form {
         @include form;
     }
+    & .avatar-managment {
+        padding: 1em 0;
+        & h3 {
+            margin: 0;
+        }
+    }
 }

@@ -15,7 +15,7 @@
         
     }
     & .field-box {
-        padding: 20px;
+        padding: 20px 20px 5px 20px;
         margin: auto;
         //background-color: darkgray;
         width: fit-content;
@@ -29,6 +29,8 @@
     }
     & label {
         margin-right: 0.5em;
-        
+    }
+    & .MuiButtonBase-root {
+        margin: 0.5em auto;
     }
 }
