@@ -1,7 +1,8 @@
 @import '../../../styles/mixins';
 
 .Signup {
-    & Form {
+    margin-top: 0.6em;
+    & form {
         @include form;
     }
 }

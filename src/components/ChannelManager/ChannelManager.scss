@@ -1,4 +1,7 @@
+@import '../../styles/mixins';
+
 .ChannelManager {
+    
     & h3 {
         text-align: center;
     }
@@ -11,5 +14,8 @@
                 font-weight: bold;
             }
         }
+    }
+    & form {
+        @include form;
     }
 }
