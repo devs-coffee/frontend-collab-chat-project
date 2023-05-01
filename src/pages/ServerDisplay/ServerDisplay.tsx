@@ -12,8 +12,8 @@ import { User } from "../../interfaces/IUser";
 import { ChannelBase } from "../../interfaces/IChannel.base";
 import { addServer, removeServer, updateServer } from "../../redux/serversSlice";
 import { ServerService } from "../../services/serverService";
-
 import './ServerDisplay.scss';
+import Message from "../../components/Message/message";
 
 const serverService = new ServerService();
 
@@ -29,7 +29,8 @@ export default function ServerDisplay() {
     const [usersError, setUsersError] = useState<string>('');
     const [ joinServerError, setJoinServerError ] = useState<{isError:boolean, errorMessage:string}>({isError: false, errorMessage: ''});
     const [mainContent, setMainContent] = useState<string>('chat');
-    
+    const [channelId, setChannelId] = useState<string>("");
+    const [showMessage, setShowMessage] = useState<boolean>(false);
     const getServerData = async() => {
         try {
             const response = await serverService.getServerById(urlSearchParams.serverId!)
@@ -108,6 +109,11 @@ export default function ServerDisplay() {
         setMainContent('chat');
     }
 
+    const redirectToChannel = (channelId: string) => {
+        setChannelId(channelId);
+        setShowMessage(true);
+    }
+
     useEffect(() => {
         getServerData();
         getServerUsers();
@@ -142,8 +148,7 @@ export default function ServerDisplay() {
                             {server?.channels && (
                             server.channels.map((channel:ChannelBase) => (
                                 <span className="channels-stack__items" key={`span-${channel.id}`}>
-                                    {channel.title}
-                                    
+                                    <p onClick={() => redirectToChannel(channel.id)}>{channel.title}</p>
                                 </span>
                             ))
                         )}
@@ -152,7 +157,7 @@ export default function ServerDisplay() {
                     {mainContent === 'chat' && (
                         <div className="ServerDisplay__main-content__middle-box">
                         <h4>Chat-box</h4>
-                        <button onClick={() => {console.log(server)}}>test</button>
+                        {showMessage && <Message channelId={channelId} />}
                     </div>
                     )}
                     {mainContent === 'updateChannel' && (

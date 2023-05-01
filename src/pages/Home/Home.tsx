@@ -11,7 +11,7 @@ import { AppDispatch } from "../../redux/store";
 import "./Home.scss";
 
 export default function Home() {
-  const { ioClose } = useIoSocket() as IoProvider;
+  const { ioClose, Socket } = useIoSocket() as IoProvider;
   
   const dispatch = useDispatch<AppDispatch>();
   const serversStatus = useSelector((state:any) => state.servers.status)
@@ -21,12 +21,16 @@ export default function Home() {
       dispatch(fetchServers());
     }
 
+    Socket.on("connect", () => {
+      console.log(Socket.connected); // true
+    });
+
     return () => {
       if(serversStatus !== "idle") {
         ioClose();
       }
     }
-  }, [ioClose, serversStatus, dispatch]);
+  }, []);
 
   return (
     <div className="Home">
