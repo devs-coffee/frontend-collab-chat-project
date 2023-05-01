@@ -1,0 +1,15 @@
+.ChannelManager {
+    & h3 {
+        text-align: center;
+    }
+    & .channels-stack {
+        margin-top : 1em;
+        &__items {
+            cursor: pointer;
+            width: fit-content;
+            &:hover {
+                font-weight: bold;
+            }
+        }
+    }
+}

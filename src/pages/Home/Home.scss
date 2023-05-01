@@ -1,1 +1,11 @@
 @import "../../styles/variables";
+
+.Home {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.Home>div:not(.Header) {
+    flex-grow: 1;
+}

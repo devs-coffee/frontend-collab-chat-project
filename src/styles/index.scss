@@ -1,6 +1,16 @@
 @import "./variables";
 @import "./mixins";
 
-body {
+html, body {
   margin: 0;
+  padding: 0;
+  height: 100%
 }
+
+#root, #root>div {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  
+}
+

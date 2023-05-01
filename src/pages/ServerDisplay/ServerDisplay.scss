@@ -1,4 +1,6 @@
 .ServerDisplay {
+    display: flex;
+    flex-direction: column;
     & a {
         text-decoration: none;
         color: black;
@@ -21,6 +23,50 @@
             &:hover {
                 cursor: pointer;
                 color: grey;
+            }
+        }
+    }
+    &__main-content {
+        flex-grow: 1;
+        display: flex;
+        
+        &__members-box {
+            border: 1px solid lightgray;
+            width: fit-content;
+            text-align: center;
+            & .members-heading {
+                margin: 10px;
+            }
+            & .members-stack {
+                width:fit-content;
+                padding: 5px 10px;
+                text-align: left;
+            }
+        }
+        &__middle-box {
+            flex-grow: 1;
+            padding: 1em;
+            & h4 {
+                text-align: center;
+            }
+        }
+        &__channels-box {
+            border: 1px solid lightgray;
+            & h4 {
+                margin: 10px;
+            }
+            & .MuiSvgIcon-root {
+                color: lightgrey;
+                cursor: pointer;
+                margin-left: 10px;
+                &:hover {
+                    color: #999999;
+                }
+            }
+            & .channels-stack {
+                &__items {
+                    margin-left: 0.5em;
+                }
             }
         }
     }

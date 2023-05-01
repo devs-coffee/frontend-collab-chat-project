@@ -3,7 +3,7 @@ import { OperationResult } from "../interfaces/IOperationResult";
 import { Server } from "../interfaces/IServer";
 import { User } from "../interfaces/IUser";
 import { serverCreationForm } from "../interfaces/IServerCreationForm";
-import { serverUpdateForm } from "../interfaces/IServerUpdateForm";
+import { ServerUpdateValues } from "../interfaces/IServerUpdateValues";
 
 export class ServerService extends Fetcher {
     async getServers():Promise<OperationResult<Server[]>> {
@@ -18,8 +18,8 @@ export class ServerService extends Fetcher {
         const response = await super.post<serverCreationForm, Server>(`/servers`, values);
         return response.data;
     }
-    async updateServer(values:serverUpdateForm, serverId:string):Promise<OperationResult<Server>> {
-        const response = await super.put<serverUpdateForm, Server>(`/servers/${serverId}`, values);
+    async updateServer(values:ServerUpdateValues, serverId:string):Promise<OperationResult<Server>> {
+        const response = await super.put<ServerUpdateValues, Server>(`/servers/${serverId}`, values);
         return response.data;
     }
     async deleteServer(id:string):Promise<OperationResult<boolean>> {
