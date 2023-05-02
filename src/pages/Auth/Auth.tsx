@@ -2,6 +2,7 @@ import { useState } from 'react';
 
 import Login from '../../components/auth/Login/Login';
 import Signup from '../../components/auth/Signup/Signup';
+import Header from '../../components/template/header/Header';
 
 import './Auth.scss';
 
@@ -23,8 +24,8 @@ function Auth() {
     
     return (
         <div className="auth">
-            <h2>Bienvenue sur<br />OpenWebChat</h2>
-            <div className='form-selector' onClick={toggleComponent}>{signup ? 'Nouveau ?\nS\'enregistrer' : 'Se connecter'}</div>
+            <Header/>
+            <div className='form-selector' onClick={toggleComponent}>{signup ? 'Nouveau ?\nS\'enregistrer' : 'Déjà inscrit?\nSe connecter'}</div>
             {signup ? displayLogin() : displaySignup()}
         </div>
     )

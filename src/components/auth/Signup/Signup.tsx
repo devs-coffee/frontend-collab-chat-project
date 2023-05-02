@@ -2,12 +2,14 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { useState } from 'react';
+import { AxiosError } from 'axios';
 
 import { Avatar, Breadcrumbs, Button } from '@mui/material';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import HighlightOffTwoToneIcon from '@mui/icons-material/HighlightOffTwoTone';
 import EditIcon from '@mui/icons-material/Edit';
 import { Snackbar } from '@mui/material';
+import SendIcon from '@mui/icons-material/Send';
 
 import { setLogs } from '../../../redux/authSlice';
 import { signupForm } from '../../../interfaces/ISignupForm';
@@ -17,7 +19,6 @@ import Modal from '../../../components/Modal/modal';
 import AvatarCropper from '../../avatarCropper/AvatarCropper';
 
 import "./Signup.scss";
-import { AxiosError } from 'axios';
 
 const authenticationService = new AuthenticationService();
 const formValidationService = new FormValidationService();
@@ -28,8 +29,6 @@ export default function Signup() {
     const [signupError, setSignupError] = useState<{isError:boolean, errorMessage:string}>({isError:false, errorMessage:''});
     const [ croppedImage, setCroppedImage ] = useState<string>('');
     const [ isOpen, setIsOpen] = useState<boolean>(false);
-    //const [ axiosError, setAxiosError] = useState<string>('');
-    
     
     const updateImage = (image: string) => {
         setCroppedImage(image);
@@ -113,7 +112,7 @@ export default function Signup() {
                             </div>
                             <ErrorMessage name="passwordConfirm" />
                             <div className="avatar-managment">
-                                <span>Avatar :</span><br/>
+                                <h3>Avatar :</h3>
                                 {(croppedImage === '')
                                     ?
                                         <Button variant="contained" startIcon={<AddPhotoAlternateIcon />} onClick={() => setIsOpen(true)}>
@@ -130,7 +129,7 @@ export default function Signup() {
                                 }
                             </div>
                             {isOpen && <Modal setIsOpen={setIsOpen} childComponent={<AvatarCropper setImage={updateImage}/>} />}
-                            <button type="submit" >envoi</button>
+                            <Button variant="contained" type='submit' endIcon={<SendIcon />}>Envoyer</Button>
                         </div>
                     </Form>
                 )}

@@ -1,9 +1,18 @@
 .DashboardServersHeading {
-    padding: 10px;
+    background-color: #e2f6f8;
+    box-shadow: inset 0px 6px 8px 10px #f5fcfd, inset 0px -6px 8px 10px #f5fcfd;
+    padding: 10px 10px 20px 10px;
+    & h3 {
+        margin: 0;
+        padding-top: 6px;
+    }
     & .MuiAvatar-root {
         cursor: pointer;
     }
     & a {
         text-decoration: none;
+    }
+    &__server-stack {
+        margin-top: 5px;
     }
 }

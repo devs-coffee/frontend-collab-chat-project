@@ -1,15 +1,13 @@
 import { useState } from "react";
-import { useDispatch } from "react-redux";
 
 import DisabledByDefaultRoundedIcon from '@mui/icons-material/DisabledByDefaultRounded';
 import { Button, Stack } from "@mui/material";
 import { red } from "@mui/material/colors";
 
 import { ChannelBase } from "../../interfaces/IChannel.base";
-import { ChannelService } from "../../services/channelService";
 import ChannelCreationForm from "../ChannelCreationForm/ChannelCreationForm";
-
 import ChannelUpdateForm from "../ChannelUpdateForm/ChannelUpdateForm";
+
 import './ChannelManager.scss';
 
 interface channelManagingProps {
@@ -18,7 +16,6 @@ interface channelManagingProps {
 }
 
 const ChannelManager: React.FC<channelManagingProps> = ({channels, avoidManaging}) => {
-    const dispatch = useDispatch();
     const [isUpdatingOne, setIsUpdatingOne] = useState<string>('');
     const [ mainContent, setMainContent ] = useState<string>('home');
     
@@ -27,12 +24,7 @@ const ChannelManager: React.FC<channelManagingProps> = ({channels, avoidManaging
         setMainContent('edit')
     }
 
-    function closeChannelCreation() {
-        setIsUpdatingOne('');
-        setMainContent('home');
-    }
-
-    function closeChannelUpdate() {
+    function closeChannelForm() {
         setIsUpdatingOne('');
         setMainContent('home');
     }
@@ -47,18 +39,16 @@ const ChannelManager: React.FC<channelManagingProps> = ({channels, avoidManaging
                     {channels.map(channel => (
                         <span className="channels-stack__items" key={`span-${channel.id}`} onClick={() => {editChannel(channel.id)}}>
                             {channel.title}
-                            
                         </span>
                     ))}
                 </Stack>
                 </>
             )}
             {mainContent === 'edit' && (
-                <ChannelUpdateForm channel={channels.find(chan => chan.id === isUpdatingOne)!} closeChannelUpdate={closeChannelUpdate} />
-                
+                <ChannelUpdateForm channel={channels.find(chan => chan.id === isUpdatingOne)!} closeChannelUpdate={closeChannelForm} />
             )}
             {mainContent === 'create' && (
-                <ChannelCreationForm closeChannelCreation={closeChannelCreation}/>
+                <ChannelCreationForm closeChannelCreation={closeChannelForm}/>
             )}
         </div>
     )

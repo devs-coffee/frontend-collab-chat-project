@@ -1,7 +1,8 @@
 @import '../../../styles/mixins';
 
 .Login  {
-    & Form {
+    margin-top: 0.6em;
+    & form {
         @include form;
     }
 }
