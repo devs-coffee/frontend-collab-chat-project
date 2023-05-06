@@ -4,6 +4,7 @@
         padding: 1em 0.5em 0.2em 0.5em;
         
         display: flex;
+        
     }
     & .logo-container {
         width: 100px;
@@ -22,6 +23,7 @@
             & .MuiAvatar-root {
                 margin-right: 0.4em;
             }
+            
         }
     }
 }
@@ -33,5 +35,17 @@
     & a {
         text-decoration: none;
         color: black;
+    }
+}
+
+[data-theme="dark"] {
+    & .logpad {
+        & .iconbutton-label {
+            color: #ddddee;
+        }
+    }
+    & .MuiPaper-root {
+        background-color: #1e1d29;
+        color: #ddddee;
     }
 }

@@ -16,3 +16,10 @@
         margin-top: 5px;
     }
 }
+
+[data-theme="dark"] .DashboardServersHeading {
+    background-color: #242331;
+    color: #ddddee;
+    box-shadow: inset 0px 4px 10px 0px #1e1d29, inset 0px -6px 8px 6px #1e1d29;
+
+}
