@@ -30,11 +30,17 @@ export default function ServerDisplay() {
     const [ joinServerError, setJoinServerError ] = useState<{isError:boolean, errorMessage:string}>({isError: false, errorMessage: ''});
     const [mainContent, setMainContent] = useState<string>('chat');
     const [channelId, setChannelId] = useState<string>("");
-    const [showMessage, setShowMessage] = useState<boolean>(false);
     const getServerData = async() => {
         try {
             const response = await serverService.getServerById(urlSearchParams.serverId!)
-            dispatch(updateServer(response.result));
+            if (response && response.isSucceed) {
+                const channels = response.result.channels;
+                const defaultChannel = channels[0];
+                setChannelId(defaultChannel.id);
+                dispatch(updateServer(response.result));
+            } else {
+                setServerError('Données du serveur non récupérées, veuillez réessayer');
+            }
         } catch (error) {
             setServerError('Données du serveur non récupérées, veuillez réessayer');
             if(error instanceof AxiosError) {
@@ -111,7 +117,6 @@ export default function ServerDisplay() {
 
     const redirectToChannel = (channelId: string) => {
         setChannelId(channelId);
-        setShowMessage(true);
     }
 
     useEffect(() => {
@@ -148,7 +153,7 @@ export default function ServerDisplay() {
                             {server?.channels && (
                             server.channels.map((channel:ChannelBase) => (
                                 <span className="channels-stack__items" key={`span-${channel.id}`}>
-                                    <p onClick={() => redirectToChannel(channel.id)}>{channel.title}</p>
+                                    <p className="channel-title" onClick={() => redirectToChannel(channel.id)}>{channel.title}</p>
                                 </span>
                             ))
                         )}
@@ -157,7 +162,7 @@ export default function ServerDisplay() {
                     {mainContent === 'chat' && (
                         <div className="ServerDisplay__main-content__middle-box">
                         <h4>Chat-box</h4>
-                        {showMessage && <Message channelId={channelId} />}
+                        {channelId && channelId !== '' && <Message channelId={channelId} key={channelId} />}
                     </div>
                     )}
                     {mainContent === 'updateChannel' && (
