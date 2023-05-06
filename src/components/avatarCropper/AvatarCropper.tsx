@@ -107,7 +107,7 @@ export default function AvatarCropper({setImage}: avatar) {
             </>
             }
 
-            <input type="file" id="imageInput" name="image" onChange={onFileSelected} style={{display: "none"}} />
+            <input type="file" id="imageInput" name="image" onChange={onFileSelected} />
             {(!image || image === '') &&
                 <div className="droparea" onDrop={handleDrop} onDragEnter={handleDragIn} onDragLeave={handleDragOut} onDragOver={handleDrag}>
                     <p>déposer une image<br/><br/>ou</p>
