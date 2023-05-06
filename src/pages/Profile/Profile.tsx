@@ -15,6 +15,7 @@ import AvatarCropper from '../../components/avatarCropper/AvatarCropper';
 import Modal from '../../components/Modal/modal';
 
 import './Profile.scss';
+import DarkModeSwitch from '../../components/DarkModeSwitch/DarkModeSwitch';
 
 const formValidationService = new FormValidationService();
 const userService = new UserService();

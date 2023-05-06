@@ -8,6 +8,7 @@ import { unsetLogs } from "../../../redux/authSlice";
 import { unsetServers } from "../../../redux/serversSlice";
 
 import './Header.scss';
+import DarkModeSwitch from "../../DarkModeSwitch/DarkModeSwitch";
 
 export default function Header() {
     const dispatch = useDispatch();
@@ -25,17 +26,21 @@ export default function Header() {
         dispatch(unsetLogs());
         dispatch(unsetServers());
     }
+    
 
     return (
         <div className="Header">
             <h1>
                 <div className="logo-container">
-                    <img src="./images/openChatRooms.png" alt="logo openChatRooms" />
+                    <Link to="/"><img src="./images/openChatRooms.png" alt="logo openChatRooms" /></Link>
+                    
                 </div>
                 <div className="sitename">
-                    OpenWebChat
+                    <Link to="/">OpenWebChat</Link>
+                    
                 </div>
                 <div className="logpad-container">
+                    <DarkModeSwitch />
                     {authStatus.isLogged && (
                         <div className="logpad">
                             <IconButton
@@ -46,7 +51,7 @@ export default function Header() {
                             >
                                 {authStatus.user.picture && <Avatar alt="votre avatar" src={authStatus.user.picture} />}
                                 {!authStatus.user.picture && <Avatar>{authStatus.user.pseudo.substring(0, 1).toUpperCase()}</Avatar>}
-                                {authStatus.user.pseudo}
+                                <span className="iconbutton-label">{authStatus.user.pseudo}</span>
                             </IconButton>
                             <Menu
                                 anchorEl={anchorEl}
