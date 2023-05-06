@@ -10,8 +10,8 @@
   justify-content: center;
   align-items: center;
 
-  .modal {
-    background-color: #fff;
+  & .modal {
+    background-color: #c3f0f5;
     padding: 20px;
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
@@ -23,11 +23,8 @@
 
     &-close {
       position: absolute;
-      top: 50px;
-      right: 50px;
-      border: none;
-      background: transparent;
-      font-size: 20px;
+      top: 10px;
+      right: 10px;
       cursor: pointer;
     }
 
@@ -35,4 +32,8 @@
       margin-top: 20px;
     }
   }
+}
+
+[data-theme="dark"] .modal{
+  background-color: #010925;
 }
