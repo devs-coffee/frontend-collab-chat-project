@@ -13,7 +13,7 @@ export default function Dashboard() {
     return (
         <div className="Dashboard">
             <DashboardServersHeading setDashboardContent={setDashboardContent} />
-            <h2>Dashboard works !</h2>
+            <h2>Dashboard</h2>
             {dashboardContent === '' && <DashboardPanel />}
             {dashboardContent === 'addServer' && (
                 <ServerCreationForm setDashboardContent={setDashboardContent}/>

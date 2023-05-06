@@ -1,6 +1,6 @@
 import { useEffect } from "react";
-import { Outlet, Link } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { Outlet } from "react-router-dom";
 
 import useIoSocket from "../../Hooks/useIoSocket";
 import Header from "../../components/template/header/Header";
@@ -35,7 +35,6 @@ export default function Home() {
   return (
     <div className="Home">
       <Header/>
-      <nav><Link to="/">Accueil</Link></nav>
       <Outlet />
     </div>
   );

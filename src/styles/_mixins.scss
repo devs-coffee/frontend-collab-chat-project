@@ -1,10 +1,23 @@
 @mixin form {
-    background-color: gray;
+    background-color: #c3f0f5;
+    width: fit-content;
+    padding: 0;
     text-align: center;
+    border: 1px solid lightgrey;
+    border-radius: 12px;
+    overflow: hidden;
+    & h2 {
+        background-color: #aeedf5;
+        margin: 0;
+        padding-bottom: 0.3em;
+        border-radius: 12px;
+        box-shadow: inset -2px -2px 10px 1px #98d2d9, inset 2px 2px 10px 4px #f6fafa
+        
+    }
     & .field-box {
-        padding: 20px;
+        padding: 20px 20px 5px 20px;
         margin: auto;
-        background-color: darkgray;
+        //background-color: darkgray;
         width: fit-content;
     }
     margin: auto;
@@ -15,7 +28,23 @@
         
     }
     & label {
-        margin-right: 5px;
-        
+        margin-right: 0.5em;
+    }
+    & .MuiButtonBase-root {
+        margin: 0.5em auto;
+    }
+}
+
+@mixin darkForm {
+    background-color: #010925;
+    border: 1px solid #282a75;
+    & h2 {
+        background-color: #021041;
+        box-shadow: inset -2px -2px 10px 1px #0c001f, inset 2px 2px 10px 4px #bbc7c7
+
+    }
+    & input {
+        background-color: #282a75;
+        color: #bbc7c7;
     }
 }

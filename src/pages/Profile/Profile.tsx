@@ -3,9 +3,10 @@ import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AxiosError } from 'axios';
 
-import { Avatar, Breadcrumbs, Snackbar } from '@mui/material';
+import { Avatar, Breadcrumbs, Button, Snackbar } from '@mui/material';
 import HighlightOffTwoToneIcon from '@mui/icons-material/HighlightOffTwoTone';
 import EditIcon from '@mui/icons-material/Edit';
+import SendIcon from '@mui/icons-material/Send';
 
 import { FormValidationService } from '../../utils/formValidationService';
 import { UserService } from '../../services/userService';
@@ -61,7 +62,6 @@ export default function Profile() {
 
     return (
         <div className="Profile">
-            <h2>Profile works !</h2>
             <Formik
                 initialValues={initialValues}
                 validate={formValidationService.validateProfileUpdate}
@@ -90,6 +90,7 @@ export default function Profile() {
             >
                 {formik => (
                     <Form className='profile-update-form'>
+                        <h2>Votre Profil :</h2>
                         <div className='field-box'>
                             <div className='profile-update-form-pseudo form__fields'>
                                 <label className='form__labels' htmlFor='profile-update_pseudo'>Pseudo :</label>
@@ -164,7 +165,7 @@ export default function Profile() {
                         <br />
                         <br />
                         <br />
-                        <button type="submit" >envoi</button>
+                        <Button variant="contained" type='submit' endIcon={<SendIcon />}>Envoyer</Button>
                     </Form>
                 )}
             </Formik>

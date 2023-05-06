@@ -1,4 +1,7 @@
 import { Dispatch, ReactNode, SetStateAction, useRef } from 'react';
+
+import DisabledByDefaultRoundedIcon from '@mui/icons-material/DisabledByDefaultRounded';
+
 import './modal.scss';
 
 
@@ -18,9 +21,10 @@ function Modal( {setIsOpen, childComponent} : openModal) {
     <>
       <div className="modal-overlay">
         <div className="modal" ref={modalRef}>
-          <button className="modal-close" onClick={closeModal}>
-            X
-          </button>
+          <div className='modal-close'>
+            <DisabledByDefaultRoundedIcon color="warning" onClick={closeModal}/>
+          </div>
+          
           <div className="modal-content">
             {childComponent}
           </div>

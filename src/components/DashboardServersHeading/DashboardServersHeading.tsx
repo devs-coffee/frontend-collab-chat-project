@@ -20,10 +20,11 @@ export default function DashboardServersHeading(props:DashboardServersHeadingPro
     const servers = useSelector((state:any) => state.servers);
     return (
         <div className="DashboardServersHeading">
-            <h3>Servers heading works !</h3>
+            <h3>Vos serveurs :</h3>
             { servers.status === "idle" && <span>Veuillez patienter</span> }
             { servers.error && <span>{servers.error}</span>}
             { servers.status === "succeed" &&
+                <div className='DashboardServersHeading__server-stack'>
                 <Stack direction="row" spacing={2}>
                     {servers.data.map((server:Server) => (
                         <Link to={`/server/${server.id}`} key={`linkto-${server.id}`} title={server.name}>
@@ -41,6 +42,7 @@ export default function DashboardServersHeading(props:DashboardServersHeadingPro
                         <SearchIcon />
                     </Avatar>
                 </Stack>
+                </div>
             }
         </div>
     )
