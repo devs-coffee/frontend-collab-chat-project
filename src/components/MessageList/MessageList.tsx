@@ -4,7 +4,7 @@ import { IMessage } from '../../interfaces/IMessage';
 import { useSelector } from 'react-redux';
 import { Avatar, Snackbar } from '@mui/material';
 import { AxiosError } from 'axios';
-import './message.scss';
+import './MessageList.scss';
 
 type message = {
   channelId: string

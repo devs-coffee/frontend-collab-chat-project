@@ -1,11 +1,11 @@
 import { useParams } from "react-router-dom";
-import Message from "../../components/Message/message"
+import Message from "../../components/MessageList/MessageList"
 
-const MessageViewer = () => {
+const PrivateMessages = () => {
     const urlSearchParams = useParams();
     return (
         <Message channelId={urlSearchParams?.channelId!}/>
     )
 }
 
-export default MessageViewer;
+export default PrivateMessages;

@@ -8,7 +8,7 @@ import { Avatar, Snackbar, Stack } from "@mui/material";
 
 import ServerUpdateForm from "../../components/ServerUpdateForm/ServerUpdateForm";
 import ChannelManager from "../../components/ChannelManager/ChannelManager";
-import Message from "../../components/Message/message";
+import Message from "../../components/MessageList/MessageList";
 import { User } from "../../interfaces/IUser";
 import { ChannelBase } from "../../interfaces/IChannel.base";
 import { addServer, removeServer, updateServer } from "../../redux/serversSlice";
