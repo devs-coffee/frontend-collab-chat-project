@@ -27,7 +27,7 @@
         }
     }
     &__main-content {
-        flex: 1;
+        flex: 1 1;
         min-height: 0;
         display: flex;
         &__members-box {
@@ -44,9 +44,10 @@
             }
         }
         &__middle-box {
-            overflow-y: scroll;
-            flex-grow: 1;
-            padding: 1em;
+            flex: 1 1;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
             & h4 {
                 text-align: center;
             }

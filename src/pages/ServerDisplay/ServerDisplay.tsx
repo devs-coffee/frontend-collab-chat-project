@@ -15,6 +15,7 @@ import { addServer, removeServer, updateServer } from "../../redux/serversSlice"
 import { ServerService } from "../../services/serverService";
 
 import './ServerDisplay.scss';
+import MessageBox from "../../components/MessageBox/MessageBox";
 
 const serverService = new ServerService();
 
@@ -160,9 +161,9 @@ export default function ServerDisplay() {
                     </div>
                     {mainContent === 'chat' && (
                         <div className="ServerDisplay__main-content__middle-box">
-                        <h4>Chat-box</h4>
-                        {channelId && channelId !== '' && <Message channelId={channelId} key={channelId} />}
-                    </div>
+                            <h4>Chat-box</h4>
+                            {channelId && channelId !== '' && <MessageBox channelId={channelId} key={channelId} />}
+                        </div>
                     )}
                     {mainContent === 'updateChannel' && (
                         <div className="ServerDisplay__main-content__middle-box">
