@@ -8,12 +8,13 @@ import { Avatar, Snackbar, Stack } from "@mui/material";
 
 import ServerUpdateForm from "../../components/ServerUpdateForm/ServerUpdateForm";
 import ChannelManager from "../../components/ChannelManager/ChannelManager";
+import Message from "../../components/Message/message";
 import { User } from "../../interfaces/IUser";
 import { ChannelBase } from "../../interfaces/IChannel.base";
 import { addServer, removeServer, updateServer } from "../../redux/serversSlice";
 import { ServerService } from "../../services/serverService";
+
 import './ServerDisplay.scss';
-import Message from "../../components/Message/message";
 
 const serverService = new ServerService();
 
@@ -33,19 +34,16 @@ export default function ServerDisplay() {
     const getServerData = async() => {
         try {
             const response = await serverService.getServerById(urlSearchParams.serverId!)
-            if (response && response.isSucceed) {
-                const channels = response.result.channels;
-                const defaultChannel = channels[0];
-                setChannelId(defaultChannel.id);
-                dispatch(updateServer(response.result));
-            } else {
-                setServerError('Données du serveur non récupérées, veuillez réessayer');
-            }
+            const channels = response.result.channels;
+            const defaultChannel = channels[0];
+            setChannelId(defaultChannel.id);
+            dispatch(updateServer(response.result));
         } catch (error) {
-            setServerError('Données du serveur non récupérées, veuillez réessayer');
+            let errorMessage: string = 'Données du serveur non récupérées, veuillez réessayer';
             if(error instanceof AxiosError) {
-                setServerError(error.response?.data.message);
+                errorMessage = error.response?.data.message;
             }
+            setServerError(errorMessage);
             return;
         }
     }
@@ -115,8 +113,9 @@ export default function ServerDisplay() {
         setMainContent('chat');
     }
 
-    const redirectToChannel = (channelId: string) => {
-        setChannelId(channelId);
+    const redirectToChannel = (toChannelId: string) => {
+        console.log(toChannelId);
+        setChannelId(toChannelId);
     }
 
     useEffect(() => {

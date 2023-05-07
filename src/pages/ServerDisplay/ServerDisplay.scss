@@ -27,9 +27,9 @@
         }
     }
     &__main-content {
-        flex-grow: 1;
+        flex: 1;
+        min-height: 0;
         display: flex;
-        
         &__members-box {
             border: 1px solid lightgray;
             width: fit-content;
@@ -44,6 +44,7 @@
             }
         }
         &__middle-box {
+            overflow-y: scroll;
             flex-grow: 1;
             padding: 1em;
             & h4 {

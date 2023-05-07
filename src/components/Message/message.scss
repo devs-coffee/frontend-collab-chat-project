@@ -1,7 +1,11 @@
-.message {
-    display: flex;
-    justify-items: center;
-    & .message_pseudo {
-        margin-left: 15px;
+.Message {
+    height: 100%;
+    & .message {
+        display: flex;
+        justify-items: center;
+        & .message_pseudo {
+            margin-left: 15px;
+        }
     }
 }
+
