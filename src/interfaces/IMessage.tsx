@@ -6,5 +6,6 @@ export interface IMessage {
     toUserId?: string;
     channelId? : string;
     content: string;
-    user?: User
+    user?: User;
+    createdAt?: string;
 }

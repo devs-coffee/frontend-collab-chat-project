@@ -1,7 +1,6 @@
 import { Fetcher } from "./fetcher";
 import { OperationResult } from "../interfaces/IOperationResult";
 import { IMessage } from "../interfaces/IMessage";
-import { channel } from "diagnostics_channel";
 
 export class MessageService extends Fetcher {
     async send(values: IMessage):Promise<OperationResult<IMessage>> {
