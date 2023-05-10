@@ -8,12 +8,14 @@ import { Avatar, Snackbar, Stack } from "@mui/material";
 
 import ServerUpdateForm from "../../components/ServerUpdateForm/ServerUpdateForm";
 import ChannelManager from "../../components/ChannelManager/ChannelManager";
+import Message from "../../components/MessageList/MessageList";
 import { User } from "../../interfaces/IUser";
 import { ChannelBase } from "../../interfaces/IChannel.base";
 import { addServer, removeServer, updateServer } from "../../redux/serversSlice";
 import { ServerService } from "../../services/serverService";
 
 import './ServerDisplay.scss';
+import MessageBox from "../../components/MessageBox/MessageBox";
 
 const serverService = new ServerService();
 
@@ -29,16 +31,20 @@ export default function ServerDisplay() {
     const [usersError, setUsersError] = useState<string>('');
     const [ joinServerError, setJoinServerError ] = useState<{isError:boolean, errorMessage:string}>({isError: false, errorMessage: ''});
     const [mainContent, setMainContent] = useState<string>('chat');
-    
+    const [channelId, setChannelId] = useState<string>("");
     const getServerData = async() => {
         try {
             const response = await serverService.getServerById(urlSearchParams.serverId!)
+            const channels = response.result.channels;
+            const defaultChannel = channels[0];
+            setChannelId(defaultChannel.id);
             dispatch(updateServer(response.result));
         } catch (error) {
-            setServerError('Données du serveur non récupérées, veuillez réessayer');
+            let errorMessage: string = 'Données du serveur non récupérées, veuillez réessayer';
             if(error instanceof AxiosError) {
-                setServerError(error.response?.data.message);
+                errorMessage = error.response?.data.message;
             }
+            setServerError(errorMessage);
             return;
         }
     }
@@ -108,6 +114,11 @@ export default function ServerDisplay() {
         setMainContent('chat');
     }
 
+    const redirectToChannel = (toChannelId: string) => {
+        console.log(toChannelId);
+        setChannelId(toChannelId);
+    }
+
     useEffect(() => {
         getServerData();
         getServerUsers();
@@ -142,8 +153,7 @@ export default function ServerDisplay() {
                             {server?.channels && (
                             server.channels.map((channel:ChannelBase) => (
                                 <span className="channels-stack__items" key={`span-${channel.id}`}>
-                                    {channel.title}
-                                    
+                                    <p className="channel-title" onClick={() => redirectToChannel(channel.id)}>{channel.title}</p>
                                 </span>
                             ))
                         )}
@@ -151,9 +161,9 @@ export default function ServerDisplay() {
                     </div>
                     {mainContent === 'chat' && (
                         <div className="ServerDisplay__main-content__middle-box">
-                        <h4>Chat-box</h4>
-                        <button onClick={() => {console.log(server)}}>test</button>
-                    </div>
+                            <h4>Chat-box</h4>
+                            {channelId && channelId !== '' && <MessageBox channelId={channelId} key={channelId} />}
+                        </div>
                     )}
                     {mainContent === 'updateChannel' && (
                         <div className="ServerDisplay__main-content__middle-box">

@@ -27,9 +27,9 @@
         }
     }
     &__main-content {
-        flex-grow: 1;
+        flex: 1 1;
+        min-height: 0;
         display: flex;
-        
         &__members-box {
             border: 1px solid lightgray;
             width: fit-content;
@@ -44,8 +44,10 @@
             }
         }
         &__middle-box {
-            flex-grow: 1;
-            padding: 1em;
+            flex: 1 1;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
             & h4 {
                 text-align: center;
             }
@@ -66,6 +68,7 @@
             & .channels-stack {
                 &__items {
                     margin-left: 0.5em;
+                    cursor: pointer;
                 }
             }
         }

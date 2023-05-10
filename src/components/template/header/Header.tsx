@@ -13,7 +13,6 @@ import DarkModeSwitch from "../../DarkModeSwitch/DarkModeSwitch";
 export default function Header() {
     const dispatch = useDispatch();
     const authStatus = useSelector((state:any) => state.auth);
-    
     const [anchorEl, setAnchorEl]  = useState<null | HTMLElement>(null);
     const isAccountMenuOpen = Boolean(anchorEl);
     const handleAvatarClick = (event: React.MouseEvent<HTMLElement>) => {
