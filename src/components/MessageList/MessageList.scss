@@ -3,15 +3,4 @@
     min-height: 0;
     overflow-y: scroll;
     padding: 0 0.5em;
-    & .message {
-        display: flex;
-        justify-items: center;
-        & .message_pseudo {
-            margin-left: 15px;
-        }
-        & .message_date {
-            font-style: italic;
-            font-size: smaller;
-        }
-    }
 }

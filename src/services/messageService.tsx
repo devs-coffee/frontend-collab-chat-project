@@ -12,4 +12,14 @@ export class MessageService extends Fetcher {
         const response = await super.get<IMessage[]>(`/messages/${channelId}`);
         return response.data;
     }
+
+    async update(messageId: string, content: string):Promise<OperationResult<IMessage>> {
+        const response = await super.put<string, IMessage>(`/messages/${messageId}`, content);
+        return response.data;
+    }
+
+    async remove(messageId: string):Promise<OperationResult<IMessage[]>> {
+        const response = await super.delete<IMessage[]>(`/messages/${messageId}`);
+        return response.data;
+    }
 }
