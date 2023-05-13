@@ -32,11 +32,7 @@ export default function  Message({message}: messageType)  {
 
         }
     }
-
-    const remove = () => {
-        
-    }
-
+    
   return (
     <div className="Message">
         <div className='message' key={`message=${message.id}`}>
