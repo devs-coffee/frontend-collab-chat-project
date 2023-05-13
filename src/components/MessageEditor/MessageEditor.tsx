@@ -1,14 +1,10 @@
 import { useState } from "react";
-import { useDispatch } from "react-redux";
-import { MessageService } from "../../services/messageService";
 type messageHandler = {
     sendMessage: (message:string) => void,
     messageContent?: string
 }
 
 export default function MessageEditor({sendMessage, messageContent}: messageHandler) {
-    const dispatch = useDispatch();
-    const messageService = new MessageService();
     const [messageToSend, setMessageToSend] = useState<string>(messageContent!);
 
     async function handleKeypress(e: React.KeyboardEvent<HTMLInputElement>) {

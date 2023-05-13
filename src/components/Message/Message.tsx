@@ -1,10 +1,13 @@
 import { Avatar } from '@mui/material';
-import { IMessage } from '../../interfaces/IMessage';
+import { IMessage, IUpdateMessage } from '../../interfaces/IMessage';
 import './Message.scss';
 import { useState } from 'react';
 import MessageEditor from '../MessageEditor/MessageEditor';
 import Actions from '../commons/Actions';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { MessageService } from '../../services/messageService';
+import { AxiosError } from 'axios';
+import { removeMessage, updateMessage } from '../../redux/messagesSlice';
 
 type messageType = {
     message: IMessage
@@ -16,21 +19,55 @@ export default function  Message({message}: messageType)  {
     const isToday = currentDate === messageDate;
     const [isEdit, setIsEdit] = useState(false);
     const authStatus = useSelector((state:any) => state.auth);
+    const dispatch = useDispatch();
+    const [getMessagesError, setGetMessagesError] = useState<{isError: boolean, errorMessage: string}>({isError:false, errorMessage:''});
 
-    const sendMessage = async (message: string) => {
+    const sendMessage = async (content: string) => {
         setIsEdit(false)
-        return message
+        update(content)
     }
 
     const triggerAction = (action: string) => {
-        console.log(action)
-        if(action === 'Modifier') {
+        if (action === 'Modifier') {
             setIsEdit(true)
-
         }
         else if (action === 'Supprimer') {
-
+            remove(message.id!).catch((error) => console.log(error))
         }
+    }
+
+    const remove = async (id: string) => {
+        try {
+            const response = await new MessageService().remove(id);
+            if (response.isSucceed) {
+                dispatch<any>(removeMessage({channelId: message.channelId!, message: message}));
+            }
+        } catch (error) {
+            let errorMessage:string;
+            if (error instanceof AxiosError) {
+                errorMessage = error.response?.data.message;
+            } else {
+                errorMessage = 'une erreur est survenue, veuillez réessayer';
+            }
+            setGetMessagesError({isError: true, errorMessage});
+            }
+        }
+
+    const update = async(content: string) => {
+        try {
+            const response = await new MessageService().update(message.id!, { content });
+            if (response.isSucceed) {
+                dispatch<any>(updateMessage({channelId: message.channelId!, message: response.result}));
+            }
+        } catch (error) {
+            let errorMessage:string;
+            if (error instanceof AxiosError) {
+                errorMessage = error.response?.data.message;
+            } else {
+                errorMessage = 'une erreur est survenue, veuillez réessayer';
+            }
+            setGetMessagesError({isError: true, errorMessage});
+            }
     }
     
   return (
