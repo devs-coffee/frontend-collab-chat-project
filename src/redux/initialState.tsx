@@ -1,5 +1,7 @@
 import { reduxData } from "../interfaces/IReduxData";
 
+
+
 const data:reduxData = {
     authStatus: {
         isLogged: false,
@@ -7,6 +9,11 @@ const data:reduxData = {
     },
     servers: {
         data: [],
+        status: "idle",
+        error: null
+    },
+    messages: {
+        data: {},
         status: "idle",
         error: null
     }
