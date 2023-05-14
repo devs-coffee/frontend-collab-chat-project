@@ -35,7 +35,7 @@ export default function MessageBox ( { channelId } : ChannelId) {
             const response = await messageService.send(message);
             if(response.isSucceed){
                 const message = response.result;
-                dispatch<any>(addMessage({channelId, message}))
+                dispatch<any>(addMessage(message))
             }
         }
         catch(error){

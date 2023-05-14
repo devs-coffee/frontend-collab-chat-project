@@ -2,6 +2,7 @@ import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import data from '../datas/reduxDefault';
 import { IMessagesPayload, IMessagePayload } from '../interfaces/IMessagePayload';
 import { MessageService } from '../services/messageService';
+import { IMessage } from '../interfaces/IMessage';
 
 export const messageSlice = createSlice({
     name: 'messages',
@@ -12,24 +13,24 @@ export const messageSlice = createSlice({
             state.data[channelId] = messages;
             return state;
         },
-        addMessage: (state, action: PayloadAction<IMessagePayload>) => {
-            const { channelId, message } = action.payload;
-            state.data[channelId].push(message);
+        addMessage: (state, action: PayloadAction<IMessage>) => {
+            const message = action.payload;
+            state.data[message.channelId!].push(message);
             return state;
         },
-        removeMessage: (state, action: PayloadAction<IMessagePayload>) => {
-            const { channelId, message } = action.payload;
-            state.data[channelId] = [...state.data[channelId].filter(m => m.id !== message.id)];
+        removeMessage: (state, action) => {
+            const message = action.payload;
+            state.data[message.channelId] = [...state.data[message.channelId].filter(m => m.id !== message.id)];
             return state;
         },
-        updateMessage: (state, action: PayloadAction<IMessagePayload>) => {
-            const { channelId, message } = action.payload;
-            const datas = [...state.data[channelId]].map(elt => {return{...elt}});
+        updateMessage: (state, action: PayloadAction<IMessage>) => {
+            const  message = action.payload;
+            const datas = [...state.data[message.channelId!]].map(elt => {return{...elt}});
             const oldServer = datas.find(m => m.id === message.id);
             if(oldServer) {
                 oldServer.content = message.content;
             }
-            state.data[channelId] = datas;
+            state.data[message.channelId!] = datas;
             const newState = {...state, datas};
             state = newState;
         },

@@ -32,7 +32,7 @@ export default function  Message({message}: messageType)  {
             setIsEdit(true)
         }
         else if (action === 'Supprimer') {
-            remove(message.id!).catch((error) => console.log(error))
+            remove(message.id!);
         }
     }
 
@@ -40,7 +40,7 @@ export default function  Message({message}: messageType)  {
         try {
             const response = await new MessageService().remove(id);
             if (response.isSucceed) {
-                dispatch<any>(removeMessage({channelId: message.channelId!, message: message}));
+                dispatch<any>(removeMessage(message));
             }
         } catch (error) {
             let errorMessage:string;
@@ -57,7 +57,7 @@ export default function  Message({message}: messageType)  {
         try {
             const response = await new MessageService().update(message.id!, { content });
             if (response.isSucceed) {
-                dispatch<any>(updateMessage({channelId: message.channelId!, message: response.result}));
+                dispatch<any>(updateMessage(response.result));
             }
         } catch (error) {
             let errorMessage:string;
