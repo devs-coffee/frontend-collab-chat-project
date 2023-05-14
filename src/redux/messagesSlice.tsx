@@ -1,6 +1,6 @@
 import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import data from '../datas/reduxDefault';
-import { IMessagesPayload, IMessagePayload } from '../interfaces/IMessagePayload';
+import { IMessagesPayload } from '../interfaces/IMessagePayload';
 import { MessageService } from '../services/messageService';
 import { IMessage } from '../interfaces/IMessage';
 
