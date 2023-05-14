@@ -1,12 +1,11 @@
-import { createAsyncThunk, createSlice, current } from "@reduxjs/toolkit";
-import data from "../datas/reduxDefault";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
+import data from "../datas/reduxDefault";
 import { OperationResult } from "../interfaces/IOperationResult";
 import { Server } from "../interfaces/IServer";
 import { ServerService } from "../services/serverService";
 
 const serverService = new ServerService();
-
 
 export const serversSlice = createSlice({
     name: 'servers',

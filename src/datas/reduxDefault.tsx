@@ -9,6 +9,11 @@ const data:reduxData = {
         data: [],
         status: "idle",
         error: null
+    },
+    users: {
+        data: [],
+        status: "idle",
+        error: null
     }
 };
 

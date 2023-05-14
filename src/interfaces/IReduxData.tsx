@@ -11,4 +11,9 @@ export interface reduxData {
         status: "idle" | "pending" | "succeed" | "failed",
         error?: string | null
     }
+    users: {
+        data: User[],
+        status: "idle" | "pending" | "succeed" | "failed",
+        error?: string | null
+    }
 }
