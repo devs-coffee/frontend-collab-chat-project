@@ -26,9 +26,9 @@ export const messageSlice = createSlice({
         updateMessage: (state, action: PayloadAction<IMessage>) => {
             const  message = action.payload;
             const datas = [...state.data[message.channelId!]].map(elt => {return{...elt}});
-            const oldServer = datas.find(m => m.id === message.id);
-            if(oldServer) {
-                oldServer.content = message.content;
+            const oldMessage = datas.find(m => m.id === message.id);
+            if(oldMessage) {
+                oldMessage.content = message.content;
             }
             state.data[message.channelId!] = datas;
             const newState = {...state, datas};
