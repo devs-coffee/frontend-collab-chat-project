@@ -69,14 +69,14 @@ export default function  Message({message}: messageType)  {
             setGetMessagesError({isError: true, errorMessage});
             }
     }
-    
+
   return (
     <div className="Message">
         <div className='message' key={`message=${message.id}`}>
             {message.user?.picture && message.user.picture !== ''
             ? <Avatar alt="user picture" src={message.user.picture}></Avatar>  
             : <Avatar alt="user picture">{message.user?.pseudo.substring(0,1).toUpperCase()}</Avatar>}
-            <p className="message_pseudo">{message.user?.pseudo} <span className='message_date'>{isToday ? "Aujourd'hui" : messageDate} à {new Date(message.createdAt!).getHours()}:{new Date(message.createdAt!).getMinutes()}</span></p>
+            <p className="message_pseudo">{message.user?.pseudo} <span className='message_date'>{isToday ? "Aujourd'hui" : 'le '  + messageDate} à {new Date(message.createdAt!).getHours()}:{new Date(message.createdAt!).getMinutes()}</span></p>
         </div>
 
         {!isEdit 
