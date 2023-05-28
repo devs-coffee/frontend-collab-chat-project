@@ -8,8 +8,9 @@ export class MessageService extends Fetcher {
         return response.data;
     }
 
-    async getMessagesByChannelId(channelId: string):Promise<OperationResult<IMessage[]>> {
-        const response = await super.get<IMessage[]>(`/messages/${channelId}`);
+    async getMessagesByChannelId(channelId: string, offset?: string):Promise<OperationResult<IMessage[]>> {
+        const url = offset ? `/messages/${channelId}?offset=${offset}` : `/messages/${channelId}`;
+        const response = await super.get<IMessage[]>(url);
         return response.data;
     }
 
