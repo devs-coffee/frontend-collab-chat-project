@@ -9,6 +9,8 @@ import { IMessage } from "../../interfaces/IMessage";
 import { useSelector } from "react-redux";
 import { AxiosError } from "axios";
 import { Snackbar } from "@mui/material";
+import useIoSocket from '../../Hooks/useIoSocket';
+import { IoProvider } from '../../interfaces/IIoProvider';
 
 type ChannelId = {
     channelId: string
@@ -21,6 +23,7 @@ export default function MessageBox ( { channelId } : ChannelId) {
     const messages = useSelector((state:any) => state.messages.data[channelId]);
     const [getMessagesError, setGetMessagesError] = useState<{isError: boolean, errorMessage: string}>({isError:false, errorMessage:''});
     const dispatch = useDispatch();
+    const { ioClose, Socket } = useIoSocket() as IoProvider;
 
     const sendMessage = async (messageContent:string) => {
         if(messageContent === '') {
@@ -59,7 +62,16 @@ export default function MessageBox ( { channelId } : ChannelId) {
     useEffect(() => {
         if(stateMessages.status === "idle" || messages === undefined) {
           dispatch<any>(fetchMessages(channelId));
+
         }
+        Socket.on(`message_${channelId}`, (res: IMessage) => {
+            if(res.userId !== authStatus.user.id){
+                dispatch<any>(addMessage(res))
+            }
+      });
+      return () => {
+        Socket.off(`message_${channelId}`)
+      }
     },[stateMessages.status, dispatch, channelId])
     
     return (
