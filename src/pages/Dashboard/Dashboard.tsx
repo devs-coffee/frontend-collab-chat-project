@@ -6,10 +6,13 @@ import ServerCreationForm from "../../components/ServerCreationForm/ServerCreati
 import ServerSearching from '../../components/ServerSearching/ServerSearching';
 
 import "./Dashboard.scss";
+import { useSelector } from "react-redux";
 
 export default function Dashboard() {
     const [dashboardContent, setDashboardContent] = useState<string>('');
+    const usersState = useSelector((state:any) => state.users);
 
+    console.log(usersState);
     return (
         <div className="Dashboard">
             <DashboardServersHeading setDashboardContent={setDashboardContent} />

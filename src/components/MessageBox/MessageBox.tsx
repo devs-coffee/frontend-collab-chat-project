@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
-import { MessageService } from "../../services/messageService";
-import MessageEditor from "../MessageEditor/MessageEditor";
-import MessageList from "../MessageList/MessageList";
-
-import "./MessageBox.scss";
-import { IMessage } from "../../interfaces/IMessage";
 import { useSelector } from "react-redux";
 import { AxiosError } from "axios";
+
 import { Snackbar } from "@mui/material";
+
+import MessageList from "../MessageList/MessageList";
+import MessageEditor from "../MessageEditor/MessageEditor";
+import { IMessage } from "../../interfaces/IMessage";
+import { MessageService } from "../../services/messageService";
+
+import "./MessageBox.scss";
 
 type ChannelId = {
     channelId: string
@@ -24,7 +26,6 @@ export default function MessageBox ( { channelId } : ChannelId) {
         try {
             const response = await messageService.getMessagesByChannelId(channelId);
             if(response.isSucceed) {
-                console.log(response.result);
                 setMessages(response.result);
             }
         } catch (error) {
