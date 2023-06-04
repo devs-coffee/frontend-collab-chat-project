@@ -6,21 +6,17 @@ import { Avatar, Snackbar } from '@mui/material';
 import { ServerService } from '../../services/serverService';
 import { Server } from '../../interfaces/IServer';
 import { AxiosError } from 'axios';
-import { useDispatch } from 'react-redux';
-import { addServer } from '../../redux/serversSlice';
 
 export default function ServerSearching() {
     const [searchInput, setSearchInput] = useState('');
     const [foundServers, setFoundServers] = useState<Server[] | null>(null);
     const [ searchError, setSearchError ] = useState<{isError:boolean, errorMessage:string}>({isError: false, errorMessage: ''});
-    const dispatch = useDispatch();
 
     const searchServers = async () => {
         setSearchError({isError: false, errorMessage: ''});
         try {
             const response = await new ServerService().searchServers(searchInput);
             setFoundServers(response.result);
-            dispatch(addServer(response.result))
         } catch(error) {
             let errorMessage: string = 'Une erreur est survenue, veuillez réessayer';
             if(error instanceof AxiosError) {

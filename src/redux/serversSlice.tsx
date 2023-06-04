@@ -15,7 +15,7 @@ export const serversSlice = createSlice({
             return state;
         },
         addServer: (state, action) => {
-            !state.data.includes(action.payload) && state.data.push(action.payload);
+            state.data.push(action.payload);
             return state;
         },
         removeServer: (state, action) => {
