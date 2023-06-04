@@ -8,15 +8,13 @@ import { UserService } from "../../services/userService";
 
 import './UserDisplay.scss';
 
-const userService = new UserService();
-
 export default function UserDisplay() {
     const [displayedUser, setDisplayedUser] = useState<User | null>(null);
     const urlSearchParams = useParams();
 
     const getUser = async () => {
         try {
-            const response = await userService.getUser(urlSearchParams.userId!);
+            const response = await new UserService().getUser(urlSearchParams.userId!);
             if(response.isSucceed) {
                 setDisplayedUser(response.result);
             }

@@ -5,8 +5,6 @@ import { OperationResult } from "../interfaces/IOperationResult";
 import { Server } from "../interfaces/IServer";
 import { ServerService } from "../services/serverService";
 
-const serverService = new ServerService();
-
 
 export const serversSlice = createSlice({
     name: 'servers',
@@ -17,7 +15,7 @@ export const serversSlice = createSlice({
             return state;
         },
         addServer: (state, action) => {
-            state.data.push(action.payload);
+            !state.data.includes(action.payload) && state.data.push(action.payload);
             return state;
         },
         removeServer: (state, action) => {
@@ -91,7 +89,7 @@ export const fetchServers = createAsyncThunk<
             rejectValue: OperationResult<Server[]>
         }
     >('servers/fetchServers', async () => {
-    const response:OperationResult<Server[]> = await serverService.getServers()
+    const response:OperationResult<Server[]> = await new ServerService().getServers()
     .catch(error => {
         throw error.response.data.message;
     })

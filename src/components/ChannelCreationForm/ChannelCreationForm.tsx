@@ -18,7 +18,6 @@ type ChannelCreationFormProps = {
 }
 
 const formValidationService = new FormValidationService();
-const channelService = new ChannelService();
 
 export default function ChannelCreationForm(props: ChannelCreationFormProps) {
     const [ channelCreationError, setChannelCreationError ] = useState<{isError:boolean, errorMessage:string}>({isError: false, errorMessage: ''});
@@ -50,7 +49,7 @@ export default function ChannelCreationForm(props: ChannelCreationFormProps) {
                 onSubmit={async(values) => {
                     setChannelCreationError({isError:false, errorMessage:''});
                     try {
-                        const response = await channelService.createChannel(values);
+                        const response = await new ChannelService().createChannel(values);
                         dispatch(addChannel(response.result));
                         props.closeChannelCreation();
                     } catch(error) {

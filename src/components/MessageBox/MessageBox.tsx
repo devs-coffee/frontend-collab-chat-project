@@ -17,7 +17,6 @@ type ChannelId = {
   }
 
 export default function MessageBox ( { channelId } : ChannelId) {
-    const messageService = new MessageService();
     const authStatus = useSelector((state:any) => state.auth);
     const stateMessages = useSelector((state:any) => state.messages);
     const messages = useSelector((state:any) => state.messages.data[channelId]);
@@ -35,7 +34,7 @@ export default function MessageBox ( { channelId } : ChannelId) {
                 channelId: channelId,
                 content: messageContent
             }
-            const response = await messageService.send(message);
+            const response = await new MessageService().send(message);
             if(response.isSucceed){
                 const message = response.result;
                 dispatch<any>(addMessage(message))
