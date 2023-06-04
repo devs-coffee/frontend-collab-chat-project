@@ -19,7 +19,6 @@ type ChannelUpdateFormProps = {
 }
 
 const formValidationService = new FormValidationService();
-const channelService = new ChannelService();
 
 export default function ChannelUpdateForm(props: ChannelUpdateFormProps) {
     const [ channelUpdateError, setChannelUpdateError ] = useState<{isError:boolean, errorMessage:string}>({isError: false, errorMessage: ''});
@@ -34,7 +33,7 @@ export default function ChannelUpdateForm(props: ChannelUpdateFormProps) {
 
     async function deleteChannel() {
         try {
-            const response = await channelService.deleteChannel(props.channel.id);
+            const response = await new ChannelService().deleteChannel(props.channel.id);
             dispatch(removeChannel(props.channel));
             props.closeChannelUpdate()
         } catch(error) {
@@ -61,7 +60,7 @@ export default function ChannelUpdateForm(props: ChannelUpdateFormProps) {
                 onSubmit={async (values) => {
                     setChannelUpdateError({isError:false, errorMessage:''});
                     try {
-                        const response = await channelService.updateChannel(values);
+                        const response = await new ChannelService().updateChannel(values);
                         dispatch(updateChannel(response.result));
                     } catch(error) {
                         let errorMessage:string = "Une erreur est survenue, veuillez réessayer";

@@ -17,7 +17,6 @@ import Modal from '../../components/Modal/modal';
 import './Profile.scss';
 
 const formValidationService = new FormValidationService();
-const userService = new UserService();
 
 export default function Profile() {
     const dispatch = useDispatch();
@@ -32,7 +31,7 @@ export default function Profile() {
     };
 
     const deleteAvatar = () => {
-        userService.updateProfile({picture: null}, authStatus.user.id)
+        new UserService().updateProfile({picture: null}, authStatus.user.id)
         .then(response => {
             dispatch(setUser(response.result));
             setCroppedImage('');
@@ -73,7 +72,7 @@ export default function Profile() {
                     }
                     if (Object.keys(modifiedValues).length) {
                         try {
-                            const response = await userService.updateProfile(modifiedValues, authStatus.user.id);
+                            const response = await new UserService().updateProfile(modifiedValues, authStatus.user.id);
                             dispatch(setUser(response.result));
                             setCroppedImage('');
                             setPasswordEdit(false);

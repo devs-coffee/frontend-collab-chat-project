@@ -12,7 +12,6 @@ import { FormValidationService } from '../../../utils/formValidationService';
 
 import "./Login.scss";
 
-const authenticationService = new AuthenticationService();
 const formValidationService = new FormValidationService();
 
 export default function Login(props:any) {
@@ -38,7 +37,7 @@ export default function Login(props:any) {
                 onSubmit={async (values) => {
                     setLoginError(false);
                     try {
-                        const response = await authenticationService.login(values);
+                        const response = await new AuthenticationService().login(values);
                         dispatch(setLogs(response.result));
                         navigate('/');
                     } catch(error) {

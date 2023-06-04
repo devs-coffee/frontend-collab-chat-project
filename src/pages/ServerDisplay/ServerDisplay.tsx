@@ -17,7 +17,6 @@ import { ServerService } from "../../services/serverService";
 import './ServerDisplay.scss';
 import MessageBox from "../../components/MessageBox/MessageBox";
 
-const serverService = new ServerService();
 
 export default function ServerDisplay() {
     const dispatch = useDispatch();
@@ -34,7 +33,7 @@ export default function ServerDisplay() {
     const [channelId, setChannelId] = useState<string>("");
     const getServerData = async() => {
         try {
-            const response = await serverService.getServerById(urlSearchParams.serverId!)
+            const response = await new ServerService().getServerById(urlSearchParams.serverId!)
             const channels = response.result.channels;
             const defaultChannel = channels[0];
             setChannelId(defaultChannel.id);
@@ -51,7 +50,7 @@ export default function ServerDisplay() {
 
     const getServerUsers = async () => {
         try {
-            const response = await serverService.getServerUsers(urlSearchParams.serverId!);
+            const response = await new ServerService().getServerUsers(urlSearchParams.serverId!);
             setUsers(response.result);
         } catch (error) {
             setUsersError('membres du serveur non récupérés, veuillez réessayer');
@@ -65,7 +64,7 @@ export default function ServerDisplay() {
     const joinServer = async () => {
         try {
             setIsDisabled(true);
-            const response = await serverService.joinServer(urlSearchParams.serverId!);
+            const response = await new ServerService().joinServer(urlSearchParams.serverId!);
             response.result ? dispatch(addServer(server)) : dispatch(removeServer(server?.id));
             getServerUsers();
             setIsDisabled(false)
