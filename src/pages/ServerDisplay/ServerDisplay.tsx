@@ -76,8 +76,8 @@ export default function ServerDisplay() {
     const joinServer = async () => {
         try {
             setIsDisabled(true);
-            const response = await serverService.joinServer(urlSearchParams.serverId!);
-            response.result ? dispatch(addServer(server)) : dispatch(removeServer(server?.id));
+            const response = await new ServerService().joinServer(urlSearchParams.serverId!);
+            response.result ? dispatch(updateServer(server)) : dispatch(removeServer(server?.id));
             getServerUsers();
             setIsDisabled(false)
         } catch (error) {
@@ -137,8 +137,8 @@ export default function ServerDisplay() {
     
     return (
         <div className="ServerDisplay">
-            {!server && <p>Patientez</p> }
-            {server && (
+            {server === undefined && <p>Patientez</p> }
+            {server !== undefined && (
                 <>
                 <div className="server-heading">
                     {server.picture ? 

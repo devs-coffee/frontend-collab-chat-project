@@ -3,7 +3,11 @@ import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import { OperationResult } from "../interfaces/IOperationResult";
 
 export abstract class Fetcher {
-    constructor(){
+    private axiosInstance = axios.create();
+    private host = 'http://codevert.org:4200';
+    private readonly token = localStorage.getItem('access_token');
+
+    constructor() {
         this.initializeRequestInterceptors();
         // TODO : this.initializeResponseInterceptor();
     }
@@ -49,22 +53,21 @@ export abstract class Fetcher {
     //     }
     // }
     
-    private readonly token = localStorage.getItem('access_token');
 
     async get<T>(url: string, config?: AxiosRequestConfig<T>):Promise<AxiosResponse<OperationResult<T>>> {
-        const response = await axios.get(url, config);
+        const response = await this.axiosInstance.get(this.host + url, config);
         return response;
     }
     async post<T, U>(url: string, body?:T, config?: AxiosRequestConfig<T>):Promise<AxiosResponse<OperationResult<U>>> {
-        const response = await axios.post(url, body, config);
+        const response = await this.axiosInstance.post(this.host + url, body, config);
         return response;
     }
     async put<T, U>(url: string, body?:T, config?: AxiosRequestConfig<T>):Promise<AxiosResponse<OperationResult<U>>> {
-        const response = await axios.put(url, body, config);
+        const response = await this.axiosInstance.put(this.host + url, body, config);
         return response;
     }
     async delete<T>(url: string, config?: AxiosRequestConfig<T>):Promise<AxiosResponse<OperationResult<T>>> {
-        const response = await axios.delete(url, config);
+        const response = await this.axiosInstance.delete(this.host + url, config);
         return response;
     }
 }

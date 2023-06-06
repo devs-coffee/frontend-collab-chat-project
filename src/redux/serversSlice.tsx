@@ -32,7 +32,7 @@ export const serversSlice = createSlice({
                 oldServer.picture = picture;
                 oldServer.categories = categories;
                 oldServer.channels = channels;
-            }
+            } else {data.push(action.payload)}
             state.data = data;
             const newState = {...state, data};
             state = newState;
