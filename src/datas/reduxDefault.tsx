@@ -14,6 +14,11 @@ const data:reduxData = {
         data: [],
         status: "idle",
         error: null
+    },
+    messages: {
+        data: {},
+        status: "idle",
+        error: null
     }
 };
 
