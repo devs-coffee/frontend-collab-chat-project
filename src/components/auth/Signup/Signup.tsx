@@ -20,7 +20,6 @@ import AvatarCropper from '../../avatarCropper/AvatarCropper';
 
 import "./Signup.scss";
 
-const authenticationService = new AuthenticationService();
 const formValidationService = new FormValidationService();
 
 export default function Signup() {
@@ -58,7 +57,7 @@ export default function Signup() {
                     values.picture = croppedImage;
                     setSignupError({isError:false, errorMessage:''});
                     try {
-                        const response = await authenticationService.signup(values);
+                        const response = await new AuthenticationService().signup(values);
                         dispatch(setLogs(response.result));
                         navigate('/');
                     } catch(error) {

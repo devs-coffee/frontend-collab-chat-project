@@ -17,7 +17,6 @@ import { ServerService } from "../../services/serverService";
 
 import './ServerDisplay.scss';
 
-const serverService = new ServerService();
 
 export default function ServerDisplay() {
     const dispatch = useDispatch();
@@ -35,8 +34,7 @@ export default function ServerDisplay() {
     const [channelId, setChannelId] = useState<string>("");
     const getServerData = async() => {
         try {
-            const response = await serverService.getServerById(urlSearchParams.serverId!);
-            server ? dispatch(updateServer(response.result)) : dispatch(addServer(response.result));
+            const response = await new ServerService().getServerById(urlSearchParams.serverId!)
             const channels = response.result.channels;
             const defaultChannel = channels[0];
             setChannelId(defaultChannel.id);
@@ -52,7 +50,7 @@ export default function ServerDisplay() {
 
     const getServerUsers = async () => {
         try {
-            const response = await serverService.getServerUsers(urlSearchParams.serverId!);
+            const response = await new ServerService().getServerUsers(urlSearchParams.serverId!);
             console.log(usersState.data);
             let usersToAdd: User[] = [];
             response.result.forEach((elt: User) => {
@@ -60,9 +58,7 @@ export default function ServerDisplay() {
                     usersToAdd.push(elt);
                 }
             });
-            console.log(usersToAdd);
             dispatch(addUsers(usersToAdd));
-            //console.log(usersState);
             setServerUsers(response.result);
         } catch (error) {
             setUsersError('membres du serveur non récupérés, veuillez réessayer');

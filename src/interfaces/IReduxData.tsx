@@ -11,6 +11,11 @@ export interface reduxData {
         data: Server[],
         status: "idle" | "pending" | "succeed" | "failed",
         error?: string | null
+    },
+    messages: {
+        data: Record<string, IMessage[]>,
+        status: "idle" | "pending" | "succeed" | "failed",
+        error?: string | null
     }
     users: {
         data: User[],

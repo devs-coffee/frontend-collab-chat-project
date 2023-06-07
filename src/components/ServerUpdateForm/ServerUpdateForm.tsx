@@ -26,7 +26,6 @@ type ServerUpdatingFormProps = {
 }
 
 const formValidationService = new FormValidationService();
-const serverService = new ServerService();
 
 export default function ServerUpdateForm(props:ServerUpdatingFormProps) {
     const dispatch = useDispatch();
@@ -49,7 +48,7 @@ export default function ServerUpdateForm(props:ServerUpdatingFormProps) {
     const deleteServer = (event:any) => {
         event.preventDefault();
         if(props.server) {
-            serverService.deleteServer(props.server.id)
+            new ServerService().deleteServer(props.server.id)
             .then(() => {
                 dispatch(removeServer(props.server.id));
                 props.setIsUpdatingServer(false);
@@ -62,7 +61,7 @@ export default function ServerUpdateForm(props:ServerUpdatingFormProps) {
     };
 
     const deleteAvatar = () => {
-        serverService.updateServer({picture: null}, props.server.id)
+        new ServerService().updateServer({picture: null}, props.server.id)
         .then(response => {
             dispatch(updateServer(response.result));
             setCroppedImage('');
@@ -99,7 +98,7 @@ export default function ServerUpdateForm(props:ServerUpdatingFormProps) {
                     if(Object.keys(modifiedValues).length){
                         setServerUpdateError({isError: false, errorMessage: ''});
                         try {
-                            const response = await serverService.updateServer(modifiedValues, props.server.id);
+                            const response = await new ServerService().updateServer(modifiedValues, props.server.id);
                             dispatch(updateServer(response.result));
                             setCroppedImage('');
                             props.setIsUpdatingServer(false);

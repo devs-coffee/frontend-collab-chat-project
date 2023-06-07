@@ -4,8 +4,8 @@ import { OperationResult } from "../interfaces/IOperationResult";
 
 export abstract class Fetcher {
     private axiosInstance = axios.create();
-    private host = 'http://codevert.org:4200';
     private readonly token = localStorage.getItem('access_token');
+    private host = process.env.REACT_APP_BACKEND_HOST
 
     constructor() {
         this.initializeRequestInterceptors();
@@ -13,11 +13,12 @@ export abstract class Fetcher {
     }
 
     private initializeRequestInterceptors = () => {
-        axios.interceptors.request.use(
+        this.axiosInstance.interceptors.request.use(
             this.handleRequest,
             this.handleError
         )
     }
+
 
     // TODO :
     // private initializeResponseInterceptors = () => {

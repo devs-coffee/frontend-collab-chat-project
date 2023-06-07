@@ -1,38 +1,82 @@
-import { useSelector } from 'react-redux';
-import { Avatar } from '@mui/material';
+import { AxiosError } from 'axios';
+import { useEffect, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+
+import { Snackbar } from '@mui/material';
+
+import { MessageService } from '../../services/messageService';
+import { setMessages } from '../../redux/messagesSlice';
 import { IMessage } from '../../interfaces/IMessage';
+import Message from '../Message/Message';
+
 import './MessageList.scss';
-import { User } from '../../interfaces/IUser';
 
 type messageList = {
     messages: IMessage[]
 }
 
-export default function  MessageList( { messages } : messageList)  {
-    const currentDate = new Date(Date.now()).toLocaleString('fr', { dateStyle : 'long' });
-    const users = useSelector((state:any) => state.users);
-    const myUser = useSelector((state:any) => state.auth.user);
-    return (
-        <div className="MessageList">
-            {messages && messages.map((message) => {
-                const messageDate = new Date(message.createdAt!).toLocaleString('fr', {dateStyle: 'long'});
-                const isToday = currentDate === messageDate;
-                if(message.user!.id === myUser.id) {
-                    message.user!.picture = myUser.picture;
-                } else {
-                    message.user!.picture = users.data.find((user: User) => user.id === message.user?.id).picture;
-                }
-                
-                return <div key={`message=${message.id}`}>
-                    <div className='message' >
-                        {message.user?.picture && message.user.picture !== ''
-                        ? <Avatar alt="user picture" src={message.user.picture}></Avatar>  
-                        : <Avatar alt="user picture">{message.user?.pseudo.substring(0,1).toUpperCase()}</Avatar>}
-                        <p className="message_pseudo">{message.user?.pseudo} <span className='message_date'>{isToday ? "Aujourd'hui" : messageDate} à {new Date(message.createdAt!).getHours()}:{new Date(message.createdAt!).getMinutes()}</span></p>
-                    </div>
-                    <p key={message.id}>{message.content}</p>
-                </div>
-            })} 
+const MessageList = ({messages}: messageList) => {
+  const messageEndRef = useRef<null | HTMLDivElement>(null); 
+  const element = useRef<null | HTMLDivElement>(null);
+  const [shouldAutoScroll, setShouldAutoScroll] = useState(true);
+  const dispatch = useDispatch();
+  const stateMessages = useSelector((state:any) => state.messages);
+  const [messageError, setMessageError] = useState<{isError:boolean, errorMessage:string}>({isError:false, errorMessage:''});
+
+  useEffect(() => {
+    shouldAutoScroll && messageEndRef.current?.scrollIntoView({
+      behavior: "auto",
+      block: "end"
+    })
+  },[messages, stateMessages.status, dispatch])
+
+  const handleToastClose = (event: React.SyntheticEvent | Event, reason?: string) => {
+    if(reason === 'clickaway') {
+        return;
+    }
+    setMessageError({isError:false, errorMessage:''});
+  }
+  
+  const getNextMessages = async () => {
+    try {
+      const response = await new MessageService().getMessagesByChannelId(messages[0].channelId!, messages[0].id!);
+      if (response.isSucceed) {;
+        messages = response.result.concat(messages);
+        dispatch(setMessages({channelId: messages[0].channelId! , messages: messages}));
+      }
+    } catch (error) {
+      let errorMessage:string = 'Une erreur est survenue, veuillez réessayer';
+      if(error instanceof AxiosError) {
+          errorMessage = error.response?.data.message;
+      }
+      setMessageError({isError:true, errorMessage});
+
+    }
+  }
+
+  const handleScroll = () => {
+    if (element.current?.scrollTop === 0 && messages.length > 0) {
+      getNextMessages();
+      setShouldAutoScroll(false);
+    }
+  };
+
+  return (
+    <div ref={element} className="MessageList" onScroll={handleScroll}>
+      {messages && messages.map((message, index) => (
+        <div key={message.id}>
+          <Message key={message.id} message={message} />
+          {index === messages.length - 1 && <div ref={messageEndRef} />}
         </div>
-    );
+      ))}  
+        <Snackbar 
+            open={messageError.isError}
+            autoHideDuration={4000}
+            onClose={handleToastClose}
+            message={messageError.errorMessage}
+        />  
+      </div>
+
+  );
 }
+export default MessageList;

@@ -9,3 +9,7 @@ export interface IMessage {
     user?: User;
     createdAt?: string;
 }
+
+export interface IUpdateMessage {
+    content: string;
+}

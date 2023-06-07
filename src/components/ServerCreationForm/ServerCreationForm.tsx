@@ -19,7 +19,6 @@ type ServerCreationFormProps = {
 }
 
 const formValidationService = new FormValidationService();
-const serverService = new ServerService();
 
 export default function ServerCreationForm(props:ServerCreationFormProps) {
     const [ croppedImage, setCroppedImage ] = useState<string>('');
@@ -63,7 +62,7 @@ export default function ServerCreationForm(props:ServerCreationFormProps) {
                     values.categories = categories;
                     setServerCreationError({isError:false, errorMessage:''});
                     try {
-                        const response = await serverService.createServer(values);
+                        const response = await new ServerService().createServer(values);
                         dispatch(addServer(response.result));
                         closeServerAdding();
                     } catch(error) {

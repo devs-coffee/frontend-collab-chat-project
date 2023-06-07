@@ -1,12 +1,11 @@
 import { useState } from "react";
-
 type messageHandler = {
-    sendMessage: (message:string) => void
+    sendMessage: (message:string) => void,
+    messageContent?: string
 }
 
-export default function MessageEditor({sendMessage}: messageHandler) {
-
-    const [messageToSend, setMessageToSend] = useState<string>('');
+export default function MessageEditor({sendMessage, messageContent}: messageHandler) {
+    const [messageToSend, setMessageToSend] = useState<string>(messageContent!);
 
     async function handleKeypress(e: React.KeyboardEvent<HTMLInputElement>) {
         if (e.key === 'Enter') {

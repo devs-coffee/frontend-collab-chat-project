@@ -1,13 +1,17 @@
 import { useEffect, useState } from "react";
+import { useDispatch } from 'react-redux';
 import { useSelector } from "react-redux";
 import { AxiosError } from "axios";
 
 import { Snackbar } from "@mui/material";
 
+import useIoSocket from '../../Hooks/useIoSocket';
+import { IMessage } from "../../interfaces/IMessage";
+import { IoProvider } from '../../interfaces/IIoProvider';
+import { MessageService } from "../../services/messageService";
+import { addMessage, fetchMessages, setMessages } from "../../redux/messagesSlice";
 import MessageList from "../MessageList/MessageList";
 import MessageEditor from "../MessageEditor/MessageEditor";
-import { IMessage } from "../../interfaces/IMessage";
-import { MessageService } from "../../services/messageService";
 
 import "./MessageBox.scss";
 
@@ -16,29 +20,12 @@ type ChannelId = {
   }
 
 export default function MessageBox ( { channelId } : ChannelId) {
-    const messageService = new MessageService();
     const authStatus = useSelector((state:any) => state.auth);
-    const [messages, setMessages] = useState<IMessage[]>([]);
+    const stateMessages = useSelector((state:any) => state.messages);
+    const messages = useSelector((state:any) => state.messages.data[channelId]);
     const [getMessagesError, setGetMessagesError] = useState<{isError: boolean, errorMessage: string}>({isError:false, errorMessage:''});
-
-
-    const getMessages = async () => {
-        try {
-            const response = await messageService.getMessagesByChannelId(channelId);
-            if(response.isSucceed) {
-                setMessages(response.result);
-                //! comparer la liste des auteurs des messages avec les users présents dans le slice, puis faire un fetch pour récupérer les users absents du slice.
-            }
-        } catch (error) {
-            let errorMessage:string;
-            if(error instanceof AxiosError) {
-                errorMessage = error.response?.data.message;
-            } else {
-                errorMessage = 'une erreur est survenue, veuillez réessayer';
-            }
-            setGetMessagesError({isError: true, errorMessage});
-        }
-    }
+    const dispatch = useDispatch();
+    const { ioClose, Socket } = useIoSocket() as IoProvider;
 
     const sendMessage = async (messageContent:string) => {
         if(messageContent === '') {
@@ -50,9 +37,10 @@ export default function MessageBox ( { channelId } : ChannelId) {
                 channelId: channelId,
                 content: messageContent
             }
-            const response = await messageService.send(message);
+            const response = await new MessageService().send(message);
             if(response.isSucceed){
-                await getMessages();
+                const message = response.result;
+                dispatch<any>(addMessage(message))
             }
         }
         catch(error){
@@ -74,8 +62,19 @@ export default function MessageBox ( { channelId } : ChannelId) {
     }
 
     useEffect(() => {
-        getMessages()
-    }, []);
+        if(stateMessages.status === "idle" || messages === undefined) {
+          dispatch<any>(fetchMessages(channelId));
+
+        }
+        Socket.on(`message_${channelId}`, (res: IMessage) => {
+            if(res.userId !== authStatus.user.id){
+                dispatch<any>(addMessage(res))
+            }
+      });
+      return () => {
+        Socket.off(`message_${channelId}`)
+      }
+    },[stateMessages.status, dispatch, channelId])
     
     return (
         <div className="MessageBox">
