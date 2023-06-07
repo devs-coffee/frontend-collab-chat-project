@@ -17,9 +17,6 @@ export default function  MessageList( { messages } : messageList)  {
             {messages && messages.map((message) => {
                 const messageDate = new Date(message.createdAt!).toLocaleString('fr', {dateStyle: 'long'});
                 const isToday = currentDate === messageDate;
-                // console.log(message.user);
-                // console.log(users.data);
-                // console.log(users.data.find((user: User) => user.id === message.user?.id));
                 if(message.user!.id === myUser.id) {
                     message.user!.picture = myUser.picture;
                 } else {

@@ -27,6 +27,7 @@ export default function MessageBox ( { channelId } : ChannelId) {
             const response = await messageService.getMessagesByChannelId(channelId);
             if(response.isSucceed) {
                 setMessages(response.result);
+                //! comparer la liste des auteurs des messages avec les users présents dans le slice, puis faire un fetch pour récupérer les users absents du slice.
             }
         } catch (error) {
             let errorMessage:string;
