@@ -11,7 +11,7 @@ import MessageBox from "../../components/MessageBox/MessageBox";
 import ServerUpdateForm from "../../components/ServerUpdateForm/ServerUpdateForm";
 import { ChannelBase } from "../../interfaces/IChannel.base";
 import { User } from "../../interfaces/IUser";
-import { addServer, removeServer, updateServer } from "../../redux/serversSlice";
+import { removeServer, addOrUpdateServer } from "../../redux/serversSlice";
 import { addUsers } from "../../redux/usersSlice";
 import { ServerService } from "../../services/serverService";
 
@@ -51,10 +51,9 @@ export default function ServerDisplay() {
     const getServerUsers = async () => {
         try {
             const response = await new ServerService().getServerUsers(urlSearchParams.serverId!);
-            console.log(usersState.data);
             let usersToAdd: User[] = [];
             response.result.forEach((elt: User) => {
-                if(!usersState.data.find((user: User) => user.id === elt.id) && !usersToAdd.find((user) => user.id === elt.id) && elt.id !== authStatus.user.id) {
+                if(!usersState.data.find((user: User) => user.id === elt.id) && elt.id !== authStatus.user.id) {
                     usersToAdd.push(elt);
                 }
             });
@@ -73,7 +72,7 @@ export default function ServerDisplay() {
         try {
             setIsDisabled(true);
             const response = await new ServerService().joinServer(urlSearchParams.serverId!);
-            response.result ? dispatch(updateServer(server)) : dispatch(removeServer(server?.id));
+            response.result ? dispatch(addOrUpdateServer(server)) : dispatch(removeServer(server?.id));
             getServerUsers();
             setIsDisabled(false)
         } catch (error) {
@@ -133,8 +132,8 @@ export default function ServerDisplay() {
     
     return (
         <div className="ServerDisplay">
-            {server === undefined && <p>Patientez</p> }
-            {server !== undefined && (
+            {server === undefined ? <p>Patientez</p> 
+                :
                 <>
                 <div className="server-heading">
                     {server.picture ? 
@@ -196,7 +195,7 @@ export default function ServerDisplay() {
                     </div>
                 </div>
                 </>
-            )}
+            }
             {server && isUpdatingServer && (<ServerUpdateForm setIsUpdatingServer={setIsUpdatingServer} server={server}/>)}
             <Snackbar
                 open={serverError !== '' || usersError !== ''}

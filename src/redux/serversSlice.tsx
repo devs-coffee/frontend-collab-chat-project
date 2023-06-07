@@ -13,15 +13,11 @@ export const serversSlice = createSlice({
             state.data = action.payload;
             return state;
         },
-        addServer: (state, action) => {
-            state.data.push(action.payload);
-            return state;
-        },
         removeServer: (state, action) => {
             state.data = [...state.data.filter(server => server.id !== action.payload)];
             return state;
         },
-        updateServer: (state, action) => {
+        addOrUpdateServer: (state, action) => {
             const { id, name, picture, categories, channels } = action.payload;
             const data = [...state.data].map(elt => {return{...elt}});
             const oldServer = data.find(server => server.id === id);
@@ -78,7 +74,7 @@ export const serversSlice = createSlice({
             })
     }
 })
-export const { setServers, addServer, removeServer, updateServer, unsetServers, addChannel, removeChannel, updateChannel } = serversSlice.actions;
+export const { setServers, removeServer, addOrUpdateServer, unsetServers, addChannel, removeChannel, updateChannel } = serversSlice.actions;
 export default serversSlice.reducer;
 
 export const fetchServers = createAsyncThunk<

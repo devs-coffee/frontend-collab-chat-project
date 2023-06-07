@@ -1,18 +1,13 @@
-import { createSlice, current } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 
 import data from "../datas/reduxDefault";
-import { User } from "../interfaces/IUser";
 
 export const usersSlice = createSlice({
     name: 'users',
     initialState: data.users,
     reducers: {
         addUsers: (state, action) => {
-            const newState = [...state.data, ...action.payload];
-            
-            state.data = [...new Map(newState.map(item => [item.id, item])).values()];
-            //console.log(current(state.data));
-            return state;
+            state.data.push(action.payload);
         },
         updateUser: (state, action) => {
             const oldUser = state.data.find(user => user.id === action.payload.id);
