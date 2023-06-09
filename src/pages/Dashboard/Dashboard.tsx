@@ -1,16 +1,17 @@
 import { useState } from "react";
+import { useSelector } from "react-redux";
 
+import { reduxData } from "../../interfaces/IReduxData";
 import DashboardPanel from "../../components/DashboardPanel/DashboardPanel";
 import DashboardServersHeading from "../../components/DashboardServersHeading/DashboardServersHeading";
 import ServerCreationForm from "../../components/ServerCreationForm/ServerCreationForm";
 import ServerSearching from '../../components/ServerSearching/ServerSearching';
 
 import "./Dashboard.scss";
-import { useSelector } from "react-redux";
 
 export default function Dashboard() {
     const [dashboardContent, setDashboardContent] = useState<string>('');
-    const usersState = useSelector((state:any) => state.users);
+    const usersState = useSelector((state:reduxData) => state.users);
 
     console.log(usersState);
     return (
