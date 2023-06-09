@@ -185,11 +185,7 @@ export default function ServerDisplay() {
                         </Stack>
                         {serverUsers.length > 0 && (
                             <button className="joinOrLeaveButton" onClick={joinServer} disabled={isDisabled}>
-                                {serverUsers.map(u => u.id).includes(authStatus.user.id) ? 
-                                    ("leave")
-                                    :
-                                    ("join")
-                                }
+                                {serverUsers.some(user => user.id === authStatus.user.id) ? 'leave' : 'join'}
                             </button>
                         )}
                     </div>

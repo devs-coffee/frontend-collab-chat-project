@@ -13,7 +13,6 @@ export default function Dashboard() {
     const [dashboardContent, setDashboardContent] = useState<string>('');
     const usersState = useSelector((state:reduxData) => state.users);
 
-    console.log(usersState);
     return (
         <div className="Dashboard">
             <DashboardServersHeading setDashboardContent={setDashboardContent} />
