@@ -5,6 +5,7 @@ import { OperationResult } from "../interfaces/IOperationResult";
 export abstract class Fetcher {
     private axiosInstance = axios.create();
     private readonly token = localStorage.getItem('access_token');
+    private host = process.env.REACT_APP_BACKEND_HOST
 
     constructor() {
         this.initializeRequestInterceptors();
@@ -55,19 +56,19 @@ export abstract class Fetcher {
     
 
     async get<T>(url: string, config?: AxiosRequestConfig<T>):Promise<AxiosResponse<OperationResult<T>>> {
-        const response = await this.axiosInstance.get(url, config);
+        const response = await this.axiosInstance.get(this.host + url, config);
         return response;
     }
     async post<T, U>(url: string, body?:T, config?: AxiosRequestConfig<T>):Promise<AxiosResponse<OperationResult<U>>> {
-        const response = await this.axiosInstance.post(url, body, config);
+        const response = await this.axiosInstance.post(this.host + url, body, config);
         return response;
     }
     async put<T, U>(url: string, body?:T, config?: AxiosRequestConfig<T>):Promise<AxiosResponse<OperationResult<U>>> {
-        const response = await this.axiosInstance.put(url, body, config);
+        const response = await this.axiosInstance.put(this.host + url, body, config);
         return response;
     }
     async delete<T>(url: string, config?: AxiosRequestConfig<T>):Promise<AxiosResponse<OperationResult<T>>> {
-        const response = await this.axiosInstance.delete(url, config);
+        const response = await this.axiosInstance.delete(this.host + url, config);
         return response;
     }
 }

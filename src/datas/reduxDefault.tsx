@@ -10,6 +10,11 @@ const data:reduxData = {
         status: "idle",
         error: null
     },
+    users: {
+        data: [],
+        status: "idle",
+        error: null
+    },
     messages: {
         data: {},
         status: "idle",

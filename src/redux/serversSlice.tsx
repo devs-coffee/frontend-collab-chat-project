@@ -1,10 +1,9 @@
-import { createAsyncThunk, createSlice, current } from "@reduxjs/toolkit";
-import data from "../datas/reduxDefault";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
+import data from "../datas/reduxDefault";
 import { OperationResult } from "../interfaces/IOperationResult";
 import { Server } from "../interfaces/IServer";
 import { ServerService } from "../services/serverService";
-
 
 export const serversSlice = createSlice({
     name: 'servers',
@@ -14,15 +13,11 @@ export const serversSlice = createSlice({
             state.data = action.payload;
             return state;
         },
-        addServer: (state, action) => {
-            state.data.push(action.payload);
-            return state;
-        },
         removeServer: (state, action) => {
             state.data = [...state.data.filter(server => server.id !== action.payload)];
             return state;
         },
-        updateServer: (state, action) => {
+        addOrUpdateServer: (state, action) => {
             const { id, name, picture, categories, channels } = action.payload;
             const data = [...state.data].map(elt => {return{...elt}});
             const oldServer = data.find(server => server.id === id);
@@ -31,7 +26,7 @@ export const serversSlice = createSlice({
                 oldServer.picture = picture;
                 oldServer.categories = categories;
                 oldServer.channels = channels;
-            }
+            } else {data.push(action.payload)}
             state.data = data;
             const newState = {...state, data};
             state = newState;
@@ -79,7 +74,7 @@ export const serversSlice = createSlice({
             })
     }
 })
-export const { setServers, addServer, removeServer, updateServer, unsetServers, addChannel, removeChannel, updateChannel } = serversSlice.actions;
+export const { setServers, removeServer, addOrUpdateServer, unsetServers, addChannel, removeChannel, updateChannel } = serversSlice.actions;
 export default serversSlice.reducer;
 
 export const fetchServers = createAsyncThunk<
@@ -95,7 +90,6 @@ export const fetchServers = createAsyncThunk<
     })
     return response;
     });
-    
     
 export const getServerList = (state:any) => state.data as Server[];
 export const getServerById = (state:any, serverId:string) => state.data.find((server:Server) => server.id === serverId) as Server;

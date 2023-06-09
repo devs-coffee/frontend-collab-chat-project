@@ -6,24 +6,25 @@ import { Link, useParams } from "react-router-dom";
 import SettingsIcon from '@mui/icons-material/Settings';
 import { Avatar, Snackbar, Stack } from "@mui/material";
 
-import ServerUpdateForm from "../../components/ServerUpdateForm/ServerUpdateForm";
 import ChannelManager from "../../components/ChannelManager/ChannelManager";
-import Message from "../../components/MessageList/MessageList";
-import { User } from "../../interfaces/IUser";
+import MessageBox from "../../components/MessageBox/MessageBox";
+import ServerUpdateForm from "../../components/ServerUpdateForm/ServerUpdateForm";
 import { ChannelBase } from "../../interfaces/IChannel.base";
-import { addServer, removeServer, updateServer } from "../../redux/serversSlice";
+import { User } from "../../interfaces/IUser";
+import { removeServer, addOrUpdateServer } from "../../redux/serversSlice";
+import { addUsers } from "../../redux/usersSlice";
 import { ServerService } from "../../services/serverService";
 
 import './ServerDisplay.scss';
-import MessageBox from "../../components/MessageBox/MessageBox";
 
 
 export default function ServerDisplay() {
     const dispatch = useDispatch();
     const authStatus = useSelector((state:any) => state.auth);
+    const usersState = useSelector((state:any) => state.users);
     const urlSearchParams = useParams();
     const server = useSelector((state:any) => state.servers.data.find((server:any) => server.id === urlSearchParams.serverId));
-    const [users, setUsers] = useState<User[]>([]);
+    const [serverUsers, setServerUsers] = useState<User[]>([]);
     const [isUpdatingServer, setIsUpdatingServer] = useState<boolean>(false);
     const [isDisabled, setIsDisabled] = useState<boolean>(false);
     const [serverError, setServerError] = useState<string>('');
@@ -37,7 +38,6 @@ export default function ServerDisplay() {
             const channels = response.result.channels;
             const defaultChannel = channels[0];
             setChannelId(defaultChannel.id);
-            dispatch(updateServer(response.result));
         } catch (error) {
             let errorMessage: string = 'Données du serveur non récupérées, veuillez réessayer';
             if(error instanceof AxiosError) {
@@ -51,7 +51,14 @@ export default function ServerDisplay() {
     const getServerUsers = async () => {
         try {
             const response = await new ServerService().getServerUsers(urlSearchParams.serverId!);
-            setUsers(response.result);
+            let usersToAdd: User[] = [];
+            response.result.forEach((elt: User) => {
+                if(!usersState.data.find((user: User) => user.id === elt.id) && elt.id !== authStatus.user.id) {
+                    usersToAdd.push(elt);
+                }
+            });
+            dispatch(addUsers(usersToAdd));
+            setServerUsers(response.result);
         } catch (error) {
             setUsersError('membres du serveur non récupérés, veuillez réessayer');
             if(error instanceof AxiosError) {
@@ -65,7 +72,7 @@ export default function ServerDisplay() {
         try {
             setIsDisabled(true);
             const response = await new ServerService().joinServer(urlSearchParams.serverId!);
-            response.result ? dispatch(addServer(server)) : dispatch(removeServer(server?.id));
+            response.result ? dispatch(addOrUpdateServer(server)) : dispatch(removeServer(server?.id));
             getServerUsers();
             setIsDisabled(false)
         } catch (error) {
@@ -99,8 +106,8 @@ export default function ServerDisplay() {
         return (
             <>
                 {!server && (serverError)}
-                {!server && users.length < 1 && (<br/>)}
-                {users.length <1 && (usersError)}
+                {!server && serverUsers.length < 1 && (<br/>)}
+                {serverUsers.length <1 && (usersError)}
             </>
         )
     }
@@ -125,8 +132,8 @@ export default function ServerDisplay() {
     
     return (
         <div className="ServerDisplay">
-            {server === null && <p>Patientez</p> }
-            {server !== null && (
+            {server === undefined ? <p>Patientez</p> 
+                :
                 <>
                 <div className="server-heading">
                     {server.picture ? 
@@ -172,23 +179,19 @@ export default function ServerDisplay() {
                     <div className="ServerDisplay__main-content__members-box">
                         <h4 className="members-heading">Users :</h4>
                         <Stack className="members-stack" spacing={0.8}>
-                            {users.map(user => (
+                            {serverUsers.map(user => (
                                 <Link key={`link-${user.id}`} to={`/user/${user.id}`}>{user.pseudo}</Link>
                             ))}
                         </Stack>
-                        {users.length > 0 && (
+                        {serverUsers.length > 0 && (
                             <button className="joinOrLeaveButton" onClick={joinServer} disabled={isDisabled}>
-                                {users.map(u => u.id).includes(authStatus.user.id) ? 
-                                    ("leave")
-                                    :
-                                    ("join")
-                                }
+                                {serverUsers.some(user => user.id === authStatus.user.id) ? 'leave' : 'join'}
                             </button>
                         )}
                     </div>
                 </div>
                 </>
-            )}
+            }
             {server && isUpdatingServer && (<ServerUpdateForm setIsUpdatingServer={setIsUpdatingServer} server={server}/>)}
             <Snackbar
                 open={serverError !== '' || usersError !== ''}

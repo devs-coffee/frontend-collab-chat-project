@@ -1,16 +1,18 @@
+import { AxiosError } from "axios";
 import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from 'react-redux';
+
+import { Snackbar } from "@mui/material";
+
+import useIoSocket from '../../Hooks/useIoSocket';
+import { IoProvider } from '../../interfaces/IIoProvider';
+import { IMessage } from "../../interfaces/IMessage";
+import { addMessage, fetchMessages } from "../../redux/messagesSlice";
 import { MessageService } from "../../services/messageService";
 import MessageEditor from "../MessageEditor/MessageEditor";
 import MessageList from "../MessageList/MessageList";
-import { useDispatch } from 'react-redux';
-import { addMessage, fetchMessages, setMessages } from "../../redux/messagesSlice";
+
 import "./MessageBox.scss";
-import { IMessage } from "../../interfaces/IMessage";
-import { useSelector } from "react-redux";
-import { AxiosError } from "axios";
-import { Snackbar } from "@mui/material";
-import useIoSocket from '../../Hooks/useIoSocket';
-import { IoProvider } from '../../interfaces/IIoProvider';
 
 type ChannelId = {
     channelId: string
@@ -22,7 +24,7 @@ export default function MessageBox ( { channelId } : ChannelId) {
     const messages = useSelector((state:any) => state.messages.data[channelId]);
     const [getMessagesError, setGetMessagesError] = useState<{isError: boolean, errorMessage: string}>({isError:false, errorMessage:''});
     const dispatch = useDispatch();
-    const { ioClose, Socket } = useIoSocket() as IoProvider;
+    const { Socket } = useIoSocket() as IoProvider;
 
     const sendMessage = async (messageContent:string) => {
         if(messageContent === '') {
@@ -60,7 +62,7 @@ export default function MessageBox ( { channelId } : ChannelId) {
 
     useEffect(() => {
         if(stateMessages.status === "idle" || messages === undefined) {
-          dispatch<any>(fetchMessages(channelId));
+            dispatch<any>(fetchMessages(channelId));
 
         }
         Socket.on(`message_${channelId}`, (res: IMessage) => {

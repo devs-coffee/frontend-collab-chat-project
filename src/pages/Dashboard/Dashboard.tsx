@@ -1,5 +1,7 @@
 import { useState } from "react";
+import { useSelector } from "react-redux";
 
+import { reduxData } from "../../interfaces/IReduxData";
 import DashboardPanel from "../../components/DashboardPanel/DashboardPanel";
 import DashboardServersHeading from "../../components/DashboardServersHeading/DashboardServersHeading";
 import ServerCreationForm from "../../components/ServerCreationForm/ServerCreationForm";
@@ -9,6 +11,7 @@ import "./Dashboard.scss";
 
 export default function Dashboard() {
     const [dashboardContent, setDashboardContent] = useState<string>('');
+    const usersState = useSelector((state:reduxData) => state.users);
 
     return (
         <div className="Dashboard">

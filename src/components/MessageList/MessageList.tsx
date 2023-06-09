@@ -1,12 +1,15 @@
-import { IMessage } from '../../interfaces/IMessage';
-import './MessageList.scss';
-import Message from '../Message/Message';
-import { useEffect, useRef, useState } from 'react';
-import { MessageService } from '../../services/messageService';
-import { useDispatch, useSelector } from 'react-redux';
-import { setMessages } from '../../redux/messagesSlice';
-import { Snackbar } from '@mui/material';
 import { AxiosError } from 'axios';
+import { useEffect, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+
+import { Snackbar } from '@mui/material';
+
+import { MessageService } from '../../services/messageService';
+import { setMessages } from '../../redux/messagesSlice';
+import { IMessage } from '../../interfaces/IMessage';
+import Message from '../Message/Message';
+
+import './MessageList.scss';
 
 type messageList = {
     messages: IMessage[]

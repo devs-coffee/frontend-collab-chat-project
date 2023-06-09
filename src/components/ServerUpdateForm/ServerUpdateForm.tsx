@@ -11,7 +11,7 @@ import { Avatar, Breadcrumbs, Snackbar } from '@mui/material';
 
 import Modal from '../../components/Modal/modal';
 import { Server } from '../../interfaces/IServer';
-import { removeServer, updateServer } from '../../redux/serversSlice';
+import { removeServer, addOrUpdateServer } from '../../redux/serversSlice';
 import { ServerService } from '../../services/serverService';
 import { FormValidationService } from '../../utils/formValidationService';
 import AvatarCropper from '../avatarCropper/AvatarCropper';
@@ -63,7 +63,7 @@ export default function ServerUpdateForm(props:ServerUpdatingFormProps) {
     const deleteAvatar = () => {
         new ServerService().updateServer({picture: null}, props.server.id)
         .then(response => {
-            dispatch(updateServer(response.result));
+            dispatch(addOrUpdateServer(response.result));
             setCroppedImage('');
         })
         .catch(error => {
@@ -99,7 +99,7 @@ export default function ServerUpdateForm(props:ServerUpdatingFormProps) {
                         setServerUpdateError({isError: false, errorMessage: ''});
                         try {
                             const response = await new ServerService().updateServer(modifiedValues, props.server.id);
-                            dispatch(updateServer(response.result));
+                            dispatch(addOrUpdateServer(response.result));
                             setCroppedImage('');
                             props.setIsUpdatingServer(false);
                         } catch(error) {
