@@ -6,7 +6,7 @@ import usersReducer from './usersSlice';
 import messagesReducer from './messagesSlice'
 export const store = configureStore({
     reducer: {
-        auth: authReducer,
+        authStatus: authReducer,
         servers: serversReducer,
         users: usersReducer,
         messages: messagesReducer

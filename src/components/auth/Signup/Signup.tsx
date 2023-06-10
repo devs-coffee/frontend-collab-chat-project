@@ -63,7 +63,6 @@ export default function Signup() {
                     } catch(error) {
                         let errorMessage:string = 'Une erreur est survenue, c\'est ballot.';
                         if(error instanceof AxiosError) {
-                            console.log(error.response?.data.message);
                             errorMessage = error.response?.data.message;
                         }
                         setSignupError({isError:true, errorMessage});

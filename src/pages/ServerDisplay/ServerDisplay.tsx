@@ -20,7 +20,7 @@ import './ServerDisplay.scss';
 
 export default function ServerDisplay() {
     const dispatch = useDispatch();
-    const authStatus = useSelector((state:any) => state.auth);
+    const authStatus = useSelector((state:any) => state.authStatus);
     const usersState = useSelector((state:any) => state.users);
     const urlSearchParams = useParams();
     const server = useSelector((state:any) => state.servers.data.find((server:any) => server.id === urlSearchParams.serverId));
@@ -34,7 +34,8 @@ export default function ServerDisplay() {
     const [channelId, setChannelId] = useState<string>("");
     const getServerData = async() => {
         try {
-            const response = await new ServerService().getServerById(urlSearchParams.serverId!)
+            const response = await new ServerService().getServerById(urlSearchParams.serverId!);
+            dispatch(addOrUpdateServer(response.result));
             const channels = response.result.channels;
             const defaultChannel = channels[0];
             setChannelId(defaultChannel.id);
@@ -121,7 +122,6 @@ export default function ServerDisplay() {
     }
 
     const redirectToChannel = (toChannelId: string) => {
-        console.log(toChannelId);
         setChannelId(toChannelId);
     }
 

@@ -1,13 +1,17 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 import data from "../datas/reduxDefault";
+import { User } from "../interfaces/IUser";
 
 export const usersSlice = createSlice({
     name: 'users',
     initialState: data.users,
     reducers: {
         addUsers: (state, action) => {
-            state.data.push(action.payload);
+            action.payload.forEach((user: User) => {
+                state.data.push(user);
+            })
+            
         },
         updateUser: (state, action) => {
             const oldUser = state.data.find(user => user.id === action.payload.id);

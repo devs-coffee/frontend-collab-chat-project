@@ -11,7 +11,7 @@ type ProtectedContentProps = {
 };
 
 const ProtectedContent = ({ children } : ProtectedContentProps) => {
-    const authStatus = useSelector((state:any) => state.auth);
+    const authStatus = useSelector((state:any) => state.authStatus);
     const dispatch = useDispatch();
     const token = window.localStorage.getItem('access_token');
     const authenticationService = new AuthenticationService();

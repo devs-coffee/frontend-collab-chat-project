@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import data from '../datas/reduxDefault';
 
 export const authSlice = createSlice({
-    name: 'auth',
+    name: 'authStatus',
     initialState: data.authStatus,
     reducers: {
         setLogs: (state, action) => {

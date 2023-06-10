@@ -8,7 +8,7 @@ import DisabledByDefaultRoundedIcon from '@mui/icons-material/DisabledByDefaultR
 
 import { FormValidationService } from '../../utils/formValidationService';
 import { ServerService } from '../../services/serverService';
-import { addServer } from '../../redux/serversSlice';
+import { addOrUpdateServer } from '../../redux/serversSlice';
 import AvatarCropper from '../avatarCropper/AvatarCropper';
 import Search from '../commons/Search';
 
@@ -63,7 +63,7 @@ export default function ServerCreationForm(props:ServerCreationFormProps) {
                     setServerCreationError({isError:false, errorMessage:''});
                     try {
                         const response = await new ServerService().createServer(values);
-                        dispatch(addServer(response.result));
+                        dispatch(addOrUpdateServer(response.result));
                         closeServerAdding();
                     } catch(error) {
                         let errorMessage:string = 'Une erreur est survenue, veuillez réessayer';

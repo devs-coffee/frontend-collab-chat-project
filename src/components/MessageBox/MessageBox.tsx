@@ -19,7 +19,7 @@ type ChannelId = {
   }
 
 export default function MessageBox ( { channelId } : ChannelId) {
-    const authStatus = useSelector((state:any) => state.auth);
+    const authStatus = useSelector((state:any) => state.authStatus);
     const stateMessages = useSelector((state:any) => state.messages);
     const messages = useSelector((state:any) => state.messages.data[channelId]);
     const [getMessagesError, setGetMessagesError] = useState<{isError: boolean, errorMessage: string}>({isError:false, errorMessage:''});

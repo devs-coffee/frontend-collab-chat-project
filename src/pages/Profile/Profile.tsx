@@ -20,7 +20,7 @@ const formValidationService = new FormValidationService();
 
 export default function Profile() {
     const dispatch = useDispatch();
-    const authStatus = useSelector((state:any) => state.auth);
+    const authStatus = useSelector((state:any) => state.authStatus);
     const [passwordEdit, setPasswordEdit] = useState(false);
     const [ croppedImage, setCroppedImage ] = useState<string>('');
     const [ isOpen, setIsOpen] = useState<boolean>(false);
