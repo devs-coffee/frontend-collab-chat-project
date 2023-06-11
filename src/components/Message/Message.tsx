@@ -1,7 +1,7 @@
 import { Avatar } from '@mui/material';
-import { IMessage, IUpdateMessage } from '../../interfaces/IMessage';
+import { IMessage } from '../../interfaces/IMessage';
 import './Message.scss';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import MessageEditor from '../MessageEditor/MessageEditor';
 import Actions from '../commons/Actions';
 import { useDispatch, useSelector } from 'react-redux';
@@ -9,6 +9,8 @@ import { MessageService } from '../../services/messageService';
 import { AxiosError } from 'axios';
 import { removeMessage, updateMessage } from '../../redux/messagesSlice';
 import { reduxData } from '../../interfaces/IReduxData';
+import useIoSocket from '../../Hooks/useIoSocket';
+import { IoProvider } from '../../interfaces/IIoProvider';
 
 type messageType = {
     message: IMessage
@@ -24,6 +26,7 @@ export default function  Message({message}: messageType)  {
     const author = message.userId === authStatus.user!.id ? authStatus.user :  users.find(user => user.id === message.userId);
     const dispatch = useDispatch();
     const [getMessagesError, setGetMessagesError] = useState<{isError: boolean, errorMessage: string}>({isError:false, errorMessage:''});
+    const { Socket } = useIoSocket() as IoProvider;
 
     const sendMessage = async (content: string) => {
         setIsEdit(false)
@@ -38,6 +41,18 @@ export default function  Message({message}: messageType)  {
             remove(message.id!);
         }
     }
+
+    useEffect(() => {
+        Socket.on(`message_${message.id!}`, (res: IMessage) => {
+            if(res.userId !== authStatus?.user?.id){
+                dispatch<any>(updateMessage(res))
+            }
+      });
+      return () => {
+        Socket.off(`message_${message.id!}`)
+      }
+    },[message, dispatch])
+    
 
     const remove = async (id: string) => {
         try {

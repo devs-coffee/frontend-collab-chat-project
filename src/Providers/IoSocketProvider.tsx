@@ -12,7 +12,6 @@ function IoSocketProvider({children} : IoSocketProviderProps) {
     if(process.env.REACT_APP_IO_URL) {
         ioUrl = process.env.REACT_APP_IO_URL;
     }
-
     const Socket = socketIOClient(ioUrl, { transports: ['websocket'], auth: {token: localStorage.getItem('access_token')}});
 
     function ioClose() {
