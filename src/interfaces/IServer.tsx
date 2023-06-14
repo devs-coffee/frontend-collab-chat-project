@@ -6,6 +6,7 @@ export interface Server {
     picture?: string,
     isPrivate: boolean,
     categories: string[],
-    channels: ChannelBase[]
-    isCurrentUserAdmin: boolean
+    channels: ChannelBase[],
+    isCurrentUserAdmin?: boolean
+    isCurrentUserMember?: boolean
 }

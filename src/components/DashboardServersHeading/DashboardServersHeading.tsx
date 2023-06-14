@@ -17,7 +17,7 @@ type DashboardServersHeadingProps = {
 export default function DashboardServersHeading(props:DashboardServersHeadingProps) {
     const addNewServer = () => props.setDashboardContent('addServer');
     const searchServers = () => props.setDashboardContent('searchServer');
-    const servers = useSelector((state:any) => state.servers);
+    const servers = useSelector((state:any) => state.servers.filter((server:Server) => server.isCurrentUserMember));
     return (
         <div className="DashboardServersHeading">
             <h3>Vos serveurs :</h3>
@@ -26,6 +26,7 @@ export default function DashboardServersHeading(props:DashboardServersHeadingPro
             { servers.status === "succeed" &&
                 <div className='DashboardServersHeading__server-stack'>
                 <Stack direction="row" spacing={2}>
+                    //! filtrer les serveurs dont le user n'est pas membre
                     {servers.data.map((server:Server) => (
                         <Link to={`/server/${server.id}`} key={`linkto-${server.id}`} title={server.name}>
                             {server.picture ?
