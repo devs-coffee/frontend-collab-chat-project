@@ -10,6 +10,8 @@ import ChannelManager from "../../components/ChannelManager/ChannelManager";
 import MessageBox from "../../components/MessageBox/MessageBox";
 import ServerUpdateForm from "../../components/ServerUpdateForm/ServerUpdateForm";
 import { ChannelBase } from "../../interfaces/IChannel.base";
+import { Server } from "../../interfaces/IServer";
+import { reduxData } from "../../interfaces/IReduxData";
 import { User } from "../../interfaces/IUser";
 import { removeServer, addOrUpdateServer } from "../../redux/serversSlice";
 import { addUsers } from "../../redux/usersSlice";
@@ -23,7 +25,7 @@ export default function ServerDisplay() {
     const authStatus = useSelector((state:any) => state.authStatus);
     const usersState = useSelector((state:any) => state.users);
     const urlSearchParams = useParams();
-    const server = useSelector((state:any) => state.servers.data.find((server:any) => server.id === urlSearchParams.serverId));
+    const server = useSelector((state:reduxData) => state.servers.data.find((server:Server) => server.id === urlSearchParams.serverId));
     const [serverUsers, setServerUsers] = useState<User[]>([]);
     const [isUpdatingServer, setIsUpdatingServer] = useState<boolean>(false);
     const [isDisabled, setIsDisabled] = useState<boolean>(false);

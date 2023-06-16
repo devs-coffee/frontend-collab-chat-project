@@ -13,15 +13,16 @@ import MessageEditor from "../MessageEditor/MessageEditor";
 import MessageList from "../MessageList/MessageList";
 
 import "./MessageBox.scss";
+import { reduxData } from "../../interfaces/IReduxData";
 
 type ChannelId = {
     channelId: string
-  }
+}
 
 export default function MessageBox ( { channelId } : ChannelId) {
-    const authStatus = useSelector((state:any) => state.authStatus);
-    const stateMessages = useSelector((state:any) => state.messages);
-    const messages = useSelector((state:any) => state.messages.data[channelId]);
+    const authStatus = useSelector((state:reduxData) => state.authStatus);
+    const stateMessages = useSelector((state:reduxData) => state.messages);
+    const messages = useSelector((state:reduxData) => state.messages.data[channelId]);
     const [getMessagesError, setGetMessagesError] = useState<{isError: boolean, errorMessage: string}>({isError:false, errorMessage:''});
     const dispatch = useDispatch();
     const { Socket } = useIoSocket() as IoProvider;
@@ -32,7 +33,7 @@ export default function MessageBox ( { channelId } : ChannelId) {
         }
         try {
             const message: IMessage = {
-                userId: authStatus.user.id,
+                userId: authStatus!.user!.id,
                 channelId: channelId,
                 content: messageContent
             }
@@ -66,7 +67,7 @@ export default function MessageBox ( { channelId } : ChannelId) {
 
         }
         Socket.on(`message_${channelId}`, (res: IMessage) => {
-            if(res.userId !== authStatus.user.id){
+            if(res.userId !== authStatus!.user!.id){
                 dispatch<any>(addMessage(res))
             }
       });

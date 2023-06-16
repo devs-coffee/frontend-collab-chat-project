@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Avatar, Stack } from '@mui/material';
@@ -9,6 +9,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import { Server } from '../../interfaces/IServer';
 
 import './DashboardServersHeading.scss';
+import { reduxData } from '../../interfaces/IReduxData';
 
 type DashboardServersHeadingProps = {
     setDashboardContent: React.Dispatch<React.SetStateAction<string>>,
@@ -17,7 +18,8 @@ type DashboardServersHeadingProps = {
 export default function DashboardServersHeading(props:DashboardServersHeadingProps) {
     const addNewServer = () => props.setDashboardContent('addServer');
     const searchServers = () => props.setDashboardContent('searchServer');
-    const servers = useSelector((state:any) => state.servers.filter((server:Server) => server.isCurrentUserMember));
+    const servers = useSelector((state:reduxData) => state.servers);
+    const filteredServers = servers.data.filter((server:Server) => server.isCurrentUserMember)
     return (
         <div className="DashboardServersHeading">
             <h3>Vos serveurs :</h3>
@@ -26,8 +28,7 @@ export default function DashboardServersHeading(props:DashboardServersHeadingPro
             { servers.status === "succeed" &&
                 <div className='DashboardServersHeading__server-stack'>
                 <Stack direction="row" spacing={2}>
-                    //! filtrer les serveurs dont le user n'est pas membre
-                    {servers.data.map((server:Server) => (
+                     {filteredServers.map((server:Server) => (
                         <Link to={`/server/${server.id}`} key={`linkto-${server.id}`} title={server.name}>
                             {server.picture ?
                                 (<Avatar alt="avatar server" src={server.picture} />)
