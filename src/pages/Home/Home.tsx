@@ -34,7 +34,7 @@ export default function Home() {
 
   return (
     <div className="Home">
-      <Header/>
+      <Header ioClose={ioClose}/>
       <Outlet />
     </div>
   );

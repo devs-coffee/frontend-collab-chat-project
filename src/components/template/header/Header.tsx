@@ -9,8 +9,11 @@ import { unsetServers } from "../../../redux/serversSlice";
 
 import './Header.scss';
 import DarkModeSwitch from "../../DarkModeSwitch/DarkModeSwitch";
+import { IoProvider } from "../../../interfaces/IIoProvider";
 
-export default function Header() {
+export default function Header({ioClose}:any) {
+
+    
     const dispatch = useDispatch();
     const authStatus = useSelector((state:any) => state.authStatus);
     const [anchorEl, setAnchorEl]  = useState<null | HTMLElement>(null);
@@ -22,6 +25,7 @@ export default function Header() {
         setAnchorEl(null);
     }
     const logout = () => {
+        ioClose();
         dispatch(unsetLogs());
         dispatch(unsetServers());
     }
