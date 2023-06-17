@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import { Avatar, Stack } from '@mui/material';
-import { green, blue } from '@mui/material/colors';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import SearchIcon from '@mui/icons-material/Search';
+import { Avatar, Stack } from '@mui/material';
+import { blue, green } from '@mui/material/colors';
 
-import { Server } from '../../interfaces/IServer';
 import { reduxData } from '../../interfaces/IReduxData';
+import { Server } from '../../interfaces/IServer';
 
 import './DashboardServersHeading.scss';
 
