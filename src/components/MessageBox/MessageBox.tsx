@@ -7,13 +7,13 @@ import { Snackbar } from "@mui/material";
 import useIoSocket from '../../Hooks/useIoSocket';
 import { IoProvider } from '../../interfaces/IIoProvider';
 import { IMessage } from "../../interfaces/IMessage";
+import { reduxData } from "../../interfaces/IReduxData";
 import { addMessage, fetchMessages } from "../../redux/messagesSlice";
 import { MessageService } from "../../services/messageService";
 import MessageEditor from "../MessageEditor/MessageEditor";
 import MessageList from "../MessageList/MessageList";
 
 import "./MessageBox.scss";
-import { reduxData } from "../../interfaces/IReduxData";
 
 type ChannelId = {
     channelId: string

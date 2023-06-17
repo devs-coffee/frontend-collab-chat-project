@@ -6,13 +6,11 @@ import { Avatar, IconButton, Menu, MenuItem } from "@mui/material";
 
 import { unsetLogs } from "../../../redux/authSlice";
 import { unsetServers } from "../../../redux/serversSlice";
+import DarkModeSwitch from "../../DarkModeSwitch/DarkModeSwitch";
 
 import './Header.scss';
-import DarkModeSwitch from "../../DarkModeSwitch/DarkModeSwitch";
-import { IoProvider } from "../../../interfaces/IIoProvider";
 
 export default function Header({ioClose}:any) {
-
     
     const dispatch = useDispatch();
     const authStatus = useSelector((state:any) => state.authStatus);
@@ -29,18 +27,15 @@ export default function Header({ioClose}:any) {
         dispatch(unsetLogs());
         dispatch(unsetServers());
     }
-    
 
     return (
         <div className="Header">
             <h1>
                 <div className="logo-container">
                     <Link to="/"><img src="./images/openChatRooms.png" alt="logo openChatRooms" /></Link>
-                    
                 </div>
                 <div className="sitename">
                     <Link to="/">OpenWebChat</Link>
-                    
                 </div>
                 <div className="logpad-container">
                     <DarkModeSwitch />

@@ -19,7 +19,6 @@ import { ServerService } from "../../services/serverService";
 
 import './ServerDisplay.scss';
 
-
 export default function ServerDisplay() {
     const dispatch = useDispatch();
     const authStatus = useSelector((state:any) => state.authStatus);
@@ -148,7 +147,6 @@ export default function ServerDisplay() {
                         <SettingsIcon onClick={() => setIsUpdatingServer(true)} />
                     }
                 </div>
-
                 <div className="ServerDisplay__main-content">
                     <div className="ServerDisplay__main-content__channels-box">
                         <h4>
