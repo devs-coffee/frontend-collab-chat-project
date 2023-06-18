@@ -8,6 +8,7 @@ import { Avatar, Stack } from '@mui/material';
 import { blue, green } from '@mui/material/colors';
 
 import { reduxData } from '../../interfaces/IReduxData';
+import { getMineServersState } from '../../redux/serversSlice';
 import { Server } from '../../interfaces/IServer';
 
 import './DashboardServersHeading.scss';
@@ -19,11 +20,7 @@ type DashboardServersHeadingProps = {
 export default function DashboardServersHeading(props:DashboardServersHeadingProps) {
     const addNewServer = () => props.setDashboardContent('addServer');
     const searchServers = () => props.setDashboardContent('searchServer');
-    const servers = useSelector((state:reduxData) => {
-        const serversState = {...state.servers};
-        serversState.data = serversState.data.filter((server:Server) => server.isCurrentUserMember);
-        return serversState;
-    });
+    const servers = getMineServersState(useSelector((state:reduxData) => state.servers));
     return (
         <div className="DashboardServersHeading">
             <h3>Vos serveurs :</h3>
