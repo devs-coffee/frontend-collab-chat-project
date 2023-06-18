@@ -19,8 +19,11 @@ type DashboardServersHeadingProps = {
 export default function DashboardServersHeading(props:DashboardServersHeadingProps) {
     const addNewServer = () => props.setDashboardContent('addServer');
     const searchServers = () => props.setDashboardContent('searchServer');
-    const servers = useSelector((state:reduxData) => state.servers);
-    const filteredServers = servers.data.filter((server:Server) => server.isCurrentUserMember)
+    const servers = useSelector((state:reduxData) => {
+        const serversState = {...state.servers};
+        serversState.data = serversState.data.filter((server:Server) => server.isCurrentUserMember);
+        return serversState;
+    });
     return (
         <div className="DashboardServersHeading">
             <h3>Vos serveurs :</h3>
@@ -29,7 +32,7 @@ export default function DashboardServersHeading(props:DashboardServersHeadingPro
             { servers.status === "succeed" &&
                 <div className='DashboardServersHeading__server-stack'>
                 <Stack direction="row" spacing={2}>
-                     {filteredServers.map((server:Server) => (
+                     {servers.data.map((server:Server) => (
                         <Link to={`/server/${server.id}`} key={`linkto-${server.id}`} title={server.name}>
                             {server.picture ?
                                 (<Avatar alt="avatar server" src={server.picture} />)
