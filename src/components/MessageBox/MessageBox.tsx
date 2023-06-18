@@ -15,11 +15,12 @@ import MessageList from "../MessageList/MessageList";
 
 import "./MessageBox.scss";
 
-type ChannelId = {
-    channelId: string
+type MessageBoxProps = {
+    channelId: string,
+    canUserPost: boolean
 }
 
-export default function MessageBox ( { channelId } : ChannelId) {
+export default function MessageBox ( { channelId, canUserPost }: MessageBoxProps ) {
     const authStatus = useSelector((state:reduxData) => state.authStatus);
     const stateMessages = useSelector((state:reduxData) => state.messages);
     const messages = useSelector((state:reduxData) => state.messages.data[channelId]);
@@ -79,7 +80,7 @@ export default function MessageBox ( { channelId } : ChannelId) {
     return (
         <div className="MessageBox">
             <MessageList messages={messages} />
-            <MessageEditor sendMessage={sendMessage}/>
+            {canUserPost && <MessageEditor sendMessage={sendMessage}/>}
             <Snackbar 
             open={getMessagesError.isError}
             autoHideDuration={4000}

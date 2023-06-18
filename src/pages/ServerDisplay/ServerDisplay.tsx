@@ -10,10 +10,10 @@ import ChannelManager from "../../components/ChannelManager/ChannelManager";
 import MessageBox from "../../components/MessageBox/MessageBox";
 import ServerUpdateForm from "../../components/ServerUpdateForm/ServerUpdateForm";
 import { ChannelBase } from "../../interfaces/IChannel.base";
-import { Server } from "../../interfaces/IServer";
 import { reduxData } from "../../interfaces/IReduxData";
+import { Server } from "../../interfaces/IServer";
 import { User } from "../../interfaces/IUser";
-import { removeServer, addOrUpdateServer } from "../../redux/serversSlice";
+import { addOrUpdateServer } from "../../redux/serversSlice";
 import { addUsers } from "../../redux/usersSlice";
 import { ServerService } from "../../services/serverService";
 
@@ -74,7 +74,9 @@ export default function ServerDisplay() {
         try {
             setIsDisabled(true);
             const response = await new ServerService().joinServer(urlSearchParams.serverId!);
-            response.result ? dispatch(addOrUpdateServer(server)) : dispatch(removeServer(server?.id));
+            const newServer = {...server};
+            newServer.isCurrentUserMember = response.result
+            dispatch(addOrUpdateServer(newServer));
             getServerUsers();
             setIsDisabled(false)
         } catch (error) {
@@ -168,7 +170,7 @@ export default function ServerDisplay() {
                     {mainContent === 'chat' && (
                         <div className="ServerDisplay__main-content__middle-box">
                             <h4>Chat-box</h4>
-                            {channelId && channelId !== '' && <MessageBox channelId={channelId} key={channelId} />}
+                            {channelId && channelId !== '' && <MessageBox channelId={channelId} canUserPost={!!server.isCurrentUserMember} key={channelId} />}
                         </div>
                     )}
                     {mainContent === 'updateChannel' && (
