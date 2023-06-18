@@ -14,6 +14,10 @@ export default function ServerSearching() {
 
     const searchServers = async () => {
         setSearchError({isError: false, errorMessage: ''});
+        if(searchInput === '') {
+            setSearchError({isError: true, errorMessage: 'le champ de recherche ne peut être vide!!'});
+            return;
+        }
         try {
             const response = await new ServerService().searchServers(searchInput);
             setFoundServers(response.result);
