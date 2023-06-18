@@ -18,7 +18,7 @@ export const serversSlice = createSlice({
             return state;
         },
         addOrUpdateServer: (state, action) => {
-            const { id, name, picture, categories, channels } = action.payload;
+            const { id, name, picture, categories, channels, isCurrentUserAdmin, isCurrentUserMember } = action.payload;
             const data = [...state.data].map(elt => {return{...elt}});
             const oldServer = data.find(server => server.id === id);
             if(oldServer) {
@@ -26,6 +26,8 @@ export const serversSlice = createSlice({
                 oldServer.picture = picture;
                 oldServer.categories = categories;
                 oldServer.channels = channels;
+                oldServer.isCurrentUserAdmin = isCurrentUserAdmin;
+                oldServer.isCurrentUserMember = isCurrentUserMember;
             } else {data.push(action.payload)}
             state.data = data;
             const newState = {...state, data};
