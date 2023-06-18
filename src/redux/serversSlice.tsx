@@ -92,4 +92,9 @@ export const fetchServers = createAsyncThunk<
     });
     
 export const getServerList = (state:any) => state.data as Server[];
+export const getMineServersState = (state:any) => {
+    const mineServersState = {...state};
+    mineServersState.data = state.data.filter((server:Server) => server.isCurrentUserMember) as Server[];
+    return mineServersState;
+}
 export const getServerById = (state:any, serverId:string) => state.data.find((server:Server) => server.id === serverId) as Server;

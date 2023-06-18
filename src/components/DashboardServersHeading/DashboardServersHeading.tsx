@@ -1,11 +1,14 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { Avatar, Stack } from '@mui/material';
-import { green, blue } from '@mui/material/colors';
+
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import SearchIcon from '@mui/icons-material/Search';
+import { Avatar, Stack } from '@mui/material';
+import { blue, green } from '@mui/material/colors';
 
+import { reduxData } from '../../interfaces/IReduxData';
+import { getMineServersState } from '../../redux/serversSlice';
 import { Server } from '../../interfaces/IServer';
 
 import './DashboardServersHeading.scss';
@@ -17,7 +20,7 @@ type DashboardServersHeadingProps = {
 export default function DashboardServersHeading(props:DashboardServersHeadingProps) {
     const addNewServer = () => props.setDashboardContent('addServer');
     const searchServers = () => props.setDashboardContent('searchServer');
-    const servers = useSelector((state:any) => state.servers);
+    const servers = getMineServersState(useSelector((state:reduxData) => state.servers));
     return (
         <div className="DashboardServersHeading">
             <h3>Vos serveurs :</h3>
@@ -26,7 +29,7 @@ export default function DashboardServersHeading(props:DashboardServersHeadingPro
             { servers.status === "succeed" &&
                 <div className='DashboardServersHeading__server-stack'>
                 <Stack direction="row" spacing={2}>
-                    {servers.data.map((server:Server) => (
+                     {servers.data.map((server:Server) => (
                         <Link to={`/server/${server.id}`} key={`linkto-${server.id}`} title={server.name}>
                             {server.picture ?
                                 (<Avatar alt="avatar server" src={server.picture} />)
