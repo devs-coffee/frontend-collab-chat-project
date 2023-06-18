@@ -170,7 +170,7 @@ export default function ServerDisplay() {
                     {mainContent === 'chat' && (
                         <div className="ServerDisplay__main-content__middle-box">
                             <h4>Chat-box</h4>
-                            {channelId && channelId !== '' && <MessageBox channelId={channelId} canUserPost={!!server.isCurrentUserMember} key={channelId} />}
+                            {channelId && channelId !== '' && <MessageBox channelId={channelId} canUserPost={server.isCurrentUserMember || false} key={channelId} />}
                         </div>
                     )}
                     {mainContent === 'updateChannel' && (
