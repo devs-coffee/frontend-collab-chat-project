@@ -4,6 +4,7 @@ import { Server } from "../interfaces/IServer";
 import { User } from "../interfaces/IUser";
 import { serverCreationForm } from "../interfaces/IServerCreationForm";
 import { ServerUpdateValues } from "../interfaces/IServerUpdateValues";
+import { ServerBase } from "../interfaces/IServerBase";
 
 export class ServerService extends Fetcher {
     async getServers():Promise<OperationResult<Server[]>> {
@@ -31,7 +32,7 @@ export class ServerService extends Fetcher {
         return response.data;
     }
 
-    async searchServers(keyword: string):Promise<OperationResult<Server[]>> {
+    async searchServers(keyword: string):Promise<OperationResult<ServerBase[]>> {
         const response = await super.get<Server[]>(`/servers/search?keyword=${keyword}`);
         return response.data;
     }

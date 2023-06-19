@@ -1,15 +1,15 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { AxiosError } from 'axios';
 
 import { Avatar, Snackbar } from '@mui/material';
 
 import { ServerService } from '../../services/serverService';
-import { Server } from '../../interfaces/IServer';
-import { AxiosError } from 'axios';
+import { ServerBase } from '../../interfaces/IServerBase';
 
 export default function ServerSearching() {
     const [searchInput, setSearchInput] = useState('');
-    const [foundServers, setFoundServers] = useState<Server[] | null>(null);
+    const [foundServers, setFoundServers] = useState<ServerBase[] | null>(null);
     const [ searchError, setSearchError ] = useState<{isError:boolean, errorMessage:string}>({isError: false, errorMessage: ''});
 
     const searchServers = async () => {
