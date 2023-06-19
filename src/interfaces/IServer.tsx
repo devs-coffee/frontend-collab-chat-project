@@ -1,12 +1,6 @@
-import { ChannelBase } from "./IChannel.base"
+import { ServerBase } from "./IServerBase"
 
-export interface Server {
-    id: string,
-    name: string,
-    picture?: string,
-    isPrivate: boolean,
-    categories: string[],
-    channels: ChannelBase[],
-    isCurrentUserAdmin?: boolean
-    isCurrentUserMember?: boolean
+export interface Server extends ServerBase {
+    isCurrentUserAdmin: boolean
+    isCurrentUserMember: boolean
 }

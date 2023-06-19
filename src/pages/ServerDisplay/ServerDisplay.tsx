@@ -18,14 +18,13 @@ import { addUsers } from "../../redux/usersSlice";
 import { ServerService } from "../../services/serverService";
 
 import './ServerDisplay.scss';
-import { FullServer } from "../../interfaces/IFullServer";
 
 export default function ServerDisplay() {
     const dispatch = useDispatch();
     const authStatus = useSelector((state:any) => state.authStatus);
     const usersState = useSelector((state:any) => state.users);
     const urlSearchParams = useParams();
-    const server = useSelector((state:reduxData) => state.servers.data.find((server:Server) => server.id === urlSearchParams.serverId)) as FullServer;
+    const server = useSelector((state:reduxData) => state.servers.data.find((server:Server) => server.id === urlSearchParams.serverId));
     const [serverUsers, setServerUsers] = useState<User[]>([]);
     const [isUpdatingServer, setIsUpdatingServer] = useState<boolean>(false);
     const [isDisabled, setIsDisabled] = useState<boolean>(false);
