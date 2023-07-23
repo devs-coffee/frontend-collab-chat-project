@@ -1,6 +1,7 @@
 # frontend-collab-chat-project
 Frontend for the collaborative project of a chat app.
 
+
 ## Conventions de nommage
 
 Pour garder une certaine constance dans le code source, voici les quelques règles à respecter lors du développement et de la maintenance de l'appli webFdl :
