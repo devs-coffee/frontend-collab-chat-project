@@ -1,4 +1,4 @@
-import { Point, Area } from 'react-easy-crop/types';
+import { Area } from 'react-easy-crop/types';
 
 export const createImage = (url:string):any =>
   new Promise((resolve, reject) => {

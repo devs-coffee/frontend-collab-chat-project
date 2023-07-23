@@ -6,9 +6,7 @@ import { ApiAuthResponse } from "../interfaces/IApiAuthResponse";
 import { loginForm } from "../interfaces/ILoginForm";
 
 export class AuthenticationService extends Fetcher {
-    constructor() {
-        super();
-    }
+    
     async getMe():Promise<OperationResult<User>> {
         const response = await super.get<User>('/auth/getMe');
         return response.data;

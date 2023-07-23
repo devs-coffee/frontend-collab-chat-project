@@ -33,7 +33,7 @@ export default function ChannelUpdateForm(props: ChannelUpdateFormProps) {
 
     async function deleteChannel() {
         try {
-            const response = await new ChannelService().deleteChannel(props.channel.id);
+            await new ChannelService().deleteChannel(props.channel.id);
             dispatch(removeChannel(props.channel));
             props.closeChannelUpdate()
         } catch(error) {
@@ -41,7 +41,7 @@ export default function ChannelUpdateForm(props: ChannelUpdateFormProps) {
             if(error instanceof AxiosError) {
                 errorMessage = error.response?.data.message;
             }
-            setDeleteChannelError({isError:true, errorMessage:'Channel non supprimé, veuillez réessayer'});
+            setDeleteChannelError({isError:true, errorMessage});
         }
     }
     
