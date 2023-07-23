@@ -1,0 +1,9 @@
+@import '../../styles/mixins';
+
+.ServerCreationForm {
+    & Form {
+        @include form;
+        text-align: center;
+    }
+    
+}

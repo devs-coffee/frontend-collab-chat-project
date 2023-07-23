@@ -1,20 +1,41 @@
-import React from 'react';
 import ReactDOM from 'react-dom/client';
-import Home from "./pages/Home/Home";
-import Error from "./pages/Error/Error";
-import './styles/index.scss';
+import { store } from './redux/store';
+import { Provider } from 'react-redux';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { StoreProvider } from "./providers/Store";
+
+import IoSocketProvider from './Providers/IoSocketProvider';
+import Home from "./pages/Home/Home";
+import ProtectedContent from './components/ProtectedContent/ProtectedContent';
+import Profile from './pages/Profile/Profile';
+import Error from "./pages/Error/Error";
+import Auth from "./pages/Auth/Auth";
+import Dashboard from './pages/Dashboard/Dashboard';
+import UserDisplay from './pages/UserDisplay/UserDisplay';
+import ServerDisplay from './pages/ServerDisplay/ServerDisplay';
+
+import './styles/index.scss';
 
 const root = ReactDOM.createRoot(document.getElementById('root')!);
 root.render(
-  <StoreProvider>
+  <Provider store={store}>
     <Router>
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={
+          <ProtectedContent>
+            <IoSocketProvider>
+              <Home />
+            </IoSocketProvider>
+          </ProtectedContent>
+        } >
+          <Route path="/" element={<Dashboard />} />
+          <Route path="profile" element={<Profile />} />
+          <Route path="server/:serverId" element={<ServerDisplay />} />
+          <Route path="/user/:userId" element={<UserDisplay />} />
+        </Route>
+        <Route path="/auth" element={<Auth />} />
         <Route path="/error" element={<Error />} />
         <Route path="*" element={<Error />} />
       </Routes>
     </Router>
-  </StoreProvider>
+  </Provider>
 );

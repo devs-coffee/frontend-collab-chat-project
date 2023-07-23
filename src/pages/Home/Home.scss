@@ -1,1 +1,13 @@
 @import "../../styles/variables";
+
+.Home {
+    height: 100vh;
+    max-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.Home>div:not(.Header) {
+    flex: 1 1;
+    min-height: 0;
+}

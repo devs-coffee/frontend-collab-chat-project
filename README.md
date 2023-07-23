@@ -1,5 +1,6 @@
 # frontend-collab-chat-project
-frontend for the collaborative project of a chat app
+Frontend for the collaborative project of a chat app.
+
 
 ## Conventions de nommage
 

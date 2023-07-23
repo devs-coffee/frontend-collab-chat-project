@@ -1,0 +1,46 @@
+.AvatarCropper {
+    & input[type="file"] {
+        display: none;
+    }
+    & .crop-container {
+        position: relative;
+        margin: auto;
+        width: 300px;
+        height: 300px;
+        & .avoid-badge {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            cursor: pointer;
+        }
+    }
+    & .slider-box {
+        width: 300px;
+        margin: auto;
+    }
+    & .droparea {
+        width: 70%;
+        background-color: #a7c8ee;
+        border: 1px solid green;
+        border-radius: 4px;
+        margin: auto;
+        & .image-input-trigger {
+            background-color: #bdd9f8;
+            padding: 0.2em;
+            border: 1px solid black;
+            border-radius: 4px;
+            cursor: pointer;
+            width: fit-content;
+            margin: 0 auto 1rem;
+        }
+    }
+}
+
+[data-theme="dark"] {
+    &  .droparea {
+        background-color: #1f2d4b;
+        & .image-input-trigger {
+            background-color: #152038
+        }
+    }
+} 
