@@ -20,7 +20,7 @@ pipeline {
             steps {
                 echo 'Hello there!'
                 sh '''
-                    npm install
+                    npm ci
                 '''
             }
         }
