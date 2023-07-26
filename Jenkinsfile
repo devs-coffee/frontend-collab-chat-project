@@ -28,7 +28,7 @@ pipeline {
         stage('build') {
             steps {
                 sh '''
-                    CI= false npm run build
+                    CI=false npm run build
                     rm -r /var/www/codevert/front/
                     cp -r build/ /var/www/codevert/front
                 '''
