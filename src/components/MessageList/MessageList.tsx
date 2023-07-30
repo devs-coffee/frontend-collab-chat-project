@@ -28,7 +28,7 @@ const MessageList = ({messages}: messageList) => {
       behavior: "auto",
       block: "end"
     })
-  },[messages, stateMessages.status, dispatch])
+  },[messages, stateMessages.status, dispatch, shouldAutoScroll])
 
   const handleToastClose = (event: React.SyntheticEvent | Event, reason?: string) => {
     if(reason === 'clickaway') {
