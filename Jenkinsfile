@@ -29,8 +29,8 @@ pipeline {
             steps {
                 sh '''
                     CI=false npm run build
-                    sudo rm -r /var/www/codevert/front/
-                    sudo cp -r build/ /var/www/codevert/front
+                    rm -r /var/www/codevert/front/
+                    cp -r build/ /var/www/codevert/front
                 '''
             }
         }
