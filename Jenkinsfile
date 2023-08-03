@@ -31,6 +31,7 @@ pipeline {
                     CI=false npm run build
                     rm -r /var/www/codevert/front/
                     cp -r build/ /var/www/codevert/front
+                    docker service update codevert_front
                 '''
             }
         }
