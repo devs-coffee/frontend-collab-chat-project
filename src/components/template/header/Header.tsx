@@ -35,7 +35,7 @@ export default function Header({ioClose}:any) {
                     <Link to="/"><img src="./images/openChatRooms.png" alt="logo openChatRooms" /></Link>
                 </div>
                 <div className="sitename">
-                    <Link to="/">OpenChatrooms</Link>
+                    <Link to="/">OpenChatRooms</Link>
                 </div>
                 <div className="logpad-container">
                     <DarkModeSwitch />
