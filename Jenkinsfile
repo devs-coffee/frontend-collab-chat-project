@@ -16,7 +16,7 @@ pipeline {
             }
         }
 
-        stage('install') {
+        stage('Install') {
             steps {
                 echo 'Hello there!'
                 sh '''
@@ -25,12 +25,19 @@ pipeline {
             }
         }
 
-        stage('build') {
+        stage('Build') {
             steps {
                 sh '''
                     CI=false npm run build
                     rm -r /var/www/codevert/front/
                     cp -r build/ /var/www/codevert/front
+                '''
+            }
+        }
+
+        stage('Update portainer') {
+            steps {
+                sh '''
                     docker service update codevert_front
                 '''
             }
