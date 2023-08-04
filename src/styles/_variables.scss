@@ -1,7 +1,17 @@
-$primary    : lightBlue;
-$primary-alt: darkBlue;
-$secondary  : lightGreen;
-$light      : #fff;
-$light-alt  : #fbfbfb;
-$dark       : #282D30;
-$darker     : #020203;
+:root {
+  --font-color: rgba(0, 0, 0, 1); /* noir */
+  --background-color: rgba(245, 252, 253, 1); /* #f5fcfd */
+  --primary: rgb(0, 172, 230); /* lightBlue */
+  --secondary: rgb(4, 238, 4); /* lightGreen */
+  --tertiary: rgba(255, 255, 255, 1); /* #fff */
+  --tertiary-alt: rgba(251, 251, 251, 1); /* #fbfbfb */
+}
+
+[data-theme="dark"] {
+  --font-color: rgba(221, 221, 238, 1); /* #ddddee */
+  --background-color: rgb(4, 1, 43); /* #1e1d29 */
+  --primary: rgba(0, 0, 139, 1); /* darkBlue */
+  --secondary: rgb(4, 238, 4); /* lightGreen */
+  --tertiary: rgb(0, 31, 49); /* #282d30 */
+  --tertiary-alt: rgba(2, 2, 3, 1); /* #020203 */
+}
