@@ -1,17 +1,39 @@
 :root {
-  --font-color: rgba(0, 0, 0, 1); /* noir */
-  --background-color: rgba(245, 252, 253, 1); /* #f5fcfd */
-  --primary: rgb(0, 172, 230); /* lightBlue */
-  --secondary: rgb(4, 238, 4); /* lightGreen */
-  --tertiary: rgba(255, 255, 255, 1); /* #fff */
-  --tertiary-alt: rgba(251, 251, 251, 1); /* #fbfbfb */
+  --font-color: black; /* black */
+  --rgba-font-color: 0, 0, 0, 1; /* black */
+  
+  --background-color: #f5fcfd; /* #f5fcfd */
+  --rgba-background-color: 245, 252, 253, 1; /* #f5fcfd */
+  
+  --primary: #00ace6; /* #00ACE6 */
+  --rgba-primary: rgba(0, 172, 230); /* #00ACE6 */
+
+  --secondary: #04ee04; /* #04ee04 */
+  --rgba-secondary: 4, 238, 4; /* #04ee04 */
+
+  --tertiary: #fff; /* #fff */
+  --rgba-tertiary: rgba(255, 255, 255, 1); /* #fff */
+
+  --tertiary-alt: #fbfbfb; /* #fbfbfb */
+  --rgba-tertiary-alt: rgba(251, 251, 251, 1); /* #fbfbfb */
 }
 
 [data-theme="dark"] {
-  --font-color: rgba(221, 221, 238, 1); /* #ddddee */
-  --background-color: rgb(4, 1, 43); /* #1e1d29 */
-  --primary: rgba(0, 0, 139, 1); /* darkBlue */
-  --secondary: rgb(4, 238, 4); /* lightGreen */
-  --tertiary: rgb(0, 31, 49); /* #282d30 */
-  --tertiary-alt: rgba(2, 2, 3, 1); /* #020203 */
+  --font-color: #ddddee; /* #ddddee */
+  --rgba-font-color: 221, 221, 238, 1; /* #ddddee */
+
+  --background-color: #1e1d29; /* #1e1d29 */
+  --rgba-background-color: 4, 1, 43; /* #1e1d29 */
+
+  --primary: darkblue; /* darkBlue */
+  --rgba-primary: 0, 0, 139, 1; /* darkBlue */
+
+  --secondary: #04ee04; /* #04ee04 */
+  --rgba-secondary: 4, 238, 4; /* #04ee04 */
+
+  --tertiary: #282d30; /* #282d30 */
+  --rgba-tertiary: 0, 31, 49; /* #282d30 */
+  
+  --tertiary-alt: #020203; /* #020203 */
+  --rgba-tertiary-alt: 2, 2, 3, 1; /* #020203 */
 }
