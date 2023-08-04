@@ -38,7 +38,7 @@ pipeline {
         stage('Update portainer') {
             steps {
                 sh '''
-                    docker service update codevert_front
+                    docker service update --force codevert_front
                 '''
             }
         }
