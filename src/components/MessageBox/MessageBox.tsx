@@ -23,7 +23,6 @@ type MessageBoxProps = {
 export default function MessageBox ( { channelId, canUserPost }: MessageBoxProps ) {
     const authStatus = useSelector((state:reduxData) => state.authStatus);
     const stateMessages = useSelector((state:reduxData) => state.messages);
-    const messages = useSelector((state:reduxData) => state.messages.data[channelId]);
     const [getMessagesError, setGetMessagesError] = useState<{isError: boolean, errorMessage: string}>({isError:false, errorMessage:''});
     const dispatch = useDispatch();
     const { Socket } = useIoSocket() as IoProvider;
@@ -63,7 +62,7 @@ export default function MessageBox ( { channelId, canUserPost }: MessageBoxProps
     }
 
     useEffect(() => {
-        if(stateMessages.status === "idle" || messages === undefined) {
+        if(stateMessages.status === "idle" || stateMessages.data[channelId] === undefined) {
             dispatch<any>(fetchMessages(channelId));
 
         }
@@ -75,11 +74,11 @@ export default function MessageBox ( { channelId, canUserPost }: MessageBoxProps
       return () => {
         Socket.off(`message_${channelId}`)
       }
-    },[stateMessages.status, dispatch, channelId])
+    },[stateMessages, dispatch, channelId, authStatus, Socket])
     
     return (
         <div className="MessageBox">
-            <MessageList messages={messages} />
+            <MessageList messages={stateMessages.data[channelId]} />
             {canUserPost && <MessageEditor sendMessage={sendMessage}/>}
             <Snackbar 
             open={getMessagesError.isError}

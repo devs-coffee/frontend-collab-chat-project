@@ -85,8 +85,8 @@ export default function  Message({message}: messageType)  {
 
   return (
     <div className="Message">
-        <div className='message' key={`message=${message.id}`}>
-            {author!.picture && author!.picture !== ''
+        <div className='message'>
+            {author && author?.picture && author?.picture !== ''
             ? <Avatar alt="user picture" src={author!.picture}></Avatar>  
             : <Avatar alt="user picture">{message.user?.pseudo.substring(0,1).toUpperCase()}</Avatar>}
             <p className="message_pseudo">{message.user?.pseudo} <span className='message_date'>{isToday ? "Aujourd'hui" : 'le '  + messageDate} à {new Date(message.createdAt!).getHours()}:{new Date(message.createdAt!).getMinutes()}</span></p>

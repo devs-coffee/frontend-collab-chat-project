@@ -12,24 +12,24 @@ export default function UserDisplay() {
     const [displayedUser, setDisplayedUser] = useState<User | null>(null);
     const urlSearchParams = useParams();
 
-    const getUser = async () => {
-        try {
-            const response = await new UserService().getUser(urlSearchParams.userId!);
-            if(response.isSucceed) {
-                setDisplayedUser(response.result);
-            }
-            else {
-                console.log(response.errorMessage);
-            }
-        } catch (error) {
-            console.log(error);
-            return;
-        }
-    }
-
     useEffect(() => {
+        const getUser = async () => {
+            try {
+                const response = await new UserService().getUser(urlSearchParams.userId!);
+                if(response.isSucceed) {
+                    setDisplayedUser(response.result);
+                    return response.result;
+                }
+                else {
+                    console.log(response.errorMessage);
+                }
+            } catch (error) {
+                console.log(error);
+                return;
+            }
+        }
         getUser();
-    }, [])
+    }, [urlSearchParams])
     
     return (
         <div className="UserDisplay">
