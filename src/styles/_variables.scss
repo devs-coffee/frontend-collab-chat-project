@@ -1,7 +1,48 @@
-$primary    : lightBlue;
-$primary-alt: darkBlue;
-$secondary  : lightGreen;
-$light      : #fff;
-$light-alt  : #fbfbfb;
-$dark       : #282D30;
-$darker     : #020203;
+:root {
+  --font-color: black; /* black */
+  --rgb-font-color: 0, 0, 0, 1; /* black */
+  
+  --background-color: #f5fcfd; /* #f5fcfd */
+  --rgb-background-color: 245, 252, 253; /* #f5fcfd */
+  
+  --primary: #00ACE6; /* #00ACE6 */
+  --rgb-primary: 0,172,230; /* #00ACE6 */
+
+  --secondary: #a7c8ee; /* #a7c8ee */
+  --rgb-secondary: 167, 200, 238;/* #a7c8ee */
+
+  --tertiary: #fff; /* #fff */
+  --rgb-tertiary: 255, 255, 255; /* #fff */
+
+  --tertiary-alt: #fbfbfb; /* #fbfbfb */
+  --rgb-tertiary-alt: 251, 251, 251; /* #fbfbfb */
+
+  --quaternary: #c3f0f5;/* #c3f0f5 */
+  --rgb-quaternary: 195 ,240 , 245; /* #c3f0f5 */
+}
+
+[data-theme="dark"] {
+  --font-color: #ddddee; /* #ddddee */
+  --rgb-font-color: 221, 221, 238; /* #ddddee */
+
+  --background-color: #1E1D29; /* #1E1D29 */
+  --rgb-background-color: 30,29,41; /* #1E1D29 */
+
+  --background-input-color: #282a75; 
+  --rgb-background-input-color: 40, 42, 117;
+
+  --primary: darkblue; /* darkBlue */
+  --rgb-primary: 0, 0, 139; /* darkBlue */
+
+  --secondary: #1f2d4b;/* #1f2d4b */
+  --rgb-secondary: 31, 45, 75; /* #1f2d4b */
+
+  --tertiary: #002235; /* #282d30 */
+  --rgb-tertiary: 0,34,53; /* #282d30 */
+
+  --tertiary-alt: #000007; /* #000007 */
+  --rgb-tertiary-alt: 0,0,7; /* #000007 */
+
+  --quaternary: #021041; /* #021041 */
+  --rgb-quaternary: 2, 16, 65; /* #021041 */
+}

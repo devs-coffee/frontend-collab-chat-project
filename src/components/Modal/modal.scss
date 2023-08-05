@@ -10,8 +10,8 @@
   justify-content: center;
   align-items: center;
 
-  & .modal {
-    background-color: #c3f0f5;
+  .modal {
+    background-color: rgba(var(--rgb-quaternary));
     padding: 20px;
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
@@ -32,8 +32,4 @@
       margin-top: 20px;
     }
   }
-}
-
-[data-theme="dark"] .modal{
-  background-color: #010925;
 }
