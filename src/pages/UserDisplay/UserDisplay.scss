@@ -1,17 +1,21 @@
 .UserDisplay {
-    & .temp-content {
+    .temp-content {
         margin: 10px;
         padding-bottom: 10px;
     }
+
     background-color: lightgray;
-    & .heading {
+
+    .heading {
         background-color: #bbbbbb;
         display: flex;
         justify-content: center;
         align-items: center;
-        margin:auto;
-        & .MuiAvatar-root {
-            margin-right: 20px;;
+        margin: auto;
+
+        .MuiAvatar-root {
+            margin-right: 20px;
+            ;
         }
     }
 }

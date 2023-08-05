@@ -4,20 +4,23 @@
     & Form {
         @include form;
     }
-    & .avatar-editor {
+
+    .avatar-editor {
         display: flex;
         flex-direction: column;
         align-items: flex-end;
         width: fit-content;
         margin: auto;
     }
-    & .actual-avatar, & .wanted-avatar {
+
+    .actual-avatar,
+    .wanted-avatar {
         width: 200px;
         height: 200px;
         border-radius: 100px;
     }
 
-    & .avatar-action {
+    .avatar-action {
         display: flex;
         justify-content: center;
         align-items: center;
