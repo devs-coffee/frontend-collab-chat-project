@@ -1,17 +1,13 @@
-@import "./variables";
-@import "./mixins";
+@use "./variables" as *;
+@use "./mixins" as *;
 
 html,
 body {
-  margin: 0;
-  padding: 0;
-  height: 100vh;
-  max-height: 100vh;
   background-color: var(--background-color);
   color: var(--font-color);
 }
 
-#root,
+html,body,#root,
 #root > div {
   height: 100vh;
   max-height: 100vh;
