@@ -42,7 +42,8 @@
 }
 
 @mixin darkForm {
-    background-color: rgba(var(--rgba-quaternary), 0.5);
+    /* #010925 */
+    background-color: rgba(var(--rgba-quaternary), 0.5); 
     border: 1px solid #1c1c1c;
 
     & h2 {
