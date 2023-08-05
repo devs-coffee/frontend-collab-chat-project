@@ -12,10 +12,10 @@
   --rgba-secondary: 4, 238, 4; /* #04ee04 */
 
   --tertiary: #fff; /* #fff */
-  --rgba-tertiary: rgba(255, 255, 255, 1); /* #fff */
+  --rgba-tertiary: 255, 255, 255, 1; /* #fff */
 
   --tertiary-alt: #fbfbfb; /* #fbfbfb */
-  --rgba-tertiary-alt: rgba(251, 251, 251, 1); /* #fbfbfb */
+  --rgba-tertiary-alt: 251, 251, 251, 1; /* #fbfbfb */
 }
 
 [data-theme="dark"] {
@@ -25,14 +25,20 @@
   --background-color: #040127; /* #040127 */
   --rgba-background-color: 4, 1, 39; /* #040127 */
 
+  --background-input-color: #282a75; 
+  --rgba-background-input-color: 40, 42, 117;
+
   --primary: darkblue; /* darkBlue */
-  --rgba-primary: rgba(0, 0, 139); /* darkBlue */
+  --rgba-primary: 0, 0, 139; /* darkBlue */
 
   --secondary: #04ee04; /* #04ee04 */
   --rgba-secondary: 4, 238, 4; /* #04ee04 */
 
   --tertiary: #002235; /* #282d30 */
   --rgba-tertiary: 0,34,53; /* #282d30 */
+
+  --quaternary: #021041; /* #021041 */
+  --rgba-quaternary: 2, 16, 65; /* #021041 */
 
   --tertiary-alt: #000007; /* #000007 */
   --rgba-tertiary-alt: 0,0,7; /* #000007 */
