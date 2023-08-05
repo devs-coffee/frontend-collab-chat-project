@@ -1,21 +1,25 @@
 @import '../../styles/mixins';
 
 .ChannelManager {
-    
-    & h3 {
+
+    h3 {
         text-align: center;
     }
-    & .channels-stack {
-        margin-top : 1em;
+
+    .channels-stack {
+        margin-top: 1em;
+
         &__items {
             cursor: pointer;
             width: fit-content;
+
             &:hover {
                 font-weight: bold;
             }
         }
     }
-    & form {
+
+    form {
         @include form;
     }
 }

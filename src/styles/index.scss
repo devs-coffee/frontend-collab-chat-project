@@ -1,44 +1,33 @@
-@import "./variables";
-@import "./mixins";
+@use "./variables" as *;
+@use "./mixins" as *;
 
-:root {
-  --font-color: black;
-  --background-color: #f5fcfd;
-}
-
-[data-theme="dark"] {
-  --font-color: #ddddee;
-  --background-color: #1e1d29;
-}
-
-html, body {
-  margin: 0;
-  padding: 0;
-  height: 100vh;
-  max-height: 100vh;
-  background-color: var(--background-color);
+html,
+body {
+  background-color: rgba(var(--rgb-background-color));
   color: var(--font-color);
 }
 
-#root, #root>div {
+html,
+body,
+#root,
+#root>div {
   height: 100vh;
   max-height: 100vh;
   margin: 0;
   padding: 0;
 }
 
-a, a:hover, a:visited {
+a,
+a:hover,
+a:visited {
   text-decoration: none;
-  color: black;
-}
-
-[data-theme=dark] a {
   color: var(--font-color);
 }
 
 form {
   @include form;
 }
-[data-theme=dark] form {
+
+[data-theme="dark"] form {
   @include darkForm;
 }

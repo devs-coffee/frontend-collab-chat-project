@@ -1,10 +1,12 @@
 .message {
     display: flex;
     justify-items: center;
-    & .message_pseudo {
+
+    .message_pseudo {
         margin-left: 15px;
     }
-    & .message_date {
+
+    .message_date {
         font-style: italic;
         font-size: smaller;
     }
