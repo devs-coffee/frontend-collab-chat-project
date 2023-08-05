@@ -1,6 +1,6 @@
 @mixin form {
     /* #c3f0f5 */
-    background-color: rgba(var(--rgba-quaternary));
+    background-color: rgba(var(--rgb-quaternary));
     width: fit-content;
     padding: 0;
     text-align: center;
@@ -10,11 +10,11 @@
 
     & h2 {
         /* #aeedf5 */
-        background-color: rgba(var(--rgba-primary), 0.15);
+        background-color: rgba(var(--rgb-primary), 0.15);
         margin: 0;
         padding-bottom: 0.3em;
         border-radius: 12px;
-        box-shadow: inset -2px -2px 10px 1px rgba(var(--rgba-primary), 0.1), inset 2px 2px 10px 4px #f6fafa
+        box-shadow: inset -2px -2px 10px 1px rgba(var(--rgb-primary), 0.1), inset 2px 2px 10px 4px #f6fafa
     }
 
     & .field-box {
@@ -45,12 +45,12 @@
     border: 1px solid #1c1c1c;
 
     & h2 {
-        background-color: rgba(var(--rgba-quaternary));
+        background-color: rgba(var(--rgb-quaternary));
         box-shadow: inset -2px -2px 10px 1px #0c001f, inset 2px 2px 10px 4px #bbc7c7
     }
 
     & input {
-        background-color: rgba(var(--rgba-background-input-color));
-        color: rgba(var(--rgba-font-color));
+        background-color: rgba(var(--rgb-background-input-color));
+        color: rgba(var(--rgb-font-color));
     }
 }

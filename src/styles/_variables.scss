@@ -1,48 +1,48 @@
 :root {
   --font-color: black; /* black */
-  --rgba-font-color: 0, 0, 0, 1; /* black */
+  --rgb-font-color: 0, 0, 0, 1; /* black */
   
   --background-color: #f5fcfd; /* #f5fcfd */
-  --rgba-background-color: 245, 252, 253, 1; /* #f5fcfd */
+  --rgb-background-color: 245, 252, 253; /* #f5fcfd */
   
-  --primary: #00ace6; /* #00ACE6 */
-  --rgba-primary: 0, 172, 230; /* #00ACE6 */
+  --primary: #00ACE6; /* #00ACE6 */
+  --rgb-primary: 0,172,230; /* #00ACE6 */
 
   --secondary: #04ee04; /* #04ee04 */
-  --rgba-secondary: 4, 238, 4; /* #04ee04 */
+  --rgb-secondary: 4, 238, 4; /* #04ee04 */
 
   --tertiary: #fff; /* #fff */
-  --rgba-tertiary: 255, 255, 255, 1; /* #fff */
+  --rgb-tertiary: 255, 255, 255; /* #fff */
 
   --tertiary-alt: #fbfbfb; /* #fbfbfb */
-  --rgba-tertiary-alt: 251, 251, 251, 1; /* #fbfbfb */
+  --rgb-tertiary-alt: 251, 251, 251; /* #fbfbfb */
 
   --quaternary: #c3f0f5;/* #c3f0f5 */
-  --rgba-quaternary: 195 ,240 , 245; /* #c3f0f5 */
+  --rgb-quaternary: 195 ,240 , 245; /* #c3f0f5 */
 }
 
 [data-theme="dark"] {
   --font-color: #ddddee; /* #ddddee */
-  --rgba-font-color: 221, 221, 238, 1; /* #ddddee */
+  --rgb-font-color: 221, 221, 238; /* #ddddee */
 
   --background-color: #040127; /* #040127 */
-  --rgba-background-color: 4, 1, 39; /* #040127 */
+  --rgb-background-color: 4, 1, 39; /* #040127 */
 
   --background-input-color: #282a75; 
-  --rgba-background-input-color: 40, 42, 117;
+  --rgb-background-input-color: 40, 42, 117;
 
   --primary: darkblue; /* darkBlue */
-  --rgba-primary: 0, 0, 139; /* darkBlue */
+  --rgb-primary: 0, 0, 139; /* darkBlue */
 
   --secondary: #04ee04; /* #04ee04 */
-  --rgba-secondary: 4, 238, 4; /* #04ee04 */
+  --rgb-secondary: 4, 238, 4; /* #04ee04 */
 
   --tertiary: #002235; /* #282d30 */
-  --rgba-tertiary: 0,34,53; /* #282d30 */
+  --rgb-tertiary: 0,34,53; /* #282d30 */
 
   --tertiary-alt: #000007; /* #000007 */
-  --rgba-tertiary-alt: 0,0,7; /* #000007 */
+  --rgb-tertiary-alt: 0,0,7; /* #000007 */
 
   --quaternary: #021041; /* #021041 */
-  --rgba-quaternary: 2, 16, 65; /* #021041 */
+  --rgb-quaternary: 2, 16, 65; /* #021041 */
 }
