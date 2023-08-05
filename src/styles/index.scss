@@ -3,7 +3,7 @@
 
 html,
 body {
-  background-color: var(--background-color);
+  background-color: rgba(var(--rgb-background-color));
   color: var(--font-color);
 }
 
@@ -19,10 +19,6 @@ a,
 a:hover,
 a:visited {
   text-decoration: none;
-  color: var(--font-color);
-}
-
-[data-theme="dark"] a {
   color: var(--font-color);
 }
 
