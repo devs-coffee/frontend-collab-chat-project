@@ -16,6 +16,9 @@
 
   --tertiary-alt: #fbfbfb; /* #fbfbfb */
   --rgba-tertiary-alt: 251, 251, 251, 1; /* #fbfbfb */
+
+  --quaternary: #c3f0f5;/* #c3f0f5 */
+  --rgba-quaternary: 195 ,240 , 245; /* #c3f0f5 */
 }
 
 [data-theme="dark"] {
@@ -37,9 +40,9 @@
   --tertiary: #002235; /* #282d30 */
   --rgba-tertiary: 0,34,53; /* #282d30 */
 
-  --quaternary: #021041; /* #021041 */
-  --rgba-quaternary: 2, 16, 65; /* #021041 */
-
   --tertiary-alt: #000007; /* #000007 */
   --rgba-tertiary-alt: 0,0,7; /* #000007 */
+
+  --quaternary: #021041; /* #021041 */
+  --rgba-quaternary: 2, 16, 65; /* #021041 */
 }

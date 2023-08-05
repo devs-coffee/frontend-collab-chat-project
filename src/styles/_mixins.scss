@@ -1,6 +1,6 @@
 @mixin form {
     /* #c3f0f5 */
-    background-color: rgba(var(--rgba-primary), 0.2);
+    background-color: rgba(var(--rgba-quaternary));
     width: fit-content;
     padding: 0;
     text-align: center;
@@ -42,8 +42,6 @@
 }
 
 @mixin darkForm {
-    /* #010925 */
-    background-color: rgba(var(--rgba-quaternary), 0.5); 
     border: 1px solid #1c1c1c;
 
     & h2 {
