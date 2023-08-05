@@ -7,8 +7,10 @@ body {
   color: var(--font-color);
 }
 
-html,body,#root,
-#root > div {
+html,
+body,
+#root,
+#root>div {
   height: 100vh;
   max-height: 100vh;
   margin: 0;
@@ -25,6 +27,7 @@ a:visited {
 form {
   @include form;
 }
+
 [data-theme="dark"] form {
   @include darkForm;
 }
