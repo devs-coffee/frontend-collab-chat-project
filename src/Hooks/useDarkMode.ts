@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Theme } from "../interfaces/ITheme";
 
 /**
  * A hook that set up the dark mode or not if selected in the preference system or localstorage.
@@ -7,20 +8,18 @@ import { useEffect, useState } from "react";
  */
 export function useDarkMode() {
 	const [darkMode, setDarkMode] = useState<boolean>(false);
-
 	const storedTheme: string | null = localStorage.getItem("theme");
-	const prefersDark: boolean = window.matchMedia("(prefers-color-scheme: dark)").matches;
+	const prefersDark: boolean = window.matchMedia(`(prefers-color-scheme: ${Theme.dark})`).matches;
 
 	useEffect(() => {
 		if (!storedTheme && prefersDark) setDarkMode(true);
 		if (!storedTheme && !prefersDark) setDarkMode(false);
-		if (storedTheme) { storedTheme === "dark" ? setDarkMode(true) : setDarkMode(false) }
+		if (storedTheme) { storedTheme === Theme.dark ? setDarkMode(true) : setDarkMode(false) }
 	}, [])
 
-
 	useEffect(() => {
-		localStorage.setItem("theme", darkMode ? "dark" : "light");
-		document.documentElement.setAttribute("data-theme", darkMode ? "dark" : "light");
+		localStorage.setItem("theme", darkMode ? Theme.dark : Theme.light);
+		document.documentElement.setAttribute("data-theme", darkMode ? Theme.dark : Theme.light);
 	}, [darkMode])
 
 	return [darkMode, setDarkMode] as const;
