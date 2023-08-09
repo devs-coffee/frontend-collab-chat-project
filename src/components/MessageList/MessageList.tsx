@@ -28,7 +28,7 @@ const MessageList = ({messages}: messageList) => {
       behavior: "auto",
       block: "end"
     })
-  },[messages, stateMessages.status, dispatch])
+  },[messages, stateMessages.status, dispatch, shouldAutoScroll])
 
   const handleToastClose = (event: React.SyntheticEvent | Event, reason?: string) => {
     if(reason === 'clickaway') {
@@ -69,14 +69,13 @@ const MessageList = ({messages}: messageList) => {
           {index === messages.length - 1 && <div ref={messageEndRef} />}
         </div>
       ))}  
-        <Snackbar 
-            open={messageError.isError}
-            autoHideDuration={4000}
-            onClose={handleToastClose}
-            message={messageError.errorMessage}
-        />  
-      </div>
-
+      <Snackbar 
+          open={messageError.isError}
+          autoHideDuration={4000}
+          onClose={handleToastClose}
+          message={messageError.errorMessage}
+      />  
+    </div>
   );
 }
 export default MessageList;

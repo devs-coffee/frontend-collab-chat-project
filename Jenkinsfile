@@ -28,6 +28,7 @@ pipeline {
         stage('Build') {
             steps {
                 sh '''
+                    cp /var/www/codevert/environments/front/.env .
                     CI=false npm run build
                     rm -r /var/www/codevert/front/
                     cp -r build/ /var/www/codevert/front

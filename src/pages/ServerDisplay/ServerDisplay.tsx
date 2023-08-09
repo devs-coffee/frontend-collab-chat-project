@@ -19,6 +19,33 @@ import { ServerService } from "../../services/serverService";
 
 import './ServerDisplay.scss';
 
+const getServerData = async(serverId: string) => {
+    try {
+        const response = await new ServerService().getServerById(serverId);
+        return response.result;
+
+    } catch (error) {
+        let errorMessage: string = 'Données du serveur non récupérées, veuillez réessayer';
+        if(error instanceof AxiosError) {
+            errorMessage = error.response?.data.message;
+        }
+        throw new Error(errorMessage);
+    }
+}
+
+const getServerUsers = async (serverId: string) => {
+    try {
+        const response = await new ServerService().getServerUsers(serverId);
+        return response.result;
+    } catch (error) {
+        let errorMessage = "membres du serveur non récupérés, veuillez réessayer";
+        if(error instanceof AxiosError) {
+            errorMessage = error.response?.data.message;
+        }
+        throw new Error(errorMessage);
+    }
+}
+
 export default function ServerDisplay() {
     const dispatch = useDispatch();
     const authStatus = useSelector((state:any) => state.authStatus);
@@ -30,46 +57,10 @@ export default function ServerDisplay() {
     const [isDisabled, setIsDisabled] = useState<boolean>(false);
     const [serverError, setServerError] = useState<string>('');
     const [usersError, setUsersError] = useState<string>('');
-    const [ joinServerError, setJoinServerError ] = useState<{isError:boolean, errorMessage:string}>({isError: false, errorMessage: ''});
+    const [joinServerError, setJoinServerError] = useState<{isError:boolean, errorMessage:string}>({isError: false, errorMessage: ''});
     const [mainContent, setMainContent] = useState<string>('chat');
     const [channelId, setChannelId] = useState<string>("");
-    const getServerData = async() => {
-        try {
-            const response = await new ServerService().getServerById(urlSearchParams.serverId!);
-            dispatch(addOrUpdateServer(response.result));
-            const channels = response.result.channels;
-            const defaultChannel = channels[0];
-            setChannelId(defaultChannel.id);
-        } catch (error) {
-            let errorMessage: string = 'Données du serveur non récupérées, veuillez réessayer';
-            if(error instanceof AxiosError) {
-                errorMessage = error.response?.data.message;
-            }
-            setServerError(errorMessage);
-            return;
-        }
-    }
-
-    const getServerUsers = async () => {
-        try {
-            const response = await new ServerService().getServerUsers(urlSearchParams.serverId!);
-            let usersToAdd: User[] = [];
-            response.result.forEach((elt: User) => {
-                if(!usersState.data.find((user: User) => user.id === elt.id) && elt.id !== authStatus.user.id) {
-                    usersToAdd.push(elt);
-                }
-            });
-            dispatch(addUsers(usersToAdd));
-            setServerUsers(response.result);
-        } catch (error) {
-            setUsersError('membres du serveur non récupérés, veuillez réessayer');
-            if(error instanceof AxiosError) {
-                setUsersError(error.response?.data.message);
-            }
-            return;
-        }
-    }
-
+    
     const joinServer = async () => {
         try {
             setIsDisabled(true);
@@ -77,7 +68,15 @@ export default function ServerDisplay() {
             const newServer = {...server};
             newServer.isCurrentUserMember = response.result
             dispatch(addOrUpdateServer(newServer));
-            getServerUsers();
+            const serverData = await getServerUsers(urlSearchParams.serverId!)
+            let usersToAdd: User[] = [];
+            serverData.forEach((elt: User) => {
+                if(!usersState.data.find((user: User) => user.id === elt.id) && elt.id !== authStatus.user.id) {
+                    usersToAdd.push(elt);
+                }
+            })
+            dispatch(addUsers(usersToAdd));
+            setServerUsers(serverData);
             setIsDisabled(false)
         } catch (error) {
             let errorMessage:string;
@@ -129,9 +128,31 @@ export default function ServerDisplay() {
     }
 
     useEffect(() => {
-        getServerData();
-        getServerUsers();
-    }, []);
+        getServerData(urlSearchParams.serverId!)
+            .then(response => {
+                dispatch(addOrUpdateServer(response));
+                const channels = response.channels;
+                const defaultChannel = channels[0];
+                setChannelId(defaultChannel.id);
+            })
+            .catch(error => {
+                setUsersError(error);
+            });
+        getServerUsers(urlSearchParams.serverId!)
+            .then(response => {
+                let usersToAdd: User[] = [];
+                response.forEach((elt: User) => {
+                    if(!usersState.data.find((user: User) => user.id === elt.id) && elt.id !== authStatus.user.id) {
+                        usersToAdd.push(elt);
+                    }
+                });
+                dispatch(addUsers(usersToAdd));
+                setServerUsers(response);
+            })
+            .catch(error => {
+                setServerError(error);
+            });
+    }, [urlSearchParams, authStatus, dispatch, usersState.data]);
     
     return (
         <div className="ServerDisplay">
