@@ -1,50 +1,56 @@
 @mixin form {
-    background-color: #c3f0f5;
+    /* #c3f0f5 */
+    background-color: rgba(var(--rgb-quaternary));
     width: fit-content;
     padding: 0;
     text-align: center;
     border: 1px solid lightgrey;
     border-radius: 12px;
     overflow: hidden;
+
     & h2 {
-        background-color: #aeedf5;
+        /* #aeedf5 */
+        background-color: rgba(var(--rgb-primary), 0.15);
         margin: 0;
         padding-bottom: 0.3em;
         border-radius: 12px;
-        box-shadow: inset -2px -2px 10px 1px #98d2d9, inset 2px 2px 10px 4px #f6fafa
-        
+        box-shadow: inset -2px -2px 10px 1px rgba(var(--rgb-primary), 0.1), inset 2px 2px 10px 4px #f6fafa
     }
-    & .field-box {
+
+    .field-box {
         padding: 20px 20px 5px 20px;
         margin: auto;
-        //background-color: darkgray;
         width: fit-content;
     }
+
     margin: auto;
-    & .form__fields {
+
+    .form__fields {
         display: flex;
         justify-content: space-between;
         margin: 10px 0;
-        
+
     }
+
     & label {
         margin-right: 0.5em;
     }
-    & .MuiButtonBase-root {
+
+    .MuiButtonBase-root {
         margin: 0.5em auto;
     }
 }
 
 @mixin darkForm {
-    background-color: #010925;
-    border: 1px solid #282a75;
-    & h2 {
-        background-color: #021041;
-        box-shadow: inset -2px -2px 10px 1px #0c001f, inset 2px 2px 10px 4px #bbc7c7
+    border: 1px solid #1c1c1c;
 
+    & h2 {
+        background-color: rgba(var(--rgb-quaternary));
+        box-shadow: inset -2px -2px 10px 1px #0c001f, inset 2px 2px 10px 4px #bbc7c7
     }
+
     & input {
-        background-color: #282a75;
-        color: #bbc7c7;
+        background-color: rgba(var(--rgb-background-input-color));
+        color: rgba(var(--rgb-font-color));
     }
 }

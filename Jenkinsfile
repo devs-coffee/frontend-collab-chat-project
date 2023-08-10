@@ -16,7 +16,7 @@ pipeline {
             }
         }
 
-        stage('install') {
+        stage('Install') {
             steps {
                 echo 'Hello there!'
                 sh '''
@@ -25,12 +25,21 @@ pipeline {
             }
         }
 
-        stage('build') {
+        stage('Build') {
             steps {
                 sh '''
+                    cp /var/www/codevert/environments/front/.env .
                     CI=false npm run build
-                    sudo rm -r /var/www/codevert/front/
-                    sudo cp -r build/ /var/www/codevert/front
+                    rm -r /var/www/codevert/front/
+                    cp -r build/ /var/www/codevert/front
+                '''
+            }
+        }
+
+        stage('Update portainer') {
+            steps {
+                sh '''
+                    docker service update --force codevert_front
                 '''
             }
         }
