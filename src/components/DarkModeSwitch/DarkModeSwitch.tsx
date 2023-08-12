@@ -1,6 +1,7 @@
 import { ChangeEventHandler } from "react";
 import { FormControlLabel, FormGroup, Switch } from "@mui/material";
 import { UserService } from "../../services/userService";
+import { Prefs } from "../../interfaces/IUser";
 import "./DarkModeSwitch.scss";
 
 type SetState<T> = React.Dispatch<React.SetStateAction<T>>;
@@ -14,7 +15,7 @@ export function DarkModeSwitch({ darkMode, setDarkMode }: { darkMode: boolean, s
 
     const toggleDarkMode: ChangeEventHandler<HTMLInputElement> = async () => {
         try {
-            const requestTheme: Record<string, string> = { colorScheme: !darkMode ? "DARK" : "LIGHT" };
+            const requestTheme: Prefs = { colorScheme: !darkMode ? "DARK" : "LIGHT" };
             await new UserService().updatePrefs(requestTheme);
             setDarkMode(!darkMode);
         }
