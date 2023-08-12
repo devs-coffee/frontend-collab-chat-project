@@ -1,5 +1,5 @@
 import { AxiosError } from "axios";
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useContext, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 
@@ -18,6 +18,7 @@ import { addUsers } from "../../redux/usersSlice";
 import { ServerService } from "../../services/serverService";
 
 import './ServerDisplay.scss';
+import IoSocketContext from "../../Contexts/IoSocketContext";
 
 const getServerData = async(serverId: string) => {
     try {
@@ -60,6 +61,7 @@ export default function ServerDisplay() {
     const [joinServerError, setJoinServerError] = useState<{isError:boolean, errorMessage:string}>({isError: false, errorMessage: ''});
     const [mainContent, setMainContent] = useState<string>('chat');
     const [channelId, setChannelId] = useState<string>("");
+    const Socket = useContext(IoSocketContext)!.Socket;
     
     const joinServer = async () => {
         try {
@@ -152,7 +154,17 @@ export default function ServerDisplay() {
             .catch(error => {
                 setServerError(error);
             });
-    }, [urlSearchParams, authStatus, dispatch, usersState.data]);
+        Socket.emit('getServerConnectedUsers', {serverId: urlSearchParams.serverId!});
+
+        Socket.on('serverUserList', (data:any) => {
+            console.log(data);
+        })
+
+        return () => {
+            Socket.off('serverUserList');
+        }
+        
+      }, [urlSearchParams, authStatus, dispatch, usersState.data]);
     
     return (
         <div className="ServerDisplay">
