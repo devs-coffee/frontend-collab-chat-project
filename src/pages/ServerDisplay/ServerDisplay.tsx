@@ -1,7 +1,7 @@
 import { AxiosError } from "axios";
 import { ReactNode, useContext, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 import SettingsIcon from '@mui/icons-material/Settings';
 import { Avatar, Snackbar, Stack } from "@mui/material";
@@ -9,6 +9,7 @@ import { Avatar, Snackbar, Stack } from "@mui/material";
 import ChannelManager from "../../components/ChannelManager/ChannelManager";
 import MessageBox from "../../components/MessageBox/MessageBox";
 import ServerUpdateForm from "../../components/ServerUpdateForm/ServerUpdateForm";
+import { UserListItem } from "../../components/UserListItem/UserListItem";
 import { ChannelBase } from "../../interfaces/IChannel.base";
 import { reduxData } from "../../interfaces/IReduxData";
 import { Server } from "../../interfaces/IServer";
@@ -16,9 +17,9 @@ import { User } from "../../interfaces/IUser";
 import { addOrUpdateServer } from "../../redux/serversSlice";
 import { addUsers } from "../../redux/usersSlice";
 import { ServerService } from "../../services/serverService";
+import IoSocketContext from "../../Contexts/IoSocketContext";
 
 import './ServerDisplay.scss';
-import IoSocketContext from "../../Contexts/IoSocketContext";
 
 const getServerData = async(serverId: string) => {
     try {
@@ -52,6 +53,7 @@ export default function ServerDisplay() {
     const authStatus = useSelector((state:any) => state.authStatus);
     const usersState = useSelector((state:any) => state.users);
     const urlSearchParams = useParams();
+    const Socket = useContext(IoSocketContext)!.Socket;
     const server = useSelector((state:reduxData) => state.servers.data.find((server:Server) => server.id === urlSearchParams.serverId));
     const [serverUsers, setServerUsers] = useState<User[]>([]);
     const [isUpdatingServer, setIsUpdatingServer] = useState<boolean>(false);
@@ -61,7 +63,7 @@ export default function ServerDisplay() {
     const [joinServerError, setJoinServerError] = useState<{isError:boolean, errorMessage:string}>({isError: false, errorMessage: ''});
     const [mainContent, setMainContent] = useState<string>('chat');
     const [channelId, setChannelId] = useState<string>("");
-    const Socket = useContext(IoSocketContext)!.Socket;
+    const [connectedUsers, setConnectedUsers] = useState<string[]>([]);
     
     const joinServer = async () => {
         try {
@@ -156,12 +158,23 @@ export default function ServerDisplay() {
             });
         Socket.emit('getServerConnectedUsers', {serverId: urlSearchParams.serverId!});
 
-        Socket.on('serverUserList', (data:any) => {
-            console.log(data);
+        Socket.on('serverUserList', (data:{userList: string[]}) => {
+            setConnectedUsers(data.userList);
+        })
+
+        Socket.on('userJoined', (data: {pseudo: string, id: string}) => {
+            console.log(`${data.pseudo} connects`);
+            setConnectedUsers([data.id, ...connectedUsers]);
+        })
+
+        Socket.on('userLeft', (data: {pseudo: string, id: string}) => {
+            console.log(`${data.pseudo} left`);
+            setConnectedUsers(connectedUsers.filter(elt => elt !== data.id));
         })
 
         return () => {
             Socket.off('serverUserList');
+            Socket.off('userJoined');
         }
         
       }, [urlSearchParams, authStatus, dispatch, usersState.data]);
@@ -215,7 +228,7 @@ export default function ServerDisplay() {
                         <h4 className="members-heading">Users :</h4>
                         <Stack className="members-stack" spacing={0.8}>
                             {serverUsers.map(user => (
-                                <Link key={`link-${user.id}`} to={`/user/${user.id}`}>{user.pseudo}</Link>
+                                <UserListItem userPseudo={user.pseudo} userId={user.id} isConnected={connectedUsers.includes(user.id)}/>
                             ))}
                         </Stack>
                         {serverUsers.length > 0 && (
