@@ -37,8 +37,8 @@ export default function Header({ ioClose }: any) {
 
 
     useEffect(() => {
-        if (user && user.prefs?.colorScheme) {
-            const requestTheme: string = user.prefs.colorScheme.toUpperCase();
+        if (user && user.colorScheme) {
+            const requestTheme: string = user.colorScheme.toUpperCase();
             requestTheme === "DARK" ? setDarkMode(true) : setDarkMode(false);
         }
     }, [user, setDarkMode]);
