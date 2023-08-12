@@ -30,7 +30,7 @@ export default function Home() {
         ioClose();
       }
     }
-  }, []);
+  }, [dispatch, serversStatus, ioClose]);
 
   return (
     <div className="Home">
