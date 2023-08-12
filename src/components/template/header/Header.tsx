@@ -1,13 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 import { Avatar, IconButton, Menu, MenuItem } from "@mui/material";
-
 import { unsetLogs } from "../../../redux/authSlice";
 import { unsetServers } from "../../../redux/serversSlice";
-import { DarkModeSwitch} from "../../DarkModeSwitch/DarkModeSwitch";
+import { DarkModeSwitch } from "../../DarkModeSwitch/DarkModeSwitch";
 import { useDarkMode } from "../../../Hooks/useDarkMode";
+import type { User } from "../../../interfaces/IUser";
 
 import './Header.scss';
 
@@ -15,20 +15,35 @@ export default function Header({ ioClose }: any) {
 
     const dispatch = useDispatch();
     const authStatus = useSelector((state: any) => state.authStatus);
+    const user: User = authStatus.user;
+
     const [darkMode, setDarkMode] = useDarkMode();
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const isAccountMenuOpen = Boolean(anchorEl);
+
     const handleAvatarClick = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
     };
+
     const handleAvatarClose = () => {
         setAnchorEl(null);
     }
+
     const logout = () => {
         ioClose();
         dispatch(unsetLogs());
         dispatch(unsetServers());
     }
+
+
+    useEffect(() => {
+        if (user && user.prefs?.colorScheme) {
+            const requestTheme: string = user.prefs.colorScheme.toUpperCase();
+            requestTheme === "DARK" ? setDarkMode(true) : setDarkMode(false);
+        }
+    }, [user, setDarkMode]);
+
+
 
     return (
         <div className="Header">
@@ -48,9 +63,9 @@ export default function Header({ ioClose }: any) {
                                 aria-haspopup="true"
                                 aria-expanded={isAccountMenuOpen ? "true" : undefined}
                             >
-                                {authStatus.user.picture && <Avatar alt="votre avatar" src={authStatus.user.picture} />}
-                                {!authStatus.user.picture && <Avatar>{authStatus.user.pseudo.substring(0, 1).toUpperCase()}</Avatar>}
-                                <span className="iconbutton-label">{authStatus.user.pseudo}</span>
+                                {user.picture && <Avatar alt="votre avatar" src={user.picture} />}
+                                {!user.picture && <Avatar>{user.pseudo.substring(0, 1).toUpperCase()}</Avatar>}
+                                <span className="iconbutton-label">{user.pseudo}</span>
                             </IconButton>
                             <Menu
                                 anchorEl={anchorEl}

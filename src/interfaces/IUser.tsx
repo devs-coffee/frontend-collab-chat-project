@@ -1,7 +1,9 @@
 import { Theme } from "./ITheme";
 
 export interface Prefs {
-    colorScheme?: Theme;
+    prefs?: {
+        colorScheme: Theme;
+    }  
     picture?: string
 }
 
