@@ -229,7 +229,7 @@ export default function ServerDisplay() {
                         <h4 className="members-heading">Users :</h4>
                         <Stack className="members-stack" spacing={0.8}>
                             {serverUsers.map(user => (
-                                <UserListItem userPseudo={user.pseudo} userId={user.id} isConnected={connectedUsers.includes(user.id)}/>
+                                <UserListItem key={`userBadge_${user.id}`} userPseudo={user.pseudo} userId={user.id} isConnected={connectedUsers.includes(user.id)}/>
                             ))}
                         </Stack>
                         {serverUsers.length > 0 && (
