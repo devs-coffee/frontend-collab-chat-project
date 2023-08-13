@@ -1,9 +1,8 @@
 import { useState } from 'react';
-
 import { Login, Signup, Header } from '../../components';
 import './Auth.scss';
 
-function Auth() {
+export function Auth() {
     const [signup, setSignup] = useState(true);
 
     const toggleComponent = (): void => {
@@ -28,4 +27,3 @@ function Auth() {
     )
 }
 
-export default Auth;

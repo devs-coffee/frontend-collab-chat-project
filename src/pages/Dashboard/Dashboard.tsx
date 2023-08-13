@@ -1,9 +1,8 @@
 import { useState } from "react";
-
 import { DashboardPanel, DashboardServersHeading, ServerCreationForm, ServerSearching } from "../../components";
 import "./Dashboard.scss";
 
-export default function Dashboard() {
+export function Dashboard() {
     const [dashboardContent, setDashboardContent] = useState<string>('');
 
     return (

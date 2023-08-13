@@ -17,7 +17,7 @@ import './Profile.scss';
 
 const formValidationService = new FormValidationService();
 
-export default function Profile() {
+export function Profile() {
     const dispatch = useDispatch();
     const authStatus = useSelector((state: any) => state.authStatus);
     const [passwordEdit, setPasswordEdit] = useState(false);

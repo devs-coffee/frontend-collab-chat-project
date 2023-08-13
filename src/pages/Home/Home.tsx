@@ -10,14 +10,14 @@ import { AppDispatch } from "../../redux/store";
 
 import "./Home.scss";
 
-export default function Home() {
+export function Home() {
   const { ioClose, Socket } = useIoSocket() as IoProvider;
-  
+
   const dispatch = useDispatch<AppDispatch>();
-  const serversStatus = useSelector((state:any) => state.servers.status)
+  const serversStatus = useSelector((state: any) => state.servers.status)
 
   useEffect(() => {
-    if(serversStatus === "idle") {
+    if (serversStatus === "idle") {
       dispatch(fetchServers());
     }
 
@@ -26,7 +26,7 @@ export default function Home() {
     });
 
     return () => {
-      if(serversStatus !== "idle") {
+      if (serversStatus !== "idle") {
         ioClose();
       }
     }
@@ -34,7 +34,7 @@ export default function Home() {
 
   return (
     <div className="Home">
-      <Header ioClose={ioClose}/>
+      <Header ioClose={ioClose} />
       <Outlet />
     </div>
   );

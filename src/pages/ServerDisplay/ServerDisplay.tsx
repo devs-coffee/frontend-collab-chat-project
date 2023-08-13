@@ -44,7 +44,7 @@ const getServerUsers = async (serverId: string) => {
     }
 }
 
-export default function ServerDisplay() {
+export function ServerDisplay() {
     const dispatch = useDispatch();
     const authStatus = useSelector((state: any) => state.authStatus);
     const usersState = useSelector((state: any) => state.users);

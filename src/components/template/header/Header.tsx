@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { Avatar, IconButton, Menu, MenuItem } from "@mui/material";
 import { unsetLogs } from "../../../redux/authSlice";
 import { unsetServers } from "../../../redux/serversSlice";
-import { DarkModeSwitch } from "../../DarkModeSwitch/DarkModeSwitch";
+import { DarkModeSwitch } from "../../index";
 import { useDarkMode } from "../../../hooks/useDarkMode";
 import type { User } from "../../../interfaces/IUser";
 import { Theme } from "../../../interfaces/Theme.enum";
