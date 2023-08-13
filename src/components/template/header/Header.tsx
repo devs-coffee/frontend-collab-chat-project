@@ -8,10 +8,11 @@ import { unsetServers } from "../../../redux/serversSlice";
 import { DarkModeSwitch } from "../../DarkModeSwitch/DarkModeSwitch";
 import { useDarkMode } from "../../../Hooks/useDarkMode";
 import type { User } from "../../../interfaces/IUser";
+import { Theme } from "../../../interfaces/Theme.enum";
 
 import './Header.scss';
 
-export default function Header({ ioClose }: any) {
+export default function Header({ ioClose }: { ioClose?: () => void }): JSX.Element {
 
     const dispatch = useDispatch();
     const authStatus = useSelector((state: any) => state.authStatus);
@@ -29,17 +30,20 @@ export default function Header({ ioClose }: any) {
         setAnchorEl(null);
     }
 
+
     const logout = () => {
-        ioClose();
+        if (ioClose) {
+            ioClose();
+        }
         dispatch(unsetLogs());
         dispatch(unsetServers());
     }
 
 
+
     useEffect(() => {
         if (user && user.prefs?.colorScheme) {
-            const requestTheme: string = user.prefs.colorScheme.toUpperCase();
-            requestTheme === "DARK" ? setDarkMode(true) : setDarkMode(false);
+            user.prefs?.colorScheme === Theme.dark ? setDarkMode(true) : setDarkMode(false);
         }
     }, [user, setDarkMode]);
 

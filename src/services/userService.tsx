@@ -1,7 +1,8 @@
 import { OperationResult } from "../interfaces/IOperationResult";
 import { profileUpdateForm } from "../interfaces/IProfileUpdateForm";
 import { Fetcher } from "./fetcher";
-import { User, Prefs } from "../interfaces/IUser";
+import { User } from "../interfaces/IUser";
+import { PrefsUpdate } from "../interfaces/iPrefsUpdate";
 
 export class UserService extends Fetcher {
     async updateProfile(values: profileUpdateForm, id: string): Promise<OperationResult<User>> {
@@ -9,8 +10,10 @@ export class UserService extends Fetcher {
         return response.data;
     }
 
-    async updatePrefs(values: Prefs): Promise<OperationResult<User>> {
-        const response = await super.put<Prefs, User>('/users/prefs', values);
+    async updatePrefs(values: PrefsUpdate): Promise<OperationResult<PrefsUpdate>> {
+        const requestValues = { colorScheme: values.colorScheme.toUpperCase() } ;
+        let response = await super.put<PrefsUpdate, PrefsUpdate>('/users/prefs', requestValues);
+        response.data.result.colorScheme = response.data.result!.colorScheme.toLowerCase();
         return response.data;
     }
 

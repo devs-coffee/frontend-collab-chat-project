@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Theme } from "../interfaces/ITheme";
+import { Theme } from "../interfaces/Theme.enum";
 
 /**
  * A hook that set up the dark mode or not if selected in the preference system or localstorage.

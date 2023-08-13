@@ -1,8 +1,8 @@
-import { Theme } from "./ITheme";
+import { Theme } from "./Theme.enum";
 
 export interface Prefs {
     prefs?: {
-        colorScheme: Theme | "LIGHT" | "DARK";
+        colorScheme: Theme;
     }
 }
 
