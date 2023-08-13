@@ -2,7 +2,7 @@ import { OperationResult } from "../interfaces/IOperationResult";
 import { profileUpdateForm } from "../interfaces/IProfileUpdateForm";
 import { Fetcher } from "./fetcher";
 import { User } from "../interfaces/IUser";
-import { PrefsUpdate } from "../interfaces/iPrefsUpdate";
+import { PrefsUpdate } from "../interfaces/IPrefsUpdate";
 
 export class UserService extends Fetcher {
     async updateProfile(values: profileUpdateForm, id: string): Promise<OperationResult<User>> {
