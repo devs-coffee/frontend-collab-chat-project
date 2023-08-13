@@ -175,6 +175,7 @@ export default function ServerDisplay() {
         return () => {
             Socket.off('serverUserList');
             Socket.off('userJoined');
+            Socket.off('userLeft');
         }
         
       }, [urlSearchParams, authStatus, dispatch, usersState.data]);
