@@ -63,7 +63,7 @@ export default function ServerDisplay() {
     const [joinServerError, setJoinServerError] = useState<{isError:boolean, errorMessage:string}>({isError: false, errorMessage: ''});
     const [mainContent, setMainContent] = useState<string>('chat');
     const [channelId, setChannelId] = useState<string>("");
-    const [connectedUsers, setConnectedUsers] = useState<string[]>([]);
+    const [connectedUsers, setConnectedUsers] = useState<string[]>([authStatus.user.id]);
     
     const joinServer = async () => {
         try {
