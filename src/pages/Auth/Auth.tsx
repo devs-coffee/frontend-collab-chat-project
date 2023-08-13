@@ -1,18 +1,15 @@
 import { useState } from 'react';
 
-import Login from '../../components/auth/Login/Login';
-import Signup from '../../components/auth/Signup/Signup';
-import Header from '../../components/template/header/Header';
-
+import { Login, Signup, Header } from '../../components';
 import './Auth.scss';
 
 function Auth() {
     const [signup, setSignup] = useState(true);
 
-    const toggleComponent = ():void => {
+    const toggleComponent = (): void => {
         setSignup(!signup);
     }
-    
+
     const displayLogin = () => {
         return (<Login />)
     }
@@ -21,10 +18,10 @@ function Auth() {
             <Signup />
         )
     }
-    
+
     return (
         <div className="auth">
-            <Header/>
+            <Header />
             <div className='form-selector' onClick={toggleComponent}>{signup ? 'Nouveau ?\nS\'enregistrer' : 'Déjà inscrit?\nSe connecter'}</div>
             {signup ? displayLogin() : displaySignup()}
         </div>

@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import socketIOClient from "socket.io-client";
 
-import IoSocketContext from "../Contexts/IoSocketContext";
+import IoSocketContext from "../contexts/IoSocketContext";
 
 type IoSocketProviderProps = {
     children: ReactNode

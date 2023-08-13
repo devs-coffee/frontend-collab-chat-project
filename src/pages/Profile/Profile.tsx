@@ -11,8 +11,7 @@ import SendIcon from '@mui/icons-material/Send';
 import { FormValidationService } from '../../utils/formValidationService';
 import { UserService } from '../../services/userService';
 import { setUser } from '../../redux/authSlice';
-import AvatarCropper from '../../components/avatarCropper/AvatarCropper';
-import Modal from '../../components/Modal/modal';
+import { Modal, AvatarCropper } from '../../components';
 
 import './Profile.scss';
 
@@ -20,22 +19,22 @@ const formValidationService = new FormValidationService();
 
 export default function Profile() {
     const dispatch = useDispatch();
-    const authStatus = useSelector((state:any) => state.authStatus);
+    const authStatus = useSelector((state: any) => state.authStatus);
     const [passwordEdit, setPasswordEdit] = useState(false);
-    const [ croppedImage, setCroppedImage ] = useState<string>('');
-    const [ isOpen, setIsOpen] = useState<boolean>(false);
-    const [ profileUpdateError, setProfileUpdateError ] = useState<{isError:boolean, errorMessage:string}>({isError: false, errorMessage: ''});
+    const [croppedImage, setCroppedImage] = useState<string>('');
+    const [isOpen, setIsOpen] = useState<boolean>(false);
+    const [profileUpdateError, setProfileUpdateError] = useState<{ isError: boolean, errorMessage: string }>({ isError: false, errorMessage: '' });
 
     const togglePasswordEdit = () => {
         setPasswordEdit(!passwordEdit);
     };
 
     const deleteAvatar = () => {
-        new UserService().updateProfile({picture: null}, authStatus.user.id)
-        .then(response => {
-            dispatch(setUser(response.result));
-            setCroppedImage('');
-        })
+        new UserService().updateProfile({ picture: null }, authStatus.user.id)
+            .then(response => {
+                dispatch(setUser(response.result));
+                setCroppedImage('');
+            })
     }
 
     const updateImage = (image: string) => {
@@ -45,10 +44,10 @@ export default function Profile() {
     }
 
     const handleToastClose = (event: React.SyntheticEvent | Event, reason?: string) => {
-        if(reason === 'clickaway') {
+        if (reason === 'clickaway') {
             return;
         }
-        setProfileUpdateError({isError: false, errorMessage: ''});
+        setProfileUpdateError({ isError: false, errorMessage: '' });
     }
 
     const initialValues = {
@@ -65,7 +64,7 @@ export default function Profile() {
                 initialValues={initialValues}
                 validate={formValidationService.validateProfileUpdate}
                 onSubmit={async (values, helper) => {
-                    setProfileUpdateError({isError: false, errorMessage: ''});
+                    setProfileUpdateError({ isError: false, errorMessage: '' });
                     const modifiedValues = formValidationService.getModifiedValues(values, initialValues);
                     if (croppedImage !== '') {
                         modifiedValues.picture = croppedImage;
@@ -77,12 +76,12 @@ export default function Profile() {
                             setCroppedImage('');
                             setPasswordEdit(false);
                             helper.resetForm();
-                        } catch(error) {
-                            let errorMessage:string = 'Une erreur est survenue, veuillez réessayer';
-                            if(error instanceof AxiosError) {
+                        } catch (error) {
+                            let errorMessage: string = 'Une erreur est survenue, veuillez réessayer';
+                            if (error instanceof AxiosError) {
                                 errorMessage = error.response?.data.message;
                             }
-                            setProfileUpdateError({isError: true, errorMessage});
+                            setProfileUpdateError({ isError: true, errorMessage });
                         }
                     }
                 }}
@@ -102,12 +101,12 @@ export default function Profile() {
                             </div>
                         </div>
                         {!passwordEdit && <div className="password-request-button" onClick={togglePasswordEdit}>Changer de mot de passe</div>}
-                        {passwordEdit && 
+                        {passwordEdit &&
                             <div className='password-update-box field-box'>
                                 <div onClick={togglePasswordEdit}>Annuler</div>
                                 <div className='profile-update-form-new-password form__fields'>
                                     <label className='form__labels' htmlFor="profile-update_new-password">Nouveau mot de passe :</label>
-                                    <Field 
+                                    <Field
                                         type="text"
                                         name="password"
                                         id="profile-update_new-password"
@@ -116,7 +115,7 @@ export default function Profile() {
                                 </div>
                                 <div className='profile-update-form-new-password-confirm form__fields'>
                                     <label className='form__labels' htmlFor="profile-update_new-password-confirm">Confirmez :</label>
-                                    <Field 
+                                    <Field
                                         type="text"
                                         name="passwordConfirm"
                                         id="profile-update_new-password-confirm"
@@ -125,7 +124,7 @@ export default function Profile() {
                                 </div>
                                 <div className='profile-update-form-old-password form__fields'>
                                     <label className='form__labels' htmlFor="profile-old-password">Mot de passe actuel:</label>
-                                    <Field 
+                                    <Field
                                         type="text"
                                         name="oldPassword"
                                         id="profile-old-password"
@@ -136,31 +135,31 @@ export default function Profile() {
                         <div className="formgroup-heading">Avatar :</div>
                         <div className='avatar-action'>
                             {(authStatus.user.picture && authStatus.user.picture !== '')
-                                ? 
-                                    <div className="avatar-editor">
-                                        <img className="actual-avatar" src={authStatus.user.picture} alt="your actual avatar" />
-                                        <Breadcrumbs>
-                                            <EditIcon sx={{ color: '#1616c4' }} onClick={() => setIsOpen(true)} />
-                                            <HighlightOffTwoToneIcon sx={{ color: '#800101' }} onClick={deleteAvatar}/>
-                                        </Breadcrumbs>
-                                    </div>
+                                ?
+                                <div className="avatar-editor">
+                                    <img className="actual-avatar" src={authStatus.user.picture} alt="your actual avatar" />
+                                    <Breadcrumbs>
+                                        <EditIcon sx={{ color: '#1616c4' }} onClick={() => setIsOpen(true)} />
+                                        <HighlightOffTwoToneIcon sx={{ color: '#800101' }} onClick={deleteAvatar} />
+                                    </Breadcrumbs>
+                                </div>
                                 :
-                                    <div className='picture'>
-                                        <Avatar>{authStatus.user.pseudo.substring(0, 1).toUpperCase()}</Avatar>
-                                        <EditIcon className='edit' sx={{ color: '#1616c4' }} onClick={() => setIsOpen(true)} />
-                                    </div>
-                            } 
+                                <div className='picture'>
+                                    <Avatar>{authStatus.user.pseudo.substring(0, 1).toUpperCase()}</Avatar>
+                                    <EditIcon className='edit' sx={{ color: '#1616c4' }} onClick={() => setIsOpen(true)} />
+                                </div>
+                            }
                             {croppedImage && croppedImage !== '' &&
                                 <>
-                                <div>=&gt;</div>
-                                <div className="avatar-editor">
-                                    <img className="wanted-avatar" src={croppedImage} alt="new avatar" />
-                                    <button onClick={() => setCroppedImage('')}>Cancel</button>
-                                </div>
+                                    <div>=&gt;</div>
+                                    <div className="avatar-editor">
+                                        <img className="wanted-avatar" src={croppedImage} alt="new avatar" />
+                                        <button onClick={() => setCroppedImage('')}>Cancel</button>
+                                    </div>
                                 </>
                             }
                         </div>
-                        {isOpen && <Modal setIsOpen={setIsOpen} childComponent={<AvatarCropper setImage={updateImage}/>} />}
+                        {isOpen && <Modal setIsOpen={setIsOpen} childComponent={<AvatarCropper setImage={updateImage} />} />}
                         <br />
                         <br />
                         <br />
@@ -168,7 +167,7 @@ export default function Profile() {
                     </Form>
                 )}
             </Formik>
-            <Snackbar 
+            <Snackbar
                 open={profileUpdateError.isError}
                 autoHideDuration={4000}
                 onClose={handleToastClose}

@@ -1,4 +1,4 @@
-import Signup from './Signup';
+import { Signup } from './Signup';
 //import '@testing-library/react/dont-cleanup-after-each.js';
 import { render } from '@testing-library/react';
 

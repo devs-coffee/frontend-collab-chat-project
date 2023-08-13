@@ -5,7 +5,7 @@ interface ElementToSearch {
   initialList?: string[]
 }
 
-const Search: React.FC<ElementToSearch> = ({ onListChange, initialList = [] }) => {
+export const Search: React.FC<ElementToSearch> = ({ onListChange, initialList = [] }) => {
   const [searchInput, setSearchInput] = useState('');
   const [list, setList] = useState<string[]>(initialList);
 
@@ -36,4 +36,3 @@ const Search: React.FC<ElementToSearch> = ({ onListChange, initialList = [] }) =
   );
 };
 
-export default Search;

@@ -5,7 +5,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import IoSocketProvider from './Providers/IoSocketProvider';
 import Home from "./pages/Home/Home";
-import ProtectedContent from './components/ProtectedContent/ProtectedContent';
+import { ProtectedContent } from './components';
 import Profile from './pages/Profile/Profile';
 import Error from "./pages/Error/Error";
 import Auth from "./pages/Auth/Auth";

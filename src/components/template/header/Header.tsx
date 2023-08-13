@@ -6,13 +6,13 @@ import { Avatar, IconButton, Menu, MenuItem } from "@mui/material";
 import { unsetLogs } from "../../../redux/authSlice";
 import { unsetServers } from "../../../redux/serversSlice";
 import { DarkModeSwitch } from "../../DarkModeSwitch/DarkModeSwitch";
-import { useDarkMode } from "../../../Hooks/useDarkMode";
+import { useDarkMode } from "../../../hooks/useDarkMode";
 import type { User } from "../../../interfaces/IUser";
 import { Theme } from "../../../interfaces/Theme.enum";
 
 import './Header.scss';
 
-export default function Header({ ioClose }: { ioClose?: () => void }): JSX.Element {
+export function Header({ ioClose }: { ioClose?: () => void }): JSX.Element {
 
     const dispatch = useDispatch();
     const authStatus = useSelector((state: any) => state.authStatus);
@@ -90,7 +90,7 @@ export default function Header({ ioClose }: { ioClose?: () => void }): JSX.Eleme
                                     />
                                 </MenuItem>
                                 <MenuItem onClick={() => logout()}>
-                                    <span className="logout-link" >Déconnexion</span>
+                                    <span className="logout-link">Déconnexion</span>
                                 </MenuItem>
                             </Menu>
                         </div>

@@ -2,7 +2,7 @@ import { Dispatch, ReactNode, SetStateAction, useRef } from 'react';
 
 import DisabledByDefaultRoundedIcon from '@mui/icons-material/DisabledByDefaultRounded';
 
-import './modal.scss';
+import './Modal.scss';
 
 
 type openModal = {
@@ -10,7 +10,7 @@ type openModal = {
   childComponent: ReactNode
 }
 
-function Modal( {setIsOpen, childComponent} : openModal) {
+export function Modal( {setIsOpen, childComponent} : openModal) {
   const modalRef = useRef<HTMLDivElement>(null);
 
   const closeModal = () => {
@@ -34,4 +34,3 @@ function Modal( {setIsOpen, childComponent} : openModal) {
   );
 }
 
-export default Modal;
