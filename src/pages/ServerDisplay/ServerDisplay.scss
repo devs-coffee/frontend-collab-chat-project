@@ -49,6 +49,13 @@
                 width: fit-content;
                 padding: 5px 10px;
                 text-align: left;
+                .MuiBadge-root {
+                    width: fit-content;
+                }
+                .MuiBadge-dot {
+                    top: 0.4em;
+                    right: -0.3em;
+                }
             }
         }
 
