@@ -53,7 +53,7 @@ export function Header({ ioClose }: { ioClose?: () => void }): JSX.Element {
         <div className="Header">
             <h1>
                 <div className="logo-container">
-                    <Link to="/"><img src="./images/openChatRooms.png" alt="logo openChatRooms" /></Link>
+                    <Link to="/"><img src={process.env.PUBLIC_URL + "/images/openChatRooms.png"} alt="logo openChatRooms" /></Link>
                 </div>
                 <div className="sitename">
                     <Link to="/">OpenChatRooms</Link>
