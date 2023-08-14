@@ -1,13 +1,11 @@
 import { AxiosError } from "axios";
 import { ReactNode, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
-import SettingsIcon from '@mui/icons-material/Settings';
-import { Avatar, Snackbar, Stack } from "@mui/material";
+import { Snackbar } from "@mui/material";
 
-import { ChannelManager, MessageBox, ServerUpdateForm } from "../../components";
-import { ChannelBase } from "../../interfaces/IChannel.base";
+import { ServerHeading, ServerChat, ServerChannelBox, ServerMembersBox, ServerUpdateForm } from "../../components";
 import { reduxData } from "../../interfaces/IReduxData";
 import { Server } from "../../interfaces/IServer";
 import { User } from "../../interfaces/IUser";
@@ -113,16 +111,8 @@ export function ServerDisplay() {
         )
     }
 
-    const updateChannels = () => {
-        setMainContent('updateChannel');
-    }
-
     const avoidManagingChannel = () => {
         setMainContent('chat');
-    }
-
-    const redirectToChannel = (toChannelId: string) => {
-        setChannelId(toChannelId);
     }
 
     useEffect(() => {
@@ -157,59 +147,32 @@ export function ServerDisplay() {
             {server === undefined ? <p>Patientez</p>
                 :
                 <>
-                    <div className="server-heading">
-                        {server.picture ?
-                            (<Avatar alt="avatar server" src={server.picture} />)
-                            :
-                            (<Avatar>{server.name?.substring(0, 1).toUpperCase()}</Avatar>)
-                        }
-                        <h3>{server.name}</h3>
-                        {server?.isCurrentUserAdmin &&
-                            <SettingsIcon onClick={() => setIsUpdatingServer(true)} />
-                        }
-                    </div>
+                    <ServerHeading
+                        title={server.name}
+                        picture={server.picture}
+                        admin={server.isCurrentUserAdmin}
+                        setIsUpdatingServer={setIsUpdatingServer}
+                    />
                     <div className="ServerDisplay__main-content">
-                        <div className="ServerDisplay__main-content__channels-box">
-                            <h4>
-                                Channels :
-                                {server?.channels && server.isCurrentUserAdmin && (
-                                    <SettingsIcon fontSize={"inherit"} onClick={() => updateChannels()} />
-                                )}
-                            </h4>
-                            <Stack className="channels-stack" spacing={0.8}>
-                                {server?.channels && (
-                                    server.channels.map((channel: ChannelBase) => (
-                                        <span className="channels-stack__items" key={`span-${channel.id}`}>
-                                            <p className="channel-title" onClick={() => redirectToChannel(channel.id)}>{channel.title}</p>
-                                        </span>
-                                    ))
-                                )}
-                            </Stack>
-                        </div>
-                        {mainContent === 'chat' && (
-                            <div className="ServerDisplay__main-content__middle-box">
-                                <h4>Chat-box</h4>
-                                {channelId && channelId !== '' && <MessageBox channelId={channelId} canUserPost={server.isCurrentUserMember} key={channelId} />}
-                            </div>
-                        )}
-                        {mainContent === 'updateChannel' && (
-                            <div className="ServerDisplay__main-content__middle-box">
-                                <ChannelManager channels={server.channels} avoidManaging={avoidManagingChannel} />
-                            </div>
-                        )}
-                        <div className="ServerDisplay__main-content__members-box">
-                            <h4 className="members-heading">Users :</h4>
-                            <Stack className="members-stack" spacing={0.8}>
-                                {serverUsers.map(user => (
-                                    <Link key={`link-${user.id}`} to={`/user/${user.id}`}>{user.pseudo}</Link>
-                                ))}
-                            </Stack>
-                            {serverUsers.length > 0 && (
-                                <button className="joinOrLeaveButton" onClick={joinServer} disabled={isDisabled}>
-                                    {serverUsers.some(user => user.id === authStatus.user.id) ? 'leave' : 'join'}
-                                </button>
-                            )}
-                        </div>
+                        <ServerChannelBox
+                            channels={server.channels}
+                            admin={server.isCurrentUserAdmin}
+                            setChannelId={setChannelId}
+                            setMainContent={setMainContent}
+                        />
+                        <ServerChat
+                            channels={server.channels}
+                            content={mainContent}
+                            channelID={channelId}
+                            currentUser={server.isCurrentUserMember}
+                            avoidManagingChannel={avoidManagingChannel}
+                        />
+                        <ServerMembersBox
+                            serverUsers={serverUsers}
+                            compareID={authStatus.user.id}
+                            joinServer={joinServer}
+                            isDisabled={isDisabled}
+                        />
                     </div>
                 </>
             }

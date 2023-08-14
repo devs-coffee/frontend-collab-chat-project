@@ -1,0 +1,32 @@
+.channelsbox {
+	border: 1px solid lightgray;
+
+	& h4 {
+		margin: 10px;
+	}
+
+	.MuiSvgIcon-root {
+		color: lightgrey;
+		cursor: pointer;
+		margin-left: 10px;
+
+		&:hover {
+			color: #999999;
+		}
+	}
+
+	.title {
+		color: rgba(var(--rgb-font-color), 0.7);
+
+		&:hover {
+			color: rgba(var(--rgb-font-color), 1);
+		}
+	}
+
+	.stack {
+		.items {
+			margin-left: 0.5em;
+			cursor: pointer;
+		}
+	}
+}
