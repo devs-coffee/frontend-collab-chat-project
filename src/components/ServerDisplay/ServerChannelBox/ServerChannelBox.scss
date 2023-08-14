@@ -1,4 +1,4 @@
-.channels-box {
+.channelsbox {
 	border: 1px solid lightgray;
 
 	& h4 {
@@ -15,8 +15,16 @@
 		}
 	}
 
-	.channels-stack {
-		&__items {
+	.title {
+		color: rgba(var(--rgb-font-color), 0.7);
+
+		&:hover {
+			color: rgba(var(--rgb-font-color), 1);
+		}
+	}
+
+	.stack {
+		.items {
 			margin-left: 0.5em;
 			cursor: pointer;
 		}

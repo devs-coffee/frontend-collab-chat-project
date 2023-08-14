@@ -20,18 +20,18 @@ interface ServerChannelBoxProps {
 export function ServerChannelBox(props: ServerChannelBoxProps): JSX.Element {
 
 	return (
-		<div className="channels-box">
+		<div className="channelsbox">
 			<h4>
 				Channels :
 				{props.channels && props.admin && (
 					<SettingsIcon fontSize={"inherit"} onClick={() => props.setMainContent('updateChannel')} />
 				)}
 			</h4>
-			<Stack className="channels-stack" spacing={0.8}>
+			<Stack className="stack" spacing={0.8}>
 				{props.channels && (
 					props.channels.map((channel: ChannelBase) => (
-						<span className="channels-stack__items" key={`span-${channel.id}`}>
-							<p className="channel-title" onClick={() => props.setChannelId(channel.id)}>{channel.title}</p>
+						<span className="items" key={`span-${channel.id}`}>
+							<p className="title" onClick={() => props.setChannelId(channel.id)}>{channel.title}</p>
 						</span>
 					))
 				)}

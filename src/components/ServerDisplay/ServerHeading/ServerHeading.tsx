@@ -19,7 +19,7 @@ interface ServerHeadingProps {
 export function ServerHeading(props: ServerHeadingProps): JSX.Element {
 
 	return (
-		<div className="server-heading">
+		<div className="heading">
 			{props.picture ?
 				(<Avatar alt="avatar server" src={props.picture} />)
 				:

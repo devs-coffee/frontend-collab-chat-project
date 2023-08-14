@@ -1,4 +1,4 @@
-import "./ServerMemberBox.scss";
+import "./ServerMembersBox.scss";
 import { Stack } from "@mui/material";
 import { Link } from "react-router-dom";
 import { User } from "../../../interfaces/IUser";
@@ -10,12 +10,12 @@ interface ServerMemberBoxProps {
 	isDisabled: boolean;
 }
 
-export function ServerMemberBox(props: ServerMemberBoxProps): JSX.Element {
+export function ServerMembersBox(props: ServerMemberBoxProps): JSX.Element {
 
 	return (
-		<div className="members-box">
-			<h4 className="members-heading">Users :</h4>
-			<Stack className="members-stack" spacing={0.8}>
+		<div className="members">
+			<h4 className="heading">Users :</h4>
+			<Stack className="stack" spacing={0.8}>
 				{props.serverUsers.map(user => (
 					<Link key={`link-${user.id}`} to={`/user/${user.id}`}>{user.pseudo}</Link>
 				))}

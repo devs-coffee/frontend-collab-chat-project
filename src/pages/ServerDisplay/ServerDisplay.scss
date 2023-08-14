@@ -2,29 +2,10 @@
     display: flex;
     flex-direction: column;
 
-    & a {
-        text-decoration: none;
-        color: black;
-
-        &:hover {
-            font-weight: bold;
-        }
-    }
-
     &__main-content {
         flex: 1 1;
         min-height: 0;
         display: flex;
-
-        &__middle-box {
-            flex: 1 1;
-            min-height: 0;
-            display: flex;
-            flex-direction: column;
-
-            & h4 {
-                text-align: center;
-            }
-        }
     }
+    
 }

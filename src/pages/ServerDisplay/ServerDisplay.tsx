@@ -1,11 +1,11 @@
 import { AxiosError } from "axios";
 import { ReactNode, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
-import { Snackbar, Stack } from "@mui/material";
+import { Snackbar } from "@mui/material";
 
-import { ChannelManager, MessageBox, ServerHeading, ServerChannelBox, ServerMemberBox, ServerUpdateForm } from "../../components";
+import { ServerHeading, ServerChat, ServerChannelBox, ServerMembersBox, ServerUpdateForm } from "../../components";
 import { reduxData } from "../../interfaces/IReduxData";
 import { Server } from "../../interfaces/IServer";
 import { User } from "../../interfaces/IUser";
@@ -160,37 +160,19 @@ export function ServerDisplay() {
                             setChannelId={setChannelId}
                             setMainContent={setMainContent}
                         />
-                        {mainContent === 'chat' && (
-                            <div className="ServerDisplay__main-content__middle-box">
-                                <h4>Chat-box</h4>
-                                {channelId && channelId !== '' && <MessageBox channelId={channelId} canUserPost={server.isCurrentUserMember} key={channelId} />}
-                            </div>
-                        )}
-                        {mainContent === 'updateChannel' && (
-                            <div className="ServerDisplay__main-content__middle-box">
-                                <ChannelManager channels={server.channels} avoidManaging={avoidManagingChannel} />
-                            </div>
-                        )}
-                        <ServerMemberBox
+                        <ServerChat
+                            channels={server.channels}
+                            content={mainContent}
+                            channelID={channelId}
+                            currentUser={server.isCurrentUserMember}
+                            avoidManagingChannel={avoidManagingChannel}
+                        />
+                        <ServerMembersBox
                             serverUsers={serverUsers}
                             compareID={authStatus.user.id}
                             joinServer={joinServer}
                             isDisabled={isDisabled}
                         />
-                        
-                        <div className="ServerDisplay__main-content__members-box">
-                            <h4 className="members-heading">Users :</h4>
-                            <Stack className="members-stack" spacing={0.8}>
-                                {serverUsers.map(user => (
-                                    <Link key={`link-${user.id}`} to={`/user/${user.id}`}>{user.pseudo}</Link>
-                                ))}
-                            </Stack>
-                            {serverUsers.length > 0 && (
-                                <button className="joinOrLeaveButton" onClick={joinServer} disabled={isDisabled}>
-                                    {serverUsers.some(user => user.id === authStatus.user.id) ? 'leave' : 'join'}
-                                </button>
-                            )}
-                        </div>
                     </div>
                 </>
             }

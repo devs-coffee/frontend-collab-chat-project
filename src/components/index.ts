@@ -21,7 +21,7 @@ export * from "./ServerCreationForm/ServerCreationForm";
 export * from "./ServerDisplay/ServerChannelBox/ServerChannelBox";
 export * from "./ServerDisplay/ServerChat/ServerChat";
 export * from "./ServerDisplay/ServerHeading/ServerHeading";
-export * from "./ServerDisplay/ServerMemberBox/ServerMemberBox";
+export * from "./ServerDisplay/ServerMembersBox/ServerMembersBox";
 export * from "./ServerSearching/ServerSearching";
 export * from "./ServerUpdateForm/ServerUpdateForm";
 export * from "./template/header/Header";
