@@ -15,10 +15,10 @@ export function ServerChat(props: ServerChatProps): JSX.Element {
 	return (
 		<div className="chat">
 			{props.content === 'chat' ? (
-				<div>
+				<>
 					<h4>Chat-box</h4>
 					{props.channelID && <MessageBox channelId={props.channelID} canUserPost={props.currentUser} key={props.channelID} />}
-				</div>
+				</>
 			) : (
 				<ChannelManager channels={props.channels} avoidManaging={props.avoidManagingChannel} />
 			)}

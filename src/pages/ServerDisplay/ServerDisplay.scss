@@ -2,10 +2,11 @@
     display: flex;
     flex-direction: column;
 
+
+
     &__main-content {
         flex: 1 1;
         min-height: 0;
         display: flex;
     }
-    
 }
