@@ -1,13 +1,27 @@
-.message {
+.Message {
+    padding-bottom: 30px;
+
+    .message {
+        display: flex;
+        justify-items: center;
+        padding: 10px;
+
+        .message_pseudo {
+            margin-left: 15px;
+        }
+
+        .message_date {
+            font-style: italic;
+            font-size: smaller;
+        }
+    }
+}
+
+
+.message_content {
     display: flex;
-    justify-items: center;
+    padding-left: 10px;
+    gap: 10px;
+    align-items: center;
 
-    .message_pseudo {
-        margin-left: 15px;
-    }
-
-    .message_date {
-        font-style: italic;
-        font-size: smaller;
-    }
 }
