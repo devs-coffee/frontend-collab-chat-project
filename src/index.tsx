@@ -3,16 +3,10 @@ import { store } from './redux/store';
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-import IoSocketProvider from './Providers/IoSocketProvider';
-import Home from "./pages/Home/Home";
-import ProtectedContent from './components/ProtectedContent/ProtectedContent';
-import Profile from './pages/Profile/Profile';
-import Error from "./pages/Error/Error";
-import Auth from "./pages/Auth/Auth";
-import Dashboard from './pages/Dashboard/Dashboard';
-import UserDisplay from './pages/UserDisplay/UserDisplay';
-import ServerDisplay from './pages/ServerDisplay/ServerDisplay';
-
+import IoSocketProvider from './providers/IoSocketProvider';
+import { Home } from "./pages/Home/Home";
+import { ProtectedContent } from './components';
+import { Profile, Error, Auth, Dashboard, UserDisplay, ServerDisplay } from './pages/';
 import './styles/index.scss';
 
 const root = ReactDOM.createRoot(document.getElementById('root')!);

@@ -1,11 +1,10 @@
 import { useParams } from "react-router-dom";
-import MessageList from "../../components/MessageList/MessageList"
+import { MessageList } from "../../components";
 
-const PrivateMessages = () => {
+export const PrivateMessages = () => {
     const urlSearchParams = useParams();
     return (
         <MessageList messages={[]}/>
     )
 }
 
-export default PrivateMessages;

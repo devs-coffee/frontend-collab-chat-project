@@ -20,9 +20,9 @@ type ChannelUpdateFormProps = {
 
 const formValidationService = new FormValidationService();
 
-export default function ChannelUpdateForm(props: ChannelUpdateFormProps) {
-    const [ channelUpdateError, setChannelUpdateError ] = useState<{isError:boolean, errorMessage:string}>({isError: false, errorMessage: ''});
-    const [ deleteChannelError, setDeleteChannelError ] = useState<{isError:boolean, errorMessage:string}>({isError: false, errorMessage: ''});
+export function ChannelUpdateForm(props: ChannelUpdateFormProps) {
+    const [channelUpdateError, setChannelUpdateError] = useState<{ isError: boolean, errorMessage: string }>({ isError: false, errorMessage: '' });
+    const [deleteChannelError, setDeleteChannelError] = useState<{ isError: boolean, errorMessage: string }>({ isError: false, errorMessage: '' });
 
     const dispatch = useDispatch();
 
@@ -36,44 +36,44 @@ export default function ChannelUpdateForm(props: ChannelUpdateFormProps) {
             await new ChannelService().deleteChannel(props.channel.id);
             dispatch(removeChannel(props.channel));
             props.closeChannelUpdate()
-        } catch(error) {
+        } catch (error) {
             let errorMessage = 'Channel non supprimé, veuillez réessayer';
-            if(error instanceof AxiosError) {
+            if (error instanceof AxiosError) {
                 errorMessage = error.response?.data.message;
             }
-            setDeleteChannelError({isError:true, errorMessage});
+            setDeleteChannelError({ isError: true, errorMessage });
         }
-    }
-    
-    const handleToastClose = (event: React.SyntheticEvent | Event, reason?: string) => {
-        if(reason === 'clickaway') {
-            return;
-        }
-        setChannelUpdateError({isError:false, errorMessage:''});
     }
 
-    return(
+    const handleToastClose = (event: React.SyntheticEvent | Event, reason?: string) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setChannelUpdateError({ isError: false, errorMessage: '' });
+    }
+
+    return (
         <div className='ChannelUpdateForm'>
             <Formik
                 initialValues={initialValues}
                 validate={formValidationService.validateChannelUpdate}
                 onSubmit={async (values) => {
-                    setChannelUpdateError({isError:false, errorMessage:''});
+                    setChannelUpdateError({ isError: false, errorMessage: '' });
                     try {
                         const response = await new ChannelService().updateChannel(values);
                         dispatch(updateChannel(response.result));
-                    } catch(error) {
-                        let errorMessage:string = "Une erreur est survenue, veuillez réessayer";
-                        if(error instanceof AxiosError) {
+                    } catch (error) {
+                        let errorMessage: string = "Une erreur est survenue, veuillez réessayer";
+                        if (error instanceof AxiosError) {
                             errorMessage = error.response?.data.message;
                         }
-                        setChannelUpdateError({isError:true, errorMessage});
+                        setChannelUpdateError({ isError: true, errorMessage });
                     }
                 }}
             >
                 {formik => (
                     <Form className='channel-update-form'>
-                        <h2>Edition du channel <DisabledByDefaultRoundedIcon color="warning" onClick={props.closeChannelUpdate}/></h2>
+                        <h2>Edition du channel <DisabledByDefaultRoundedIcon color="warning" onClick={props.closeChannelUpdate} /></h2>
                         <div className='field-box'>
                             <div className='channel-update-form-title form__fields'>
                                 <label className='form__labels' htmlFor='newchannel-title'>Titre :</label>
@@ -85,7 +85,7 @@ export default function ChannelUpdateForm(props: ChannelUpdateFormProps) {
                             </div>
                             <ErrorMessage name='title' />
                         </div>
-                        <Button variant="contained" type="submit">Envoyer</Button><br/>
+                        <Button variant="contained" type="submit">Envoyer</Button><br />
                         <Button variant="contained" onClick={() => deleteChannel()}>Supprimer</Button>
                     </Form>
                 )}
