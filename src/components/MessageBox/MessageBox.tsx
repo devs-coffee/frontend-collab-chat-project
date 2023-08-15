@@ -1,10 +1,8 @@
 import { AxiosError } from "axios";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from 'react-redux';
-
 import { Snackbar } from "@mui/material";
 
-import useIoSocket from '../../hooks/useIoSocket';
 import { IoProvider } from '../../interfaces/IIoProvider';
 import { IMessage } from "../../interfaces/IMessage";
 import { reduxData } from "../../interfaces/IReduxData";
@@ -13,6 +11,7 @@ import { MessageService } from "../../services/messageService";
 import { MessageEditor, MessageList } from "../index";
 
 import "./MessageBox.scss";
+import useIoSocket from "../../hooks/useIoSocket";
 
 type MessageBoxProps = {
     channelId: string,

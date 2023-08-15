@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Outlet } from "react-router-dom";
 
 import useIoSocket from "../../hooks/useIoSocket";
-import { Header } from "../../components";
+import { Header } from "../../components/Template/Header/Header";
 import { IoProvider } from "../../interfaces/IIoProvider";
 import { fetchServers } from "../../redux/serversSlice";
 import { AppDispatch } from "../../redux/store";
