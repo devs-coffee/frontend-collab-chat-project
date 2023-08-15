@@ -14,18 +14,18 @@ import "./Login.scss";
 
 const formValidationService = new FormValidationService();
 
-export default function Login(props:any) {
+export function Login(props: any) {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [loginError, setLoginError] = useState(false);
 
     const handleToastClose = (event: React.SyntheticEvent | Event, reason?: string) => {
-        if(reason === 'clickaway') {
+        if (reason === 'clickaway') {
             return;
         }
         setLoginError(false);
     }
-    
+
     return (
         <div className="Login">
             <Formik
@@ -40,7 +40,7 @@ export default function Login(props:any) {
                         const response = await new AuthenticationService().login(values);
                         dispatch(setLogs(response.result));
                         navigate('/');
-                    } catch(error) {
+                    } catch (error) {
                         setLoginError(true);
                     }
                 }}
@@ -74,7 +74,7 @@ export default function Login(props:any) {
                     </Form>
                 )}
             </Formik>
-            {loginError && <Snackbar 
+            {loginError && <Snackbar
                 open={loginError}
                 autoHideDuration={4000}
                 onClose={handleToastClose}

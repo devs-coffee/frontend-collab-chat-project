@@ -1,0 +1,25 @@
+.members {
+	border: 1px solid lightgray;
+	width: fit-content;
+	text-align: center;
+
+	.heading {
+		margin: 10px;
+	}
+
+	.stack {
+		width: fit-content;
+		padding: 5px 10px;
+		text-align: left;
+
+		& a {
+			text-decoration: none;
+
+			color: rgba(var(--rgb-font-color), 0.7);
+
+			&:hover {
+				color: rgba(var(--rgb-font-color), 1);
+			}
+		}
+	}
+}

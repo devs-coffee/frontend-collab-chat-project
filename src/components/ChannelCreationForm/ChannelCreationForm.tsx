@@ -19,9 +19,9 @@ type ChannelCreationFormProps = {
 
 const formValidationService = new FormValidationService();
 
-export default function ChannelCreationForm(props: ChannelCreationFormProps) {
-    const [ channelCreationError, setChannelCreationError ] = useState<{isError:boolean, errorMessage:string}>({isError: false, errorMessage: ''});
-    
+export function ChannelCreationForm(props: ChannelCreationFormProps) {
+    const [channelCreationError, setChannelCreationError] = useState<{ isError: boolean, errorMessage: string }>({ isError: false, errorMessage: '' });
+
     const urlSearchParams = useParams();
     const dispatch = useDispatch();
 
@@ -35,10 +35,10 @@ export default function ChannelCreationForm(props: ChannelCreationFormProps) {
     }
 
     const handleToastClose = (event: React.SyntheticEvent | Event, reason?: string) => {
-        if(reason === 'clickaway') {
+        if (reason === 'clickaway') {
             return;
         }
-        setChannelCreationError({isError:false, errorMessage:''});
+        setChannelCreationError({ isError: false, errorMessage: '' });
     }
 
     return (
@@ -46,24 +46,24 @@ export default function ChannelCreationForm(props: ChannelCreationFormProps) {
             <Formik
                 initialValues={initialValues}
                 validate={formValidationService.validateChannelCreation}
-                onSubmit={async(values) => {
-                    setChannelCreationError({isError:false, errorMessage:''});
+                onSubmit={async (values) => {
+                    setChannelCreationError({ isError: false, errorMessage: '' });
                     try {
                         const response = await new ChannelService().createChannel(values);
                         dispatch(addChannel(response.result));
                         props.closeChannelCreation();
-                    } catch(error) {
-                        let errorMessage:string = "Une erreur est survenue, veuillez réessayer";
-                        if(error instanceof AxiosError) {
+                    } catch (error) {
+                        let errorMessage: string = "Une erreur est survenue, veuillez réessayer";
+                        if (error instanceof AxiosError) {
                             errorMessage = error.response?.data.message;
                         }
-                        setChannelCreationError({isError:true, errorMessage});
+                        setChannelCreationError({ isError: true, errorMessage });
                     }
                 }}
             >
                 {formik => (
                     <Form className='channel-creation-form'>
-                        <h2>Nouveau channel <DisabledByDefaultRoundedIcon color="warning" onClick={avoidChannelCreation}/></h2>
+                        <h2>Nouveau channel <DisabledByDefaultRoundedIcon color="warning" onClick={avoidChannelCreation} /></h2>
                         <div className='field-box'>
                             <div className='channel-creation-form-title form__fields'>
                                 <label className='form__labels' htmlFor='newchannel-title'>Titre :</label>

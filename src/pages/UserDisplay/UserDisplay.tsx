@@ -8,7 +8,7 @@ import { UserService } from "../../services/userService";
 
 import './UserDisplay.scss';
 
-export default function UserDisplay() {
+export function UserDisplay() {
     const [displayedUser, setDisplayedUser] = useState<User | null>(null);
     const urlSearchParams = useParams();
 
@@ -16,7 +16,7 @@ export default function UserDisplay() {
         const getUser = async () => {
             try {
                 const response = await new UserService().getUser(urlSearchParams.userId!);
-                if(response.isSucceed) {
+                if (response.isSucceed) {
                     setDisplayedUser(response.result);
                     return response.result;
                 }
@@ -30,11 +30,11 @@ export default function UserDisplay() {
         }
         getUser();
     }, [urlSearchParams])
-    
+
     return (
         <div className="UserDisplay">
             <div className="heading">
-                {displayedUser?.picture ? 
+                {displayedUser?.picture ?
                     (<Avatar alt="avatar membre" src={displayedUser.picture} />)
                     :
                     (<Avatar alt="avatar membre">{displayedUser?.pseudo.substring(0, 1).toUpperCase()}</Avatar>)

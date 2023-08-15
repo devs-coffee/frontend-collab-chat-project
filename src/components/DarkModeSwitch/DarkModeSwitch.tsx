@@ -1,43 +1,31 @@
-import { ChangeEventHandler, useState } from "react";
-
-import {FormControlLabel, FormGroup, Switch} from "@mui/material";
-
+import { ChangeEventHandler } from "react";
+import { FormControlLabel, FormGroup, Switch } from "@mui/material";
+import { UserService } from "../../services/userService";
+import { Theme } from "../../interfaces/Theme.enum";
 import "./DarkModeSwitch.scss";
 
-export default function DarkModeSwitch() {
-    const [ checked, setChecked ] = useState<boolean>(document.documentElement.getAttribute("data-theme") === "dark");
+type SetState<T> = React.Dispatch<React.SetStateAction<T>>;
 
-    const setDark = () => {
-        localStorage.setItem("theme", "dark");
-        document.documentElement.setAttribute("data-theme", "dark");
-    }
-    
-    const setLight = () => {
-        localStorage.setItem("theme", "light");
-        document.documentElement.setAttribute("data-theme", "light");
-    }
-    
-    const storedTheme = localStorage.getItem("theme");
+/**
+ * @param darkMode a boolean indicating whether the dark mode is on or off.
+ * @param setDarkMode a callback function that sets the dark mode state.
+ * @returns A switch that allows the user to toggle the dark mode.
+ */
+export function DarkModeSwitch({ darkMode, setDarkMode }: {darkMode: boolean, setDarkMode: SetState<boolean> }): JSX.Element {
 
-    const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
-
-    const defaultDark = storedTheme === "dark" || (storedTheme === null && prefersDark);
-
-
-    if(defaultDark) {
-        localStorage.setItem("theme", "dark");
-        document.documentElement.setAttribute("data-theme", "dark");
-    }
-
-    const toggleDarkMode: ChangeEventHandler<HTMLInputElement> = (e) => {
-        
-        e.target.checked ? setDark() : setLight();
-        setChecked(!checked);
+    const toggleDarkMode: ChangeEventHandler<HTMLInputElement> = async () => {
+        try {
+            await new UserService().updatePrefs({ colorScheme: !darkMode ? Theme.dark : Theme.light });
+            setDarkMode(!darkMode);
+        }
+        catch (e) {
+            /** TODO: Handle Error */
+        }
     }
 
     return (
         <FormGroup id="darkmode-switch">
-            <FormControlLabel control={<Switch onChange={toggleDarkMode}/>} checked={checked} label="darkmode" />
+            <FormControlLabel control={<Switch onChange={toggleDarkMode} />} checked={darkMode} label="darkmode" />
         </FormGroup>
     )
 }

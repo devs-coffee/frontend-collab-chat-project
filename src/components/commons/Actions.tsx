@@ -6,7 +6,7 @@ type actionsTypes = {
     actionHandler: (element: string) => void
 }
 
-const Actions = ({ availableActions, actionHandler }: actionsTypes) => {
+export const Actions = ({ availableActions, actionHandler }: actionsTypes) => {
     const [isShown, setIsShown] = useState(false);
 
     const triggerAction = (action: string) => {
@@ -28,4 +28,3 @@ const Actions = ({ availableActions, actionHandler }: actionsTypes) => {
   );
 }
 
-export default Actions;

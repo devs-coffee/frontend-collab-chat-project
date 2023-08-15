@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { CircularProgress, Box } from '@mui/material';
 import './Loader.scss'
 
-const Loader: FC = () => {
+export const Loader: FC = () => {
   return (
     <Box
       sx={{
@@ -17,4 +17,3 @@ const Loader: FC = () => {
   );
 };
 
-export default Loader;

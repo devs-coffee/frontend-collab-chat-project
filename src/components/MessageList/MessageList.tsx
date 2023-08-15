@@ -7,7 +7,7 @@ import { Snackbar } from '@mui/material';
 import { MessageService } from '../../services/messageService';
 import { setMessages } from '../../redux/messagesSlice';
 import { IMessage } from '../../interfaces/IMessage';
-import Message from '../Message/Message';
+import { Message } from '../Message/Message';
 
 import './MessageList.scss';
 
@@ -15,7 +15,7 @@ type messageList = {
     messages: IMessage[]
 }
 
-const MessageList = ({messages}: messageList) => {
+export const MessageList = ({messages}: messageList) => {
   const messageEndRef = useRef<null | HTMLDivElement>(null); 
   const element = useRef<null | HTMLDivElement>(null);
   const [shouldAutoScroll, setShouldAutoScroll] = useState(true);
@@ -78,4 +78,3 @@ const MessageList = ({messages}: messageList) => {
     </div>
   );
 }
-export default MessageList;

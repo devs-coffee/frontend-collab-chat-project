@@ -15,20 +15,19 @@ import { setLogs } from '../../../redux/authSlice';
 import { signupForm } from '../../../interfaces/ISignupForm';
 import { AuthenticationService } from '../../../services/authenticationService';
 import { FormValidationService } from '../../../utils/formValidationService';
-import Modal from '../../../components/Modal/modal';
-import AvatarCropper from '../../avatarCropper/AvatarCropper';
+import { Modal, AvatarCropper } from '../../index';
 
 import "./Signup.scss";
 
 const formValidationService = new FormValidationService();
 
-export default function Signup() {
+export function Signup() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const [signupError, setSignupError] = useState<{isError:boolean, errorMessage:string}>({isError:false, errorMessage:''});
-    const [ croppedImage, setCroppedImage ] = useState<string>('');
-    const [ isOpen, setIsOpen] = useState<boolean>(false);
-    
+    const [signupError, setSignupError] = useState<{ isError: boolean, errorMessage: string }>({ isError: false, errorMessage: '' });
+    const [croppedImage, setCroppedImage] = useState<string>('');
+    const [isOpen, setIsOpen] = useState<boolean>(false);
+
     const updateImage = (image: string) => {
         setCroppedImage(image);
         setIsOpen(false);
@@ -36,10 +35,10 @@ export default function Signup() {
     }
 
     const handleToastClose = (event: React.SyntheticEvent | Event, reason?: string) => {
-        if(reason === 'clickaway') {
+        if (reason === 'clickaway') {
             return;
         }
-        setSignupError({isError:false, errorMessage:''});
+        setSignupError({ isError: false, errorMessage: '' });
     }
 
     return (
@@ -53,19 +52,19 @@ export default function Signup() {
                     picture: ''
                 }}
                 validate={formValidationService.validateSignup}
-                onSubmit={async (values:signupForm) => {
+                onSubmit={async (values: signupForm) => {
                     values.picture = croppedImage;
-                    setSignupError({isError:false, errorMessage:''});
+                    setSignupError({ isError: false, errorMessage: '' });
                     try {
                         const response = await new AuthenticationService().signup(values);
                         dispatch(setLogs(response.result));
                         navigate('/');
-                    } catch(error) {
-                        let errorMessage:string = 'Une erreur est survenue, c\'est ballot.';
-                        if(error instanceof AxiosError) {
+                    } catch (error) {
+                        let errorMessage: string = 'Une erreur est survenue, c\'est ballot.';
+                        if (error instanceof AxiosError) {
                             errorMessage = error.response?.data.message;
                         }
-                        setSignupError({isError:true, errorMessage});
+                        setSignupError({ isError: true, errorMessage });
                     }
                 }}
             >
@@ -75,7 +74,7 @@ export default function Signup() {
                         <div className="field-box">
                             <div className="signup-form-pseudo form__fields">
                                 <label className='form__labels' htmlFor="signup_pseudo">Pseudo :</label>
-                                <Field 
+                                <Field
                                     type="text"
                                     name="pseudo"
                                     id="signup_pseudo"
@@ -113,26 +112,26 @@ export default function Signup() {
                                 <h3>Avatar :</h3>
                                 {(croppedImage === '')
                                     ?
-                                        <Button variant="contained" startIcon={<AddPhotoAlternateIcon />} onClick={() => setIsOpen(true)}>
-                                            Ajouter
-                                        </Button>
+                                    <Button variant="contained" startIcon={<AddPhotoAlternateIcon />} onClick={() => setIsOpen(true)}>
+                                        Ajouter
+                                    </Button>
                                     :
-                                        <>
+                                    <>
                                         <Avatar alt="avatar serveur demandé" src={croppedImage} />
                                         <Breadcrumbs>
                                             <EditIcon sx={{ color: '#1616c4' }} onClick={() => setIsOpen(true)} />
-                                            <HighlightOffTwoToneIcon sx={{ color: '#800101' }} onClick={() => setCroppedImage('')}/>
+                                            <HighlightOffTwoToneIcon sx={{ color: '#800101' }} onClick={() => setCroppedImage('')} />
                                         </Breadcrumbs>
-                                        </>
+                                    </>
                                 }
                             </div>
-                            {isOpen && <Modal setIsOpen={setIsOpen} childComponent={<AvatarCropper setImage={updateImage}/>} />}
+                            {isOpen && <Modal setIsOpen={setIsOpen} childComponent={<AvatarCropper setImage={updateImage} />} />}
                             <Button variant="contained" type='submit' endIcon={<SendIcon />}>Envoyer</Button>
                         </div>
                     </Form>
                 )}
             </Formik>
-            <Snackbar 
+            <Snackbar
                 open={signupError.isError}
                 autoHideDuration={4000}
                 onClose={handleToastClose}

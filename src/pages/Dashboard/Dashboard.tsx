@@ -1,13 +1,8 @@
 import { useState } from "react";
-
-import DashboardPanel from "../../components/DashboardPanel/DashboardPanel";
-import DashboardServersHeading from "../../components/DashboardServersHeading/DashboardServersHeading";
-import ServerCreationForm from "../../components/ServerCreationForm/ServerCreationForm";
-import ServerSearching from '../../components/ServerSearching/ServerSearching';
-
+import { DashboardPanel, DashboardServersHeading, ServerCreationForm, ServerSearching } from "../../components";
 import "./Dashboard.scss";
 
-export default function Dashboard() {
+export function Dashboard() {
     const [dashboardContent, setDashboardContent] = useState<string>('');
 
     return (
@@ -16,7 +11,7 @@ export default function Dashboard() {
             <h2>Dashboard</h2>
             {dashboardContent === '' && <DashboardPanel />}
             {dashboardContent === 'addServer' && (
-                <ServerCreationForm setDashboardContent={setDashboardContent}/>
+                <ServerCreationForm setDashboardContent={setDashboardContent} />
             )}
             {dashboardContent === 'searchServer' && (
                 <ServerSearching />
