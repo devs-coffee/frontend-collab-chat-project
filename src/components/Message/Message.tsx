@@ -92,11 +92,11 @@ export function Message({ message }: messageType) {
             </div>
 
             {!isEdit
-                ? <div>
+                ? <div className="message_content">
                     <p key={message.id}>{message.content}</p>
                     {authStatus!.user!.id === message.userId && <span><Actions actionHandler={(action: string) => triggerAction(action)} availableActions={['Modifier', 'Supprimer']} /></span>}
                 </div>
-                : <div>
+                : <div className="message_content">
                     <MessageEditor messageContent={message.content} sendMessage={sendMessage} />
                     <span onClick={() => setIsEdit(false)}>Annuler</span>
                 </div>
