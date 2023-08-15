@@ -1,0 +1,19 @@
+.message-editor {
+	background-color: var(--tertiary);
+
+	.editor {
+		padding-left: 10px;
+		padding-top: 20px;
+		padding-bottom: 20px;
+	}
+
+	.toolbar {
+		background-color: var(--secondary);
+		border: 1px solid var(--secondary);
+	}
+
+	.rdw-editor-toolbar[aria-hidden="true"] {
+		display: none !important;
+	}
+}
+

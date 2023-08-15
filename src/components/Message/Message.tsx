@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { Avatar, Snackbar } from '@mui/material';
-import parse, { domToReact, htmlToDOM, Element } from 'html-react-parser';
+import parse, { Element } from 'html-react-parser';
 import { IMessage } from '../../interfaces/IMessage';
 import { reduxData } from '../../interfaces/IReduxData';
 import { removeMessage, updateMessage } from '../../redux/messagesSlice';
