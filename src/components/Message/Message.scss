@@ -1,5 +1,5 @@
 .Message {
-    padding-bottom: 30px;
+    padding-bottom: 10px;
 
     .message {
         display: flex;
@@ -21,7 +21,7 @@
 .message_content {
     display: flex;
     padding-left: 10px;
-    gap: 10px;
+    padding-right: 10px;
+    justify-content: space-between;
     align-items: center;
-
 }
