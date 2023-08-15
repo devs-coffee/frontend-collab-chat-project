@@ -3,7 +3,7 @@ import { store } from './redux/store';
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-import IoSocketProvider from './providers/IoSocketProvider';
+import IoSocketProvider from './Providers/IoSocketProvider';
 import { Home } from "./pages/Home/Home";
 import { ProtectedContent } from './components';
 import { Profile, Error, Auth, Dashboard, UserDisplay, ServerDisplay } from './pages/';
