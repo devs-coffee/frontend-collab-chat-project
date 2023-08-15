@@ -1,6 +1,7 @@
 .message-editor {
 	background-color: var(--tertiary-alt);
 	padding: 10px;
+	transition: all 0.2s ease;
 
 	.editor {
 		padding: 10px;
@@ -17,11 +18,6 @@
 			color: var(--font-color);
 			border-color: var(--background-color);
 			box-shadow: none;
-
-			&:active,
-			&:focus {
-				border-color: black;
-			}
 		}
 
 
@@ -39,28 +35,20 @@
 
 		}
 
-		%modal {
-			left: -200px;
-			border: none;
-		}
-
 		.rdw-embedded-modal,
 		.rdw-emoji-modal,
 		.rdw-colorpicker-modal {
 			@extend %template;
-			@extend %modal;
 			top: -220px;
 		}
 
 		.rdw-link-modal {
 			@extend %template;
-			@extend %modal;
 			top: -250px;
 		}
 
 		.rdw-image-modal {
 			@extend %template;
-			@extend %modal;
 			top: -230px;
 		}
 
@@ -81,14 +69,25 @@
 			box-shadow: none;
 			border-color: var(--background-color);
 		}
+
+
 	}
 
+	.rdw-dropdown-optionwrapper {
+		transform: translateY(-180px);
+		max-height: 150px;
+	}
 
+	.rdw-colorpicker-modal-options {
+		overflow: hidden;
+	}
 
 	.rdw-editor-toolbar[aria-hidden="true"] {
 		display: none !important;
 	}
 }
+
+
 
 [data-theme="dark"] {
 	.rdw-dropdown-carettoopen {
