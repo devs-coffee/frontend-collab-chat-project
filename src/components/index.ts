@@ -24,4 +24,5 @@ export * from "./ServerDisplay/ServerHeading/ServerHeading";
 export * from "./ServerDisplay/ServerMembersBox/ServerMembersBox";
 export * from "./ServerSearching/ServerSearching";
 export * from "./ServerUpdateForm/ServerUpdateForm";
-export * from "./Template/header/Header";
+export * from "./Template/Header/Header";
+export * from "./UserItem/UserItem"
