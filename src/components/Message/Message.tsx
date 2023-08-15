@@ -102,7 +102,7 @@ export function Message({ message }: messageType) {
             </div>
 
             {!isEdit
-                ? <div>
+                ? <div className="message_content">
                     <p key={message.id}>{parser(message.content)}</p>
                     {authStatus!.user!.id === message.userId && <span><Actions actionHandler={(action: string) => triggerAction(action)} availableActions={['Modifier', 'Supprimer']} /></span>}
                 </div>
