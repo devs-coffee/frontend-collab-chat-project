@@ -21,8 +21,6 @@ export function MessageEditor({ sendMessage, messageContent }: messageHandler) {
         }
     }
 
-
-
     const triggerSendMessage = () => {
         sendMessage(messageToSend);
         setMessageToSend('');
@@ -38,7 +36,7 @@ export function MessageEditor({ sendMessage, messageContent }: messageHandler) {
     return (
         <div className="message-editor" onKeyDown={handleKeypress} >
             <Editor
-                toolbarOnFocus
+                
                 wrapperClassName="wrapper"
                 editorClassName="editor"
                 toolbarClassName={"toolbar"}
@@ -48,4 +46,5 @@ export function MessageEditor({ sendMessage, messageContent }: messageHandler) {
             />
         </div>
     )
+
 }

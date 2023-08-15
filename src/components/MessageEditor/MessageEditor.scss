@@ -1,19 +1,96 @@
 .message-editor {
 	background-color: var(--tertiary-alt);
+	padding: 10px;
 
 	.editor {
-		padding-left: 10px;
-		padding-top: 20px;
-		padding-bottom: 20px;
+		padding: 10px;
 	}
 
 	.toolbar {
 		background-color: var(--secondary);
 		border: 1px solid var(--secondary);
+
+
+		%template {
+			background-color: var(--secondary);
+			transition: background-color 0.2s;
+			color: var(--font-color);
+			border-color: var(--background-color);
+			box-shadow: none;
+
+			&:active,
+			&:focus {
+				border-color: black;
+			}
+		}
+
+
+		.rdw-option-wrapper,
+		.rdw-dropdown-selectedtext,
+		.rdw-dropdown-wrapper,
+		.rdw-dropdown-selectedtext {
+			@extend %template;
+
+			&:hover,
+			&:active {
+				box-shadow: none;
+				background-color: rgba(var(--rgb-primary), 0.15);
+			}
+
+		}
+
+		%modal {
+			left: -200px;
+			border: none;
+		}
+
+		.rdw-embedded-modal,
+		.rdw-emoji-modal,
+		.rdw-colorpicker-modal {
+			@extend %template;
+			@extend %modal;
+			top: -220px;
+		}
+
+		.rdw-link-modal {
+			@extend %template;
+			@extend %modal;
+			top: -250px;
+		}
+
+		.rdw-image-modal {
+			@extend %template;
+			@extend %modal;
+			top: -230px;
+		}
+
+		.rdw-option-active {
+			box-shadow: none;
+			background-color: rgba(var(--rgb-primary), 0.15);
+		}
+
+		.rdw-dropdownoption-default {
+			@extend %template;
+
+			&:hover {
+				opacity: 0.8;
+			}
+		}
 	}
+
+
 
 	.rdw-editor-toolbar[aria-hidden="true"] {
 		display: none !important;
 	}
 }
 
+[data-theme="dark"] {
+	.rdw-option-wrapper {
+		img {
+
+			filter: invert(1);
+
+		}
+	}
+}

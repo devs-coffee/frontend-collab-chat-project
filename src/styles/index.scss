@@ -3,6 +3,7 @@
 
 html,
 body {
+  transition: all 0.2s;
   background-color: rgba(var(--rgb-background-color));
   color: var(--font-color);
 }
