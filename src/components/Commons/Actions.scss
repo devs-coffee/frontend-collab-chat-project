@@ -1,1 +1,24 @@
+.actions {
+	cursor: pointer;
+	display: flex;
+	align-items: center;
 
+	>div,
+	ul {
+		display: inline-flex;
+		color: rgba(var(--rgb-font-color), 0.7);
+
+		&:hover {
+			color: rgba(var(--rgb-font-color), 1);
+		}
+	}
+
+	ul {
+		padding-inline-start: 15px;
+	}
+
+	li {
+		display: flex;
+		list-style-type: none;
+	}
+}
