@@ -15,7 +15,7 @@ export function MessageEditor({ sendMessage, messageContent }: messageHandler) {
     const [editorState, setEditorState] = useState(EditorState.createEmpty());
 
     async function handleKeypress(e: React.KeyboardEvent<HTMLInputElement>) {
-        if (e.key === 'Enter') {
+        if (e.key === 'Enter' && !e.shiftKey) {
             triggerSendMessage();
         }
     }
