@@ -2,7 +2,7 @@
 
 .Signup {
     margin-top: 0.6em;
-    & form {
+    form {
         @include form;
     }
     .avatar-managment {
@@ -10,5 +10,9 @@
         & h3 {
             margin: 0;
         }
+    }
+    .passwordHelper {
+        width: fit-content;
+        margin: auto;
     }
 }

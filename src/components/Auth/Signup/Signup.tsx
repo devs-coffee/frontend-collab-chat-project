@@ -51,7 +51,7 @@ export function Signup() {
             return ;
         }
         return (
-        <div style={{whiteSpace: 'pre'}}>
+        <div className="passwordHelper" style={{whiteSpace: 'pre'}}>
             <p>
                 Votre mot de passe doit contenir :<br/>
                 <span style={size ?{color : 'green'} : { color: 'red'}}>- au moins 8 caractères</span><br/>
