@@ -7,7 +7,7 @@ import { Stack } from "@mui/material";
 import { User } from "../../../interfaces/IUser";
 
 import IoSocketContext from "../../../contexts/IoSocketContext";
-import { UserListItem } from "../../../components";
+import { UserItem } from "../../../components";
 
 import "./ServerMembersBox.scss";
 
@@ -56,7 +56,7 @@ export function ServerMembersBox(props: ServerMemberBoxProps): JSX.Element {
 			<h4 className="heading">Users :</h4>
 			<Stack className="stack" spacing={0.8}>
 				{props.serverUsers.map(user => (
-					<UserListItem key={`userBadge_${user.id}`} user={user} isConnected={connectedUsers.includes(user.id)}/>
+					<UserItem key={`userBadge_${user.id}`} user={user} isConnected={connectedUsers.includes(user.id)}/>
 				))}
 			</Stack>
 
