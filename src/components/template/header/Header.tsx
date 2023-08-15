@@ -6,7 +6,7 @@ import { Avatar, IconButton, Menu, MenuItem } from "@mui/material";
 import { unsetLogs } from "../../../redux/authSlice";
 import { unsetServers } from "../../../redux/serversSlice";
 import { DarkModeSwitch } from "../../index";
-import { useDarkMode } from "../../../Hooks/useDarkMode";
+import { useDarkMode } from "../../../hooks/useDarkMode";
 import type { User } from "../../../interfaces/IUser";
 import { Theme } from "../../../interfaces/Theme.enum";
 

@@ -11,7 +11,7 @@ import { MessageService } from "../../services/messageService";
 import { MessageEditor, MessageList } from "../index";
 
 import "./MessageBox.scss";
-import useIoSocket from "../../Hooks/useIoSocket";
+import useIoSocket from "../../hooks/useIoSocket";
 
 type MessageBoxProps = {
     channelId: string,
