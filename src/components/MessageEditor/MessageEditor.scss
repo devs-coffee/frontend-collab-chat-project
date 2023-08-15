@@ -76,6 +76,11 @@
 				opacity: 0.8;
 			}
 		}
+
+		.rdw-dropdown-optionwrapper {
+			box-shadow: none;
+			border-color: var(--background-color);
+		}
 	}
 
 
@@ -86,11 +91,17 @@
 }
 
 [data-theme="dark"] {
+	.rdw-dropdown-carettoopen {
+		border-top: 6px solid rgb(255, 255, 255);
+	}
+
+	.rdw-dropdown-carettoclose {
+		border-bottom: 6px solid rgb(255, 255, 255);
+	}
+
 	.rdw-option-wrapper {
 		img {
-
 			filter: invert(1);
-
 		}
 	}
 }
