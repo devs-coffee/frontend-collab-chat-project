@@ -1,7 +1,7 @@
 import { Formik, Form, Field, ErrorMessage, useField } from 'formik';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { ReactNode, useState } from 'react';
+import { useState } from 'react';
 import { AxiosError } from 'axios';
 
 import { Avatar, Breadcrumbs, Button } from '@mui/material';
@@ -18,7 +18,6 @@ import { FormValidationService } from '../../../utils/formValidationService';
 import { Modal, AvatarCropper } from '../../index';
 
 import "./Signup.scss";
-import { JsxElement } from 'typescript';
 
 const formValidationService = new FormValidationService();
 
@@ -58,12 +57,9 @@ export function Signup() {
                     <span style={upper ? { color: 'green' } : { color: 'red' }}>- une majuscule</span><br />
                     <span style={special ? { color: 'green' } : { color: 'red' }}>- un caractère spécial parmi + - * / = ! @ _ &</span>
                 </p>
-
             </div>
         );
     })
-
-    
 
     return (
         <div className="Signup">
@@ -121,7 +117,6 @@ export function Signup() {
                                     type="text"
                                     name="password"
                                     id="signup_password"
-                                    //onChange={() => handlePassowrdHelp(formik.getFieldProps('password').value)}
                                 />
                             </div>
                             <ErrorMessage name="password" />
@@ -131,8 +126,6 @@ export function Signup() {
                                     type="text"
                                     name="passwordConfirm"
                                     id="signup_passwordconfirm"
-                                    //onFocus={setIsPasswordTouched(true)}
-                                    
                                 />
                             </div>
                             <ErrorMessage name="passwordConfirm" />
@@ -158,15 +151,11 @@ export function Signup() {
                             <div className={formik.getFieldMeta('password').error ? "invalidPassword" : "validPassword"}>
                                 {handlePassowrdHelp(formik.getFieldProps('password').value)}
                             </div>
-                           
                         </div>
                     </Form>
-                    
                     </>
                 )}
-
             </Formik>
-            
             <Snackbar
                 open={signupError.isError}
                 autoHideDuration={4000}
