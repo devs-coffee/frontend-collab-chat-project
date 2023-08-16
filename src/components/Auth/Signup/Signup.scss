@@ -14,5 +14,21 @@
     .passwordHelper {
         width: fit-content;
         margin: auto;
+        display: flex;
+        flex-direction: column;
+        text-align: left;
     }
+
+    .invalidPassword {
+        transition: all 1s ease-in-out;
+        max-height: 600px;
+    }
+
+    .validPassword {
+        transition: all 1s ease-in-out;
+        max-height: 0;
+        overflow: hidden;
+    }
+
+
 }
