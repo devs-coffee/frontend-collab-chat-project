@@ -1,7 +1,4 @@
-import { Dispatch, SetStateAction, useContext, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
-
+import { useContext, useEffect, useState } from "react";
 import { Stack } from "@mui/material";
 
 import { User } from "../../../interfaces/IUser";
@@ -12,84 +9,84 @@ import { UserItem } from "../../../components";
 import "./ServerMembersBox.scss";
 
 interface ServerMemberBoxProps {
+	userId: string;
+	serverId: string;
 	serverUsers: User[];
-	compareID: string; 
 	joinServer: () => void;
 	isDisabled: boolean;
-	setServerUsers: Dispatch<SetStateAction<User[]>>
 }
 
 export function ServerMembersBox(props: ServerMemberBoxProps): JSX.Element {
-	const urlSearchParams = useParams();
 	const Socket = useContext(IoSocketContext)!.Socket;
-	const authStatus = useSelector((state:any) => state.authStatus);
-	const [connectedUsers, setConnectedUsers] = useState<string[]>([authStatus.user.id]);
+	const [connectedUsers, setConnectedUsers] = useState<string[]>([props.userId]);
 	const [hasConnecetdUsers, setHasConnectedUsers] = useState<boolean>(false);
 
+	console.log('render');
+
 	useEffect(() => {
-		if(!hasConnecetdUsers) {
-			Socket.emit('getServerConnectedUsers', {serverId: urlSearchParams.serverId!});
+		if (!hasConnecetdUsers) {
+			Socket.emit('getServerConnectedUsers', { serverId: props.serverId! });
 		}
-		
 
-		Socket.on('serverUserList', (data:{userList: string[]}) => {
-            setHasConnectedUsers(true);
+		Socket.on('serverUserList', (data: { userList: string[] }) => {
+			setHasConnectedUsers(true);
 			setConnectedUsers(data.userList);
-        })
+		})
 
-        Socket.on('userJoined', (data: {pseudo: string, id: string}) => {
-            console.log(`${data.pseudo} connects`);
-            setConnectedUsers([data.id, ...connectedUsers]);
-        })
+		Socket.on('userJoined', (data: { pseudo: string, id: string }) => {
+			console.log(`${data.pseudo} connects`);
+			setConnectedUsers([data.id, ...connectedUsers]);
+		})
 
-        Socket.on('userLeft', (data: {pseudo: string, id: string}) => {
-            console.log(`${data.pseudo} left`);
-            setConnectedUsers(connectedUsers.filter(elt => elt !== data.id));
-        })
+		Socket.on('userLeft', (data: { pseudo: string, id: string }) => {
+			console.log(`${data.pseudo} left`);
+			/*setConnectedUsers(connectedUsers.filter(elt => elt !== data.id));*/
+		})
 
-		Socket.on('newMember', (data: {user:User}) => {
+		Socket.on('newMember', (data: { user: User }) => {
 			console.log('New member : ', data);
 			console.log(props.serverUsers);
 			console.log([data.user, ...props.serverUsers]);
 			let oldList = JSON.parse(JSON.stringify(props.serverUsers));
 			oldList.push(data.user);
-			props.setServerUsers([data.user, ...oldList]);
+			//props.setServerUsers([data.user, ...oldList]);
 			//setConnectedUsers([data.userId, ...connectedUsers]);
 			//props.setServerUsers([])
 		})
 
-		Socket.on('goneMember', (data: {user:User}) => {
+		Socket.on('goneMember', (data: { user: User }) => {
 			console.log('Gone member : ', data);
 			console.log(props.serverUsers); // []
 			console.log(props.serverUsers.filter(elt => elt.id !== data.user.id));
-			let oldList = JSON.parse(JSON.stringify(props.serverUsers));
-			props.setServerUsers(oldList.filter((elt: User) => elt.id !== data.user.id));
+			//let oldList = JSON.parse(JSON.stringify(props.serverUsers));
+			//props.setServerUsers(oldList.filter((elt: User) => elt.id !== data.user.id));
 		})
 
-        return () => {
-            Socket.off('serverUserList');
-            Socket.off('userJoined');
-            Socket.off('userLeft');
+
+
+		return () => {
+			Socket.off('serverUserList');
+			Socket.off('userJoined');
+			Socket.off('userLeft');
 			Socket.off('newMember');
 			Socket.off('goneMember');
-        }
+		}
 
-      }, [urlSearchParams, connectedUsers]
+	}, [props.serverId, connectedUsers]
 	);
 
-	console.log('render');
 	return (
 		<div className="members">
 			<h4 className="heading">Users :</h4>
 			<Stack className="stack" spacing={0.8}>
-				{props.serverUsers.map(user => (
-					<UserItem key={`userBadge_${user.id}`} user={user} isConnected={connectedUsers.includes(user.id)}/>
+				{props.serverUsers.map((user, index) => (
+					<UserItem key={index} user={user} isConnected={connectedUsers.includes(user.id)} />
 				))}
 			</Stack>
 
 			{props.serverUsers.length > 0 && (
 				<button className="joinOrLeaveButton" onClick={props.joinServer} disabled={props.isDisabled}>
-					{props.serverUsers.some(user => user.id === props.compareID) ? 'leave' : 'join'}
+					{props.serverUsers.some(user => user.id === props.userId) ? 'leave' : 'join'}
 				</button>
 			)}
 		</div>

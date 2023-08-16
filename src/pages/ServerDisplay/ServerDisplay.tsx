@@ -168,11 +168,11 @@ export function ServerDisplay() {
                             avoidManagingChannel={avoidManagingChannel}
                         />
                         <ServerMembersBox
+                            userId={authStatus.user.id}
+                            serverId={urlSearchParams.serverId || ''}
                             serverUsers={serverUsers}
-                            compareID={authStatus.user.id}
                             joinServer={joinServer}
                             isDisabled={isDisabled}
-                            setServerUsers={setServerUsers}
                         />
                     </div>
                 </>
