@@ -172,6 +172,7 @@ export function ServerDisplay() {
                             compareID={authStatus.user.id}
                             joinServer={joinServer}
                             isDisabled={isDisabled}
+                            setServerUsers={setServerUsers}
                         />
                     </div>
                 </>

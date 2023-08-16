@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 
@@ -16,6 +16,7 @@ interface ServerMemberBoxProps {
 	compareID: string; 
 	joinServer: () => void;
 	isDisabled: boolean;
+	setServerUsers: Dispatch<SetStateAction<User[]>>
 }
 
 export function ServerMembersBox(props: ServerMemberBoxProps): JSX.Element {
@@ -23,12 +24,17 @@ export function ServerMembersBox(props: ServerMemberBoxProps): JSX.Element {
 	const Socket = useContext(IoSocketContext)!.Socket;
 	const authStatus = useSelector((state:any) => state.authStatus);
 	const [connectedUsers, setConnectedUsers] = useState<string[]>([authStatus.user.id]);
+	const [hasConnecetdUsers, setHasConnectedUsers] = useState<boolean>(false);
 
 	useEffect(() => {
-		Socket.emit('getServerConnectedUsers', {serverId: urlSearchParams.serverId!});
+		if(!hasConnecetdUsers) {
+			Socket.emit('getServerConnectedUsers', {serverId: urlSearchParams.serverId!});
+		}
+		
 
 		Socket.on('serverUserList', (data:{userList: string[]}) => {
-            setConnectedUsers(data.userList);
+            setHasConnectedUsers(true);
+			setConnectedUsers(data.userList);
         })
 
         Socket.on('userJoined', (data: {pseudo: string, id: string}) => {
@@ -41,16 +47,37 @@ export function ServerMembersBox(props: ServerMemberBoxProps): JSX.Element {
             setConnectedUsers(connectedUsers.filter(elt => elt !== data.id));
         })
 
+		Socket.on('newMember', (data: {user:User}) => {
+			console.log('New member : ', data);
+			console.log(props.serverUsers);
+			console.log([data.user, ...props.serverUsers]);
+			let oldList = JSON.parse(JSON.stringify(props.serverUsers));
+			oldList.push(data.user);
+			props.setServerUsers([data.user, ...oldList]);
+			//setConnectedUsers([data.userId, ...connectedUsers]);
+			//props.setServerUsers([])
+		})
+
+		Socket.on('goneMember', (data: {user:User}) => {
+			console.log('Gone member : ', data);
+			console.log(props.serverUsers); // []
+			console.log(props.serverUsers.filter(elt => elt.id !== data.user.id));
+			let oldList = JSON.parse(JSON.stringify(props.serverUsers));
+			props.setServerUsers(oldList.filter((elt: User) => elt.id !== data.user.id));
+		})
+
         return () => {
             Socket.off('serverUserList');
             Socket.off('userJoined');
             Socket.off('userLeft');
+			Socket.off('newMember');
+			Socket.off('goneMember');
         }
 
       }, [urlSearchParams, connectedUsers]
 	);
 
-	
+	console.log('render');
 	return (
 		<div className="members">
 			<h4 className="heading">Users :</h4>
