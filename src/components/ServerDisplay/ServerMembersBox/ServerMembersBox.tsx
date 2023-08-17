@@ -40,7 +40,7 @@ export function ServerMembersBox(): JSX.Element {
 	const [connectedUsers, setConnectedUsers] = useState<string[]>([userId]);
 	const [hasConnectdUsers, setHasConnectedUsers] = useState<boolean>(false);
 	const [isDisabled, setIsDisabled] = useState<boolean>(false);
-    const [joinServerError, setJoinServerError] = useState<{ isError: boolean, errorMessage: string }>({ isError: false, errorMessage: '' });
+	const [joinServerError, setJoinServerError] = useState<{ isError: boolean, errorMessage: string }>({ isError: false, errorMessage: '' });
 	const [usersError, setUsersError] = useState<{ isError: boolean, errorMessage: string }>({ isError: false, errorMessage: '' });
 
 	const joinServer = async () => {
@@ -150,7 +150,6 @@ export function ServerMembersBox(): JSX.Element {
 					<UserItem key={`userBadge_${user.id}`} user={user} isConnected={connectedUsers.includes(user.id)}/>
 				))}
 			</Stack>
-
 			{serverUsers.length > 0 && (
 				<button className="joinOrLeaveButton" onClick={joinServer} disabled={isDisabled}>
 					{serverUsers.some(user => user.id === userId ) ? 'leave' : 'join'}
