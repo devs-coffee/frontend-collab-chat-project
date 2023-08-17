@@ -119,22 +119,21 @@ export function ServerMembersBox(props: ServerMemberBoxProps): JSX.Element {
 		if(!hasConnecetdUsers) {
 			Socket.emit('getServerConnectedUsers', {serverId: urlSearchParams.serverId!});
 		}
-		
 
-		Socket.on('serverUserList', (data:{userList: string[]}) => {
-            setHasConnectedUsers(true);
+		Socket.on('serverUserList', (data: { userList: string[] }) => {
+			setHasConnectedUsers(true);
 			setConnectedUsers(data.userList);
-        })
+		})
 
-        Socket.on('userJoined', (data: {pseudo: string, id: string}) => {
-            console.log(`${data.pseudo} connects`);
-            setConnectedUsers([data.id, ...connectedUsers]);
-        })
+		Socket.on('userJoined', (data: { pseudo: string, id: string }) => {
+			console.log(`${data.pseudo} connects`);
+			setConnectedUsers([data.id, ...connectedUsers]);
+		})
 
-        Socket.on('userLeft', (data: {pseudo: string, id: string}) => {
-            console.log(`${data.pseudo} left`);
-            setConnectedUsers(connectedUsers.filter(elt => elt !== data.id));
-        })
+		Socket.on('userLeft', (data: { pseudo: string, id: string }) => {
+			console.log(`${data.pseudo} left`);
+			setConnectedUsers(connectedUsers.filter(elt => elt !== data.id));
+		})
 
 		Socket.on('newMember', (data: {user:User}) => {
 			let oldList = JSON.parse(JSON.stringify(serverUsers));
@@ -142,7 +141,7 @@ export function ServerMembersBox(props: ServerMemberBoxProps): JSX.Element {
 			setServerUsers([data.user, ...oldList]);
 		})
 
-		Socket.on('goneMember', (data: {user:User}) => {
+		Socket.on('goneMember', (data: { user: User }) => {
 			console.log('Gone member : ', data);
 			console.log(serverUsers); // []
 			console.log(serverUsers.filter(elt => elt.id !== data.user.id));
@@ -150,15 +149,17 @@ export function ServerMembersBox(props: ServerMemberBoxProps): JSX.Element {
 			setServerUsers(oldList.filter((elt: User) => elt.id !== data.user.id));
 		})
 
-        return () => {
-            Socket.off('serverUserList');
-            Socket.off('userJoined');
-            Socket.off('userLeft');
+
+
+		return () => {
+			Socket.off('serverUserList');
+			Socket.off('userJoined');
+			Socket.off('userLeft');
 			Socket.off('newMember');
 			Socket.off('goneMember');
-        }
+		}
 
-      }, [urlSearchParams, connectedUsers]
+	}, [connectedUsers]
 	);
 
 	console.log('MemberBox renders');
