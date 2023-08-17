@@ -1,70 +1,174 @@
 import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { AxiosError } from "axios";
 
-import { Stack } from "@mui/material";
-
-import { User } from "../../../interfaces/IUser";
+import { Snackbar, Stack } from "@mui/material";
 
 import IoSocketContext from "../../../contexts/IoSocketContext";
+import { User } from "../../../interfaces/IUser";
+import { reduxData } from "../../../interfaces/IReduxData";
+import { Server } from "../../../interfaces/IServer";
 import { UserItem } from "../../../components";
+import { ServerService } from "../../../services/serverService";
+import { addOrUpdateServer } from "../../../redux/serversSlice";
+import { addUsers } from "../../../redux/usersSlice";
 
 import "./ServerMembersBox.scss";
 
-interface ServerMemberBoxProps {
-	serverUsers: User[];
-	compareID: string; 
-	joinServer: () => void;
-	isDisabled: boolean;
+const getServerUsers = async (serverId: string) => {
+    try {
+        const response = await new ServerService().getServerUsers(serverId);
+        return response.result;
+    } catch (error) {
+        let errorMessage = "membres du serveur non récupérés, veuillez réessayer";
+        if (error instanceof AxiosError) {
+            errorMessage = error.response?.data.message;
+        }
+        throw new Error(errorMessage);
+    }
 }
 
-export function ServerMembersBox(props: ServerMemberBoxProps): JSX.Element {
+export function ServerMembersBox(): JSX.Element {
+	const dispatch = useDispatch();
+	const usersState = useSelector((state: any) => state.users);
 	const urlSearchParams = useParams();
 	const Socket = useContext(IoSocketContext)!.Socket;
-	const authStatus = useSelector((state:any) => state.authStatus);
-	const [connectedUsers, setConnectedUsers] = useState<string[]>([authStatus.user.id]);
+	const server = useSelector((state: reduxData) => state.servers.data.find((server: Server) => server.id === urlSearchParams.serverId));
+	const userId = useSelector((state: reduxData) => state.authStatus.user!.id);
+	const [serverUsers, setServerUsers] = useState<User[]>([]);
+	const [connectedUsers, setConnectedUsers] = useState<string[]>([userId]);
+	const [hasConnectdUsers, setHasConnectedUsers] = useState<boolean>(false);
+	const [isDisabled, setIsDisabled] = useState<boolean>(false);
+	const [joinServerError, setJoinServerError] = useState<{ isError: boolean, errorMessage: string }>({ isError: false, errorMessage: '' });
+	const [usersError, setUsersError] = useState<{ isError: boolean, errorMessage: string }>({ isError: false, errorMessage: '' });
+
+	const joinServer = async () => {
+        try {
+            setIsDisabled(true);
+            const response = await new ServerService().joinServer(urlSearchParams.serverId!);
+            const newServer = { ...server };
+            newServer.isCurrentUserMember = response.result
+            dispatch(addOrUpdateServer(newServer));
+            const usersData = await getServerUsers(urlSearchParams.serverId!)
+            let usersToAdd: User[] = [];
+            usersData.forEach((elt: User) => {
+                if (!usersState.data.find((user: User) => user.id === elt.id) && elt.id !== userId) {
+                    usersToAdd.push(elt);
+                }
+            })
+            dispatch(addUsers(usersToAdd));
+            setServerUsers(usersData);
+            setIsDisabled(false)
+        } catch (error) {
+            let errorMessage: string;
+            if (error instanceof AxiosError) {
+                errorMessage = error.response?.data.message;
+            } else {
+                errorMessage = 'une erreur est survenue, veuillez réessayer';
+            }
+            setJoinServerError({ isError: true, errorMessage });
+            return;
+        }
+    }
+
+	const handleJoinToastClose = (event: React.SyntheticEvent | Event, reason?: string) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setJoinServerError({ isError: false, errorMessage: '' });
+    }
+
+	const handleUsersToastClose = (event: React.SyntheticEvent | Event, reason?: string) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setUsersError({ isError: false, errorMessage: '' });
+    }
 
 	useEffect(() => {
-		Socket.emit('getServerConnectedUsers', {serverId: urlSearchParams.serverId!});
-
-		Socket.on('serverUserList', (data:{userList: string[]}) => {
-            setConnectedUsers(data.userList);
-        })
-
-        Socket.on('userJoined', (data: {pseudo: string, id: string}) => {
-            console.log(`${data.pseudo} connects`);
-            setConnectedUsers([data.id, ...connectedUsers]);
-        })
-
-        Socket.on('userLeft', (data: {pseudo: string, id: string}) => {
-            console.log(`${data.pseudo} left`);
-            setConnectedUsers(connectedUsers.filter(elt => elt !== data.id));
-        })
-
-        return () => {
-            Socket.off('serverUserList');
-            Socket.off('userJoined');
-            Socket.off('userLeft');
+		if(serverUsers.length === 0) {
+			getServerUsers(urlSearchParams.serverId!)
+                .then(response => {
+                    let usersToAdd: User[] = [];
+                    response.forEach((elt: User) => {
+                        if (!usersState.data.find((user: User) => user.id === elt.id) && elt.id !== userId) {
+                            usersToAdd.push(elt);
+                        }
+                    });
+                    dispatch(addUsers(usersToAdd));
+                    setServerUsers(response);
+                })
+                .catch(error => {
+                    setUsersError(error);
+                });
         }
+		
+		if(serverUsers.length !== 0 && !hasConnectdUsers) {
+			Socket.emit('getServerConnectedUsers', {serverId: urlSearchParams.serverId!});
+		}
 
-      }, [urlSearchParams, connectedUsers]
+		Socket.on('serverUserList', (data: { userList: string[] }) => {
+			setHasConnectedUsers(true);
+			setConnectedUsers(data.userList);
+		})
+
+		Socket.on('userJoined', (data: { pseudo: string, id: string }) => {
+			let newList = [data.id, ...connectedUsers];
+			setConnectedUsers(newList);
+		})
+
+		Socket.on('userLeft', (data: { pseudo: string, id: string }) => {
+			let newList = connectedUsers.filter(elt => elt !== data.id);
+			setConnectedUsers(newList);
+		})
+
+		Socket.on('newMember', (data: {user:User}) => {
+			let newList = [data.user, ...serverUsers];
+			setServerUsers(newList);
+		})
+
+		Socket.on('goneMember', (data: { user: User }) => {
+			let newList = serverUsers.filter((elt: User) => elt.id !== data.user.id);
+			setServerUsers(newList);
+		})
+
+		return () => {
+			Socket.off('serverUserList');
+			Socket.off('userJoined');
+			Socket.off('userLeft');
+			Socket.off('newMember');
+			Socket.off('goneMember');
+		}
+
+	}, [connectedUsers, serverUsers]
 	);
 
-	
 	return (
 		<div className="members">
 			<h4 className="heading">Users :</h4>
 			<Stack className="stack" spacing={0.8}>
-				{props.serverUsers.map(user => (
+				{serverUsers.map(user => (
 					<UserItem key={`userBadge_${user.id}`} user={user} isConnected={connectedUsers.includes(user.id)}/>
 				))}
 			</Stack>
-
-			{props.serverUsers.length > 0 && (
-				<button className="joinOrLeaveButton" onClick={props.joinServer} disabled={props.isDisabled}>
-					{props.serverUsers.some(user => user.id === props.compareID) ? 'leave' : 'join'}
+			{serverUsers.length > 0 && (
+				<button className="joinOrLeaveButton" onClick={joinServer} disabled={isDisabled}>
+					{serverUsers.some(user => user.id === userId ) ? 'leave' : 'join'}
 				</button>
 			)}
+			<Snackbar
+				open={usersError.isError}
+				autoHideDuration={4000}
+				onClose={handleUsersToastClose}
+                message={usersError.errorMessage}
+			/>
+			<Snackbar
+				open={joinServerError.isError}
+				autoHideDuration={4000}
+				onClose={handleJoinToastClose}
+				message={joinServerError.errorMessage}
+			/>
 		</div>
 	);
 }
