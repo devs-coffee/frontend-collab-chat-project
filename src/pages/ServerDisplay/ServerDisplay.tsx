@@ -48,7 +48,7 @@ export function ServerDisplay() {
     const usersState = useSelector((state: any) => state.users);
     const urlSearchParams = useParams();
     const server = useSelector((state: reduxData) => state.servers.data.find((server: Server) => server.id === urlSearchParams.serverId));
-    const [serverUsers, setServerUsers] = useState<User[]>([]);
+    const [serverUsers, setServerUsers] = useState<User[]>([]); /** Sometime rerender and set to empty */
     const [isUpdatingServer, setIsUpdatingServer] = useState<boolean>(false);
     const [isDisabled, setIsDisabled] = useState<boolean>(false);
     const [serverError, setServerError] = useState<string>('');
@@ -72,6 +72,7 @@ export function ServerDisplay() {
                 }
             })
             dispatch(addUsers(usersToAdd));
+            console.log('test' + serverData);
             setServerUsers(serverData);
             setIsDisabled(false)
         } catch (error) {
@@ -173,6 +174,7 @@ export function ServerDisplay() {
                             serverUsers={serverUsers}
                             joinServer={joinServer}
                             isDisabled={isDisabled}
+                            setServerUsers={setServerUsers}
                         />
                     </div>
                 </>
