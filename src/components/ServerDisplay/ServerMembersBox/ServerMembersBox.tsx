@@ -114,21 +114,23 @@ export function ServerMembersBox(): JSX.Element {
 		})
 
 		Socket.on('userJoined', (data: { pseudo: string, id: string }) => {
-			setConnectedUsers([data.id, ...connectedUsers]);
+			let newList = [data.id, ...connectedUsers];
+			setConnectedUsers(newList);
 		})
 
 		Socket.on('userLeft', (data: { pseudo: string, id: string }) => {
-			setConnectedUsers(connectedUsers.filter(elt => elt !== data.id));
+			let newList = connectedUsers.filter(elt => elt !== data.id);
+			setConnectedUsers(newList);
 		})
 
 		Socket.on('newMember', (data: {user:User}) => {
-			let oldList = JSON.parse(JSON.stringify(serverUsers));
-			setServerUsers([data.user, ...oldList]);
+			let newList = [data.user, ...serverUsers];
+			setServerUsers(newList);
 		})
 
 		Socket.on('goneMember', (data: { user: User }) => {
-			let oldList = JSON.parse(JSON.stringify(serverUsers));
-			setServerUsers(oldList.filter((elt: User) => elt.id !== data.user.id));
+			let newList = serverUsers.filter((elt: User) => elt.id !== data.user.id);
+			setServerUsers(newList);
 		})
 
 		return () => {
