@@ -1,21 +1,20 @@
 import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import { AxiosError } from "axios";
 
 import { Snackbar, Stack } from "@mui/material";
 
-import { User } from "../../../interfaces/IUser";
-
 import IoSocketContext from "../../../contexts/IoSocketContext";
-import { UserItem } from "../../../components";
-
-import "./ServerMembersBox.scss";
-import { ServerService } from "../../../services/serverService";
-import { AxiosError } from "axios";
+import { User } from "../../../interfaces/IUser";
 import { reduxData } from "../../../interfaces/IReduxData";
 import { Server } from "../../../interfaces/IServer";
+import { UserItem } from "../../../components";
+import { ServerService } from "../../../services/serverService";
 import { addOrUpdateServer } from "../../../redux/serversSlice";
 import { addUsers } from "../../../redux/usersSlice";
+
+import "./ServerMembersBox.scss";
 
 const getServerUsers = async (serverId: string) => {
     try {
@@ -30,26 +29,18 @@ const getServerUsers = async (serverId: string) => {
     }
 }
 
-interface ServerMemberBoxProps {
-	//serverUsers: User[];
-	userId: string; 
-	//joinServer: () => void;
-	//isDisabled: boolean;
-	//setServerUsers: Dispatch<SetStateAction<User[]>>
-}
-
-export function ServerMembersBox(props: ServerMemberBoxProps): JSX.Element {
+export function ServerMembersBox(): JSX.Element {
 	const dispatch = useDispatch();
 	const usersState = useSelector((state: any) => state.users);
 	const urlSearchParams = useParams();
 	const Socket = useContext(IoSocketContext)!.Socket;
 	const server = useSelector((state: reduxData) => state.servers.data.find((server: Server) => server.id === urlSearchParams.serverId));
+	const userId = useSelector((state: reduxData) => state.authStatus.user!.id);
 	const [serverUsers, setServerUsers] = useState<User[]>([]);
-	const [connectedUsers, setConnectedUsers] = useState<string[]>([props.userId]);
-	const [hasConnecetdUsers, setHasConnectedUsers] = useState<boolean>(false);
+	const [connectedUsers, setConnectedUsers] = useState<string[]>([userId]);
+	const [hasConnectdUsers, setHasConnectedUsers] = useState<boolean>(false);
 	const [isDisabled, setIsDisabled] = useState<boolean>(false);
     const [joinServerError, setJoinServerError] = useState<{ isError: boolean, errorMessage: string }>({ isError: false, errorMessage: '' });
-	const [hasFetchUsers, setHasFetchUsers] = useState<boolean>(false);
 	const [usersError, setUsersError] = useState<{ isError: boolean, errorMessage: string }>({ isError: false, errorMessage: '' });
 
 	const joinServer = async () => {
@@ -62,13 +53,12 @@ export function ServerMembersBox(props: ServerMemberBoxProps): JSX.Element {
             const usersData = await getServerUsers(urlSearchParams.serverId!)
             let usersToAdd: User[] = [];
             usersData.forEach((elt: User) => {
-                if (!usersState.data.find((user: User) => user.id === elt.id) && elt.id !== props.userId) {
+                if (!usersState.data.find((user: User) => user.id === elt.id) && elt.id !== userId) {
                     usersToAdd.push(elt);
                 }
             })
             dispatch(addUsers(usersToAdd));
             setServerUsers(usersData);
-			setHasFetchUsers(true);
             setIsDisabled(false)
         } catch (error) {
             let errorMessage: string;
@@ -98,25 +88,23 @@ export function ServerMembersBox(props: ServerMemberBoxProps): JSX.Element {
 
 	useEffect(() => {
 		if(serverUsers.length === 0) {
-            getServerUsers(urlSearchParams.serverId!)
+			getServerUsers(urlSearchParams.serverId!)
                 .then(response => {
                     let usersToAdd: User[] = [];
                     response.forEach((elt: User) => {
-                        if (!usersState.data.find((user: User) => user.id === elt.id) && elt.id !== props.userId) {
+                        if (!usersState.data.find((user: User) => user.id === elt.id) && elt.id !== userId) {
                             usersToAdd.push(elt);
                         }
                     });
                     dispatch(addUsers(usersToAdd));
-                    //setHasFetchUsers(true);
                     setServerUsers(response);
-
                 })
                 .catch(error => {
-                    setServerUsers(error);
+                    setUsersError(error);
                 });
         }
 		
-		if(!hasConnecetdUsers) {
+		if(serverUsers.length !== 0 && !hasConnectdUsers) {
 			Socket.emit('getServerConnectedUsers', {serverId: urlSearchParams.serverId!});
 		}
 
@@ -126,30 +114,22 @@ export function ServerMembersBox(props: ServerMemberBoxProps): JSX.Element {
 		})
 
 		Socket.on('userJoined', (data: { pseudo: string, id: string }) => {
-			console.log(`${data.pseudo} connects`);
 			setConnectedUsers([data.id, ...connectedUsers]);
 		})
 
 		Socket.on('userLeft', (data: { pseudo: string, id: string }) => {
-			console.log(`${data.pseudo} left`);
 			setConnectedUsers(connectedUsers.filter(elt => elt !== data.id));
 		})
 
 		Socket.on('newMember', (data: {user:User}) => {
 			let oldList = JSON.parse(JSON.stringify(serverUsers));
-			oldList.push(data.user);
 			setServerUsers([data.user, ...oldList]);
 		})
 
 		Socket.on('goneMember', (data: { user: User }) => {
-			console.log('Gone member : ', data);
-			console.log(serverUsers); // []
-			console.log(serverUsers.filter(elt => elt.id !== data.user.id));
 			let oldList = JSON.parse(JSON.stringify(serverUsers));
 			setServerUsers(oldList.filter((elt: User) => elt.id !== data.user.id));
 		})
-
-
 
 		return () => {
 			Socket.off('serverUserList');
@@ -159,10 +139,9 @@ export function ServerMembersBox(props: ServerMemberBoxProps): JSX.Element {
 			Socket.off('goneMember');
 		}
 
-	}, [connectedUsers]
+	}, [connectedUsers, serverUsers]
 	);
 
-	console.log('MemberBox renders');
 	return (
 		<div className="members">
 			<h4 className="heading">Users :</h4>
@@ -174,14 +153,14 @@ export function ServerMembersBox(props: ServerMemberBoxProps): JSX.Element {
 
 			{serverUsers.length > 0 && (
 				<button className="joinOrLeaveButton" onClick={joinServer} disabled={isDisabled}>
-					{serverUsers.some(user => user.id === props.userId ) ? 'leave' : 'join'}
+					{serverUsers.some(user => user.id === userId ) ? 'leave' : 'join'}
 				</button>
 			)}
 			<Snackbar
 				open={usersError.isError}
 				autoHideDuration={4000}
 				onClose={handleUsersToastClose}
-                message={/*getFullError()*/usersError.errorMessage}
+                message={usersError.errorMessage}
 			/>
 			<Snackbar
 				open={joinServerError.isError}
