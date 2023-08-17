@@ -1,4 +1,4 @@
-import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { Formik, Form, Field, ErrorMessage, useField } from 'formik';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { useState } from 'react';
@@ -41,6 +41,26 @@ export function Signup() {
         setSignupError({ isError: false, errorMessage: '' });
     }
 
+    const handlePassowrdHelp = ((value: string): JSX.Element => {
+        let number = value.match(/[0-9]/);
+        let lower = value.match(/[a-z]/);
+        let upper = value.match(/[A-Z]/);
+        let special = value.match(/[+\-/=!@_&*]/);
+        let size = value.length >= 8;
+        return (
+            <div className="passwordHelper" style={{ whiteSpace: 'pre' }}>
+                <p>
+                    Votre mot de passe doit contenir :<br />
+                    <span style={size ? { color: 'green' } : { color: 'red' }}>- au moins 8 caractères</span><br />
+                    <span style={number ? { color: 'green' } : { color: 'red' }}>- un chiffre</span><br />
+                    <span style={lower ? { color: 'green' } : { color: 'red' }}>- une minuscule</span><br />
+                    <span style={upper ? { color: 'green' } : { color: 'red' }}>- une majuscule</span><br />
+                    <span style={special ? { color: 'green' } : { color: 'red' }}>- un caractère spécial parmi + - * / = ! @ _ &</span>
+                </p>
+            </div>
+        );
+    })
+
     return (
         <div className="Signup">
             <Formik
@@ -69,6 +89,7 @@ export function Signup() {
                 }}
             >
                 {formik => (
+                    <>
                     <Form className="signup-form" >
                         <h2>inscription</h2>
                         <div className="field-box">
@@ -127,8 +148,12 @@ export function Signup() {
                             </div>
                             {isOpen && <Modal setIsOpen={setIsOpen} childComponent={<AvatarCropper setImage={updateImage} />} />}
                             <Button variant="contained" type='submit' endIcon={<SendIcon />}>Envoyer</Button>
+                            <div className={formik.getFieldMeta('password').error ? "invalidPassword" : "validPassword"}>
+                                {handlePassowrdHelp(formik.getFieldProps('password').value)}
+                            </div>
                         </div>
                     </Form>
+                    </>
                 )}
             </Formik>
             <Snackbar
