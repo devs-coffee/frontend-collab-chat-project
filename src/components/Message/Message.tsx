@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { Avatar, Snackbar } from '@mui/material';
-
+import parse, { Element } from 'html-react-parser';
 import { IMessage } from '../../interfaces/IMessage';
 import { reduxData } from '../../interfaces/IReduxData';
 import { removeMessage, updateMessage } from '../../redux/messagesSlice';
@@ -31,6 +31,16 @@ export function Message({ message }: messageType) {
         setIsEdit(false)
         update(content)
     }
+
+    const parser = (input: string) =>
+        parse(input, {
+            replace: domNode => {
+                if (domNode instanceof Element && domNode.attribs.class === 'remove') {
+                    return <></>;
+                }
+            }
+        });
+
 
     const triggerAction = (action: string) => {
         if (action === 'Modifier') {
@@ -93,7 +103,7 @@ export function Message({ message }: messageType) {
 
             {!isEdit
                 ? <div className="message_content">
-                    <p key={message.id}>{message.content}</p>
+                    <p key={message.id}>{parser(message.content)}</p>
                     {authStatus!.user!.id === message.userId && <span><Actions actionHandler={(action: string) => triggerAction(action)} availableActions={['Modifier', 'Supprimer']} /></span>}
                 </div>
                 : <div className="message_content">
