@@ -7,9 +7,15 @@
 		padding: 10px;
 	}
 
+
+
+
 	.toolbar {
+
+
 		background-color: var(--secondary);
 		border: 1px solid var(--secondary);
+		display: none;
 
 		%template {
 			background-color: var(--secondary);
@@ -66,6 +72,11 @@
 			box-shadow: none;
 			border-color: var(--background-color);
 		}
+	}
+
+	.toolbar-focus {
+		display: flex;
+		@extend .toolbar;
 	}
 
 	.rdw-dropdown-optionwrapper {

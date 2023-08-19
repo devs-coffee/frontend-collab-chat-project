@@ -15,37 +15,46 @@ export function MessageEditor({ sendMessage, messageContent }: messageHandler) {
 
     const [messageToSend, setMessageToSend] = useState<string>(messageContent!);
     const [editorState, setEditorState] = useMessageEditorState(messageContent ? messageContent : undefined);
+    const [editorFocus, setEditorFocus] = useState<boolean>(false);
 
     const handleKeypress = async (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter' && !e.shiftKey) {
             triggerSendMessage();
+            setEditorFocus(false);
         }
     }
 
-    const triggerSendMessage = (): void => {
+    const triggerSendMessage = async (): Promise<void> => {
         sendMessage(messageToSend);
         setMessageToSend('');
-        setEditorState(EditorState.createEmpty());
+        await setEditorState(EditorState.createEmpty());
+        document.getElementById('wrapper')?.focus();
     }
 
     const onEditorStateChange = (editorState: EditorState) => {
+        console.log(editorState);
         setEditorState(editorState);
         let message = draftToHtml(convertToRaw(editorState.getCurrentContent()));
         setMessageToSend(message);
+
     };
 
     return (
-        <div className="message-editor" onKeyDown={handleKeypress} >
-            <Editor
-
-                wrapperClassName="wrapper"
-                editorClassName="editor"
-                toolbarClassName={"toolbar"}
-                editorState={editorState}
-                placeholder="Envoyez votre messsage..."
-                onEditorStateChange={onEditorStateChange}
-            />
-        </div>
+        <>
+            <div tabIndex={-1} id="wrapper"></div>
+            <div className="message-editor" onKeyDown={handleKeypress} >
+                <Editor
+                    onFocus={(e) => setEditorFocus(true)}
+                    onBlur={(e) => setEditorFocus(false)}
+                    wrapperClassName="wrapper"
+                    editorClassName="editor"
+                    toolbarClassName={editorFocus ? "toolbar-focus" : "toolbar"}
+                    editorState={editorState}
+                    placeholder="Envoyez votre messsage..."
+                    onEditorStateChange={onEditorStateChange}
+                />
+            </div>
+        </>
     )
 
 }
