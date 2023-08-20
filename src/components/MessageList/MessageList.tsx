@@ -24,6 +24,7 @@ export const MessageList = ({messages}: messageList) => {
   const [messageError, setMessageError] = useState<{isError:boolean, errorMessage:string}>({isError:false, errorMessage:''});
 
   useEffect(() => {
+    console.log(element.current?.scrollHeight! == element.current?.offsetHeight!);
     shouldAutoScroll && messageEndRef.current?.scrollIntoView({
       behavior: "auto",
       block: "end"
@@ -55,11 +56,17 @@ export const MessageList = ({messages}: messageList) => {
   }
 
   const handleScroll = () => {
-    if (element.current?.scrollTop === 0 && messages.length > 0) {
+    const elt = element.current;
+    if (elt?.scrollTop === 0 && messages.length > 0) {
       getNextMessages();
       setShouldAutoScroll(false);
     }
+    //console.log(elt?.scrollTop === elt?.scrollHeight! - elt?.offsetHeight!);
+    if(elt?.scrollTop === elt?.scrollHeight! - elt?.offsetHeight!) {
+      console.log('scrolled to bottom');
+    }
   };
+
 
   return (
     <div ref={element} className="MessageList" onScroll={handleScroll}>
