@@ -15,13 +15,13 @@
             font-size: smaller;
         }
     }
-}
 
-
-.message_content {
-    display: flex;
-    padding-left: 10px;
-    padding-right: 10px;
-    justify-content: space-between;
-    align-items: center;
+    .message_content {
+        display: flex;
+        padding-left: 10px;
+        padding-right: 10px;
+        gap: 10px;
+        justify-content: space-between;
+        align-items: center;
+    }
 }
