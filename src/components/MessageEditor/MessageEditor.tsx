@@ -20,7 +20,6 @@ export function MessageEditor({ sendMessage, messageContent }: messageHandler) {
     const handleKeypress = async (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter' && !e.shiftKey) {
             triggerSendMessage();
-            setEditorFocus(false);
         }
     }
 
@@ -32,11 +31,9 @@ export function MessageEditor({ sendMessage, messageContent }: messageHandler) {
     }
 
     const onEditorStateChange = (editorState: EditorState) => {
-        console.log(editorState);
         setEditorState(editorState);
         let message = draftToHtml(convertToRaw(editorState.getCurrentContent()));
         setMessageToSend(message);
-
     };
 
     return (
@@ -44,11 +41,11 @@ export function MessageEditor({ sendMessage, messageContent }: messageHandler) {
             <div tabIndex={-1} id="wrapper"></div>
             <div className="message-editor" onKeyDown={handleKeypress} >
                 <Editor
-                    onFocus={(e) => setEditorFocus(true)}
-                    onBlur={(e) => setEditorFocus(false)}
+                    onFocus={() => setEditorFocus(true)}
+                    onBlur={() => setEditorFocus(false)}
                     wrapperClassName="wrapper"
                     editorClassName="editor"
-                    toolbarClassName={editorFocus ? "toolbar-focus" : "toolbar"}
+                    toolbarClassName={editorFocus || messageContent ? "toolbar-focus" : "toolbar"}
                     editorState={editorState}
                     placeholder="Envoyez votre messsage..."
                     onEditorStateChange={onEditorStateChange}

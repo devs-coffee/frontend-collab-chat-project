@@ -27,6 +27,7 @@ export function Message({ message }: messageType) {
     const dispatch = useDispatch();
     const [getMessagesError, setGetMessagesError] = useState<{ isError: boolean, errorMessage: string }>({ isError: false, errorMessage: '' });
 
+
     const sendMessage = async (content: string) => {
         setIsEdit(false)
         update(content)
@@ -46,8 +47,11 @@ export function Message({ message }: messageType) {
         if (action === 'Modifier') {
             setIsEdit(true)
         }
-        else if (action === 'Supprimer') {
+        if (action === 'Supprimer') {
             remove(message.id!);
+        }
+        if (action === "Annuler") {
+            setIsEdit(false);
         }
     }
 
@@ -108,7 +112,9 @@ export function Message({ message }: messageType) {
                 </div>
                 : <div className="message_content">
                     <MessageEditor messageContent={message.content} sendMessage={sendMessage} />
-                    <span onClick={() => setIsEdit(false)}>Annuler</span>
+                    <span>
+                        <Actions actionHandler={(action: string) => triggerAction(action)} isShow={true} availableActions={['Annuler']} />
+                    </span>
                 </div>
             }
             <Snackbar
