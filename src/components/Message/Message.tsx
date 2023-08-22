@@ -19,7 +19,6 @@ type messageType = {
 export const MemorisedMessage = React.memo(Message);
 
 function Message({ message }: messageType) {
-    console.log("re rendu");
     const currentDate = new Date(Date.now()).toLocaleString('fr', { dateStyle: 'long' });
     const messageDate = new Date(message.createdAt!).toLocaleString('fr', { dateStyle: 'long' });
     const isToday = currentDate === messageDate;
