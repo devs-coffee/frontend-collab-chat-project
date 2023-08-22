@@ -19,7 +19,6 @@ type MessageBoxProps = {
 }
 
 export function MessageBox({ channelId, canUserPost }: MessageBoxProps) {
-    console.log("re render");
     const authStatus = useSelector((state: reduxData) => state.authStatus);
     const stateMessages = useSelector((state: reduxData) => state.messages);
     const [getMessagesError, setGetMessagesError] = useState<{ isError: boolean, errorMessage: string }>({ isError: false, errorMessage: '' });
