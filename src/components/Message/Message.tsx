@@ -1,7 +1,7 @@
 import { AxiosError } from 'axios';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
+import React from 'react';
 import { Avatar, Snackbar } from '@mui/material';
 import parse, { Element } from 'html-react-parser';
 import { IMessage } from '../../interfaces/IMessage';
@@ -16,7 +16,10 @@ type messageType = {
     message: IMessage
 }
 
-export function Message({ message }: messageType) {
+export const MemorisedMessage = React.memo(Message);
+
+function Message({ message }: messageType) {
+    console.log("re rendu");
     const currentDate = new Date(Date.now()).toLocaleString('fr', { dateStyle: 'long' });
     const messageDate = new Date(message.createdAt!).toLocaleString('fr', { dateStyle: 'long' });
     const isToday = currentDate === messageDate;
