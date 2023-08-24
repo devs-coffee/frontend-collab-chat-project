@@ -4,12 +4,13 @@ import { useDispatch } from 'react-redux';
 import { AxiosError } from 'axios';
 
 import DisabledByDefaultRoundedIcon from '@mui/icons-material/DisabledByDefaultRounded';
-import { Button, Snackbar } from '@mui/material';
+import { Button } from '@mui/material';
 
 import { FormValidationService } from '../../utils/formValidationService';
 import { ChannelService } from '../../services/channelService';
 import { ChannelBase } from '../../interfaces/IChannel.base';
 import { removeChannel, updateChannel } from '../../redux/serversSlice';
+import { MessageError } from '../../components';
 
 import "./ChannelUpdateForm.scss";
 
@@ -43,13 +44,6 @@ export function ChannelUpdateForm(props: ChannelUpdateFormProps) {
             }
             setDeleteChannelError({ isError: true, errorMessage });
         }
-    }
-
-    const handleToastClose = (event: React.SyntheticEvent | Event, reason?: string) => {
-        if (reason === 'clickaway') {
-            return;
-        }
-        setChannelUpdateError({ isError: false, errorMessage: '' });
     }
 
     return (
@@ -90,16 +84,16 @@ export function ChannelUpdateForm(props: ChannelUpdateFormProps) {
                     </Form>
                 )}
             </Formik>
-            <Snackbar
+
+            <MessageError
                 open={channelUpdateError.isError}
-                autoHideDuration={4000}
-                onClose={handleToastClose}
+                setCallbackClose={() => setChannelUpdateError({ isError: false, errorMessage: '' })}
                 message={channelUpdateError.errorMessage}
             />
-            <Snackbar
+
+            <MessageError
                 open={deleteChannelError.isError}
-                autoHideDuration={4000}
-                onClose={handleToastClose}
+                setCallbackClose={() => setChannelUpdateError({ isError: false, errorMessage: '' })}
                 message={deleteChannelError.errorMessage}
             />
         </div>

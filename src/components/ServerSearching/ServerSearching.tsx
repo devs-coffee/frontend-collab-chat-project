@@ -2,8 +2,9 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { AxiosError } from 'axios';
 
-import { Avatar, Snackbar } from '@mui/material';
+import { Avatar } from '@mui/material';
 
+import { MessageError } from '../../components';
 import { ServerService } from '../../services/serverService';
 import { ServerBase } from '../../interfaces/IServerBase';
 
@@ -28,13 +29,6 @@ export function ServerSearching() {
             }
             setSearchError({ isError: true, errorMessage });
         }
-    }
-
-    const handleToastClose = (event: React.SyntheticEvent | Event, reason?: string) => {
-        if (reason === 'clickaway') {
-            return;
-        }
-        setSearchError({ isError: false, errorMessage: '' });
     }
 
     return (
@@ -66,10 +60,9 @@ export function ServerSearching() {
                     )}
                 </div>
             )}
-            <Snackbar
+            <MessageError
                 open={searchError.isError}
-                autoHideDuration={4000}
-                onClose={handleToastClose}
+                setCallbackClose={() => setSearchError({ isError: false, errorMessage: '' })}
                 message={searchError.errorMessage}
             />
         </div>

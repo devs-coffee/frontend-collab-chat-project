@@ -4,12 +4,13 @@ import { useDispatch } from 'react-redux';
 import { AxiosError } from 'axios';
 import { useParams } from 'react-router-dom';
 
-import { Button, Snackbar } from '@mui/material';
+import { Button } from '@mui/material';
 import DisabledByDefaultRoundedIcon from '@mui/icons-material/DisabledByDefaultRounded';
 
 import { FormValidationService } from '../../utils/formValidationService';
 import { ChannelService } from '../../services/channelService';
 import { addChannel } from '../../redux/serversSlice';
+import { MessageError } from '../MessageError/MessageError';
 
 import "./ChannelCreationForm.scss";
 
@@ -32,13 +33,6 @@ export function ChannelCreationForm(props: ChannelCreationFormProps) {
 
     const avoidChannelCreation = () => {
         props.closeChannelCreation();
-    }
-
-    const handleToastClose = (event: React.SyntheticEvent | Event, reason?: string) => {
-        if (reason === 'clickaway') {
-            return;
-        }
-        setChannelCreationError({ isError: false, errorMessage: '' });
     }
 
     return (
@@ -81,10 +75,9 @@ export function ChannelCreationForm(props: ChannelCreationFormProps) {
                 )}
 
             </Formik>
-            <Snackbar
+            <MessageError
                 open={channelCreationError.isError}
-                autoHideDuration={4000}
-                onClose={handleToastClose}
+                setCallbackClose={() => setChannelCreationError({ isError: false, errorMessage: '' })}
                 message={channelCreationError.errorMessage}
             />
         </div>

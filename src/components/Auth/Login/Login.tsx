@@ -3,12 +3,13 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { useDispatch } from 'react-redux';
 import { useState } from 'react';
 
-import { Button, Snackbar } from '@mui/material';
+import { Button } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 
 import { setLogs } from '../../../redux/authSlice';
 import { AuthenticationService } from '../../../services/authenticationService';
 import { FormValidationService } from '../../../utils/formValidationService';
+import { MessageError } from '../../index';
 
 import "./Login.scss";
 
@@ -18,13 +19,6 @@ export function Login(props: any) {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [loginError, setLoginError] = useState(false);
-
-    const handleToastClose = (event: React.SyntheticEvent | Event, reason?: string) => {
-        if (reason === 'clickaway') {
-            return;
-        }
-        setLoginError(false);
-    }
 
     return (
         <div className="Login">
@@ -74,12 +68,7 @@ export function Login(props: any) {
                     </Form>
                 )}
             </Formik>
-            {loginError && <Snackbar
-                open={loginError}
-                autoHideDuration={4000}
-                onClose={handleToastClose}
-                message="Email et / ou mot de passe invalide !"
-            />}
+            {loginError && <MessageError setCallbackClose={() =>setLoginError(false)} open={loginError} message={'Email et / ou mot de passe invalide !'} />}
         </div>
     )
 }

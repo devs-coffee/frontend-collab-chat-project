@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AxiosError } from 'axios';
 
-import { Avatar, Breadcrumbs, Button, Snackbar } from '@mui/material';
+import { Avatar, Breadcrumbs, Button } from '@mui/material';
 import HighlightOffTwoToneIcon from '@mui/icons-material/HighlightOffTwoTone';
 import EditIcon from '@mui/icons-material/Edit';
 import SendIcon from '@mui/icons-material/Send';
@@ -11,7 +11,7 @@ import SendIcon from '@mui/icons-material/Send';
 import { FormValidationService } from '../../utils/formValidationService';
 import { UserService } from '../../services/userService';
 import { setUser } from '../../redux/authSlice';
-import { Modal, AvatarCropper } from '../../components';
+import { Modal, AvatarCropper, MessageError } from '../../components';
 
 import './Profile.scss';
 
@@ -41,13 +41,6 @@ export function Profile() {
         setCroppedImage(image);
         setIsOpen(false);
         return image;
-    }
-
-    const handleToastClose = (event: React.SyntheticEvent | Event, reason?: string) => {
-        if (reason === 'clickaway') {
-            return;
-        }
-        setProfileUpdateError({ isError: false, errorMessage: '' });
     }
 
     const initialValues = {
@@ -167,12 +160,13 @@ export function Profile() {
                     </Form>
                 )}
             </Formik>
-            <Snackbar
+
+            <MessageError
                 open={profileUpdateError.isError}
-                autoHideDuration={4000}
-                onClose={handleToastClose}
+                setCallbackClose={() => setProfileUpdateError({ isError: false, errorMessage: '' })}
                 message={profileUpdateError.errorMessage}
             />
+
         </div>
     )
 }
