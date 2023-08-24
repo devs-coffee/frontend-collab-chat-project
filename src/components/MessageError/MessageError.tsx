@@ -7,7 +7,12 @@ export interface MessageErrorProps {
 	message: string;
 }
 
-
+/**
+ * @param open A boolean indicating whether the message should appear on the screen or not.
+ * @param setCallbackClose A function to call when the message is close or a click is away of the message.
+ * @param message The message to display.
+ * @returns A Component that represents a message error box.
+ */
 export function MessageError(props: MessageErrorProps): JSX.Element {
 
 	const handleToastClose = (event: React.SyntheticEvent | Event, reason?: string) => {
