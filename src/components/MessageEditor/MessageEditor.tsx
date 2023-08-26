@@ -15,6 +15,7 @@ export function MessageEditor({ sendMessage, messageContent }: messageHandler) {
 
     const [messageToSend, setMessageToSend] = useState<string>(messageContent!);
     const [editorState, setEditorState] = useMessageEditorState(messageContent ? messageContent : undefined);
+    const [editorFocus, setEditorFocus] = useState<boolean>(false);
 
     const handleKeypress = async (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter' && !e.shiftKey) {
@@ -22,10 +23,11 @@ export function MessageEditor({ sendMessage, messageContent }: messageHandler) {
         }
     }
 
-    const triggerSendMessage = (): void => {
+    const triggerSendMessage = async (): Promise<void> => {
         sendMessage(messageToSend);
         setMessageToSend('');
-        setEditorState(EditorState.createEmpty());
+        await setEditorState(EditorState.createEmpty());
+        document.getElementById('wrapper')?.focus();
     }
 
     const onEditorStateChange = (editorState: EditorState) => {
@@ -35,17 +37,21 @@ export function MessageEditor({ sendMessage, messageContent }: messageHandler) {
     };
 
     return (
-        <div className="message-editor" onKeyDown={handleKeypress} >
-            <Editor
-
-                wrapperClassName="wrapper"
-                editorClassName="editor"
-                toolbarClassName={"toolbar"}
-                editorState={editorState}
-                placeholder="Envoyez votre messsage..."
-                onEditorStateChange={onEditorStateChange}
-            />
-        </div>
+        <>
+            <div tabIndex={-1} id="wrapper"></div>
+            <div className="message-editor" onKeyDown={handleKeypress} >
+                <Editor
+                    onFocus={() => setEditorFocus(true)}
+                    onBlur={() => setEditorFocus(false)}
+                    wrapperClassName="wrapper"
+                    editorClassName="editor"
+                    toolbarClassName={editorFocus || messageContent ? "toolbar-focus" : "toolbar"}
+                    editorState={editorState}
+                    placeholder="Envoyez votre messsage..."
+                    onEditorStateChange={onEditorStateChange}
+                />
+            </div>
+        </>
     )
 
 }

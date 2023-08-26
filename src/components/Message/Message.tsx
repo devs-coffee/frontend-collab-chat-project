@@ -1,7 +1,7 @@
 import { AxiosError } from 'axios';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
+import React from 'react';
 import { Avatar, Snackbar } from '@mui/material';
 import parse, { Element } from 'html-react-parser';
 import { IMessage } from '../../interfaces/IMessage';
@@ -16,7 +16,9 @@ type messageType = {
     message: IMessage
 }
 
-export function Message({ message }: messageType) {
+export const MemorisedMessage = React.memo(Message);
+
+function Message({ message }: messageType) {
     const currentDate = new Date(Date.now()).toLocaleString('fr', { dateStyle: 'long' });
     const messageDate = new Date(message.createdAt!).toLocaleString('fr', { dateStyle: 'long' });
     const isToday = currentDate === messageDate;
@@ -26,6 +28,7 @@ export function Message({ message }: messageType) {
     const author = message.userId === authStatus.user!.id ? authStatus.user : users.find(user => user.id === message.userId);
     const dispatch = useDispatch();
     const [getMessagesError, setGetMessagesError] = useState<{ isError: boolean, errorMessage: string }>({ isError: false, errorMessage: '' });
+
 
     const sendMessage = async (content: string) => {
         setIsEdit(false)
@@ -46,8 +49,11 @@ export function Message({ message }: messageType) {
         if (action === 'Modifier') {
             setIsEdit(true)
         }
-        else if (action === 'Supprimer') {
+        if (action === 'Supprimer') {
             remove(message.id!);
+        }
+        if (action === "Annuler") {
+            setIsEdit(false);
         }
     }
 
@@ -108,7 +114,9 @@ export function Message({ message }: messageType) {
                 </div>
                 : <div className="message_content">
                     <MessageEditor messageContent={message.content} sendMessage={sendMessage} />
-                    <span onClick={() => setIsEdit(false)}>Annuler</span>
+                    <span>
+                        <Actions actionHandler={(action: string) => triggerAction(action)} isShow={true} availableActions={['Annuler']} />
+                    </span>
                 </div>
             }
             <Snackbar
