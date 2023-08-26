@@ -18,4 +18,15 @@ export class ChannelService extends Fetcher {
         const response = await super.delete<boolean>(`/channels/${id}`);
         return response.data;
     }
+
+    async markAsRead(id:string): Promise<OperationResult<boolean>> {
+        const response = await super.put<string, boolean>((`/channels/${id}/isRead`));
+        return response.data;
+    }
+
+    //TODO créer interface PrivateChannel
+    async getPrivateChannels(): Promise<OperationResult<any>> {
+        const response = await super.get<any>(`/channels/@me`);
+        return response.data;
+    }
 }

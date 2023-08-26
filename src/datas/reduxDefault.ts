@@ -19,6 +19,11 @@ const data:reduxData = {
         data: {},
         status: "idle",
         error: null
+    },
+    privateChans: {
+        data: [],
+        status: "idle",
+        error: null
     }
 };
 

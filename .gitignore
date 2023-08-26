@@ -24,4 +24,4 @@ yarn-debug.log*
 yarn-error.log*
 
 .vscode
-discord-like.code-workspace
+_vscode.code-workspace

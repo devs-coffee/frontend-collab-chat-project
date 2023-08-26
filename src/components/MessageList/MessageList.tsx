@@ -5,17 +5,19 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Snackbar } from '@mui/material';
 
 import { MessageService } from '../../services/messageService';
+import { ChannelService } from '../../services/channelService';
 import { setMessages } from '../../redux/messagesSlice';
 import { IMessage } from '../../interfaces/IMessage';
-import { Message } from '../Message/Message';
+import { Message } from '../';
 
 import './MessageList.scss';
 
 type messageList = {
-    messages: IMessage[]
+    messages: IMessage[],
+    channelId: string
 }
 
-export const MessageList = ({messages}: messageList) => {
+export const MessageList = ({messages, channelId}: messageList) => {
   const messageEndRef = useRef<null | HTMLDivElement>(null); 
   const element = useRef<null | HTMLDivElement>(null);
   const [shouldAutoScroll, setShouldAutoScroll] = useState(true);
@@ -24,7 +26,10 @@ export const MessageList = ({messages}: messageList) => {
   const [messageError, setMessageError] = useState<{isError:boolean, errorMessage:string}>({isError:false, errorMessage:''});
 
   useEffect(() => {
-    console.log(element.current?.scrollHeight! == element.current?.offsetHeight!);
+    if(element.current?.scrollHeight! === element.current?.offsetHeight!) {
+      // send markAsRead
+      new ChannelService().markAsRead(channelId);
+    }
     shouldAutoScroll && messageEndRef.current?.scrollIntoView({
       behavior: "auto",
       block: "end"
