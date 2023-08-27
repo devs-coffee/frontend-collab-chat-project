@@ -7,14 +7,14 @@ import { AxiosError } from 'axios';
 import DisabledByDefaultRoundedIcon from '@mui/icons-material/DisabledByDefaultRounded';
 import EditIcon from '@mui/icons-material/Edit';
 import HighlightOffTwoToneIcon from '@mui/icons-material/HighlightOffTwoTone';
-import { Avatar, Breadcrumbs, Snackbar } from '@mui/material';
+import { Avatar, Breadcrumbs } from '@mui/material';
 
-import { Modal, AvatarCropper, Search } from '../index';
 import { Server } from '../../interfaces/IServer';
 import { removeServer, addOrUpdateServer } from '../../redux/serversSlice';
 import { ServerService } from '../../services/serverService';
 import { FormValidationService } from '../../utils/formValidationService';
 import { ServerUpdateValues } from '../../interfaces/IServerUpdateValues';
+import { Modal, AvatarCropper, Search, MessageError } from '../';
 
 import './ServerUpdateForm.scss';
 
@@ -73,13 +73,6 @@ export function ServerUpdateForm(props: ServerUpdatingFormProps) {
         setCroppedImage(image);
         setIsOpen(false);
         return image;
-    }
-
-    const handleToastClose = (event: React.SyntheticEvent | Event, reason?: string) => {
-        if (reason === 'clickaway') {
-            return;
-        }
-        setServerUpdateError({ isError: false, errorMessage: '' });
     }
 
     return (
@@ -160,12 +153,12 @@ export function ServerUpdateForm(props: ServerUpdatingFormProps) {
                     </Form>
                 )}
             </Formik>
-            <Snackbar
+            <MessageError
                 open={serverUpdateError.isError}
-                autoHideDuration={4000}
-                onClose={handleToastClose}
+                setCallbackClose={() => setServerUpdateError({ isError: false, errorMessage: '' })}
                 message={serverUpdateError.errorMessage}
             />
+
         </div>
     )
 }
