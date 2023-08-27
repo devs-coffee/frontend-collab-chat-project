@@ -6,7 +6,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import IoSocketProvider from './providers/IoSocketProvider';
 import { Home } from "./pages/Home/Home";
 import { ProtectedContent } from './components';
-import { Profile, Error, Auth, Dashboard, UserDisplay, ServerDisplay } from './pages/';
+import { Profile, Error, Auth, Dashboard, UserDisplay, ServerDisplay, PrivateMessages } from './pages/';
 import './styles/index.scss';
 
 const root = ReactDOM.createRoot(document.getElementById('root')!);
@@ -25,6 +25,7 @@ root.render(
           <Route path="profile" element={<Profile />} />
           <Route path="server/:serverId" element={<ServerDisplay />} />
           <Route path="/user/:userId" element={<UserDisplay />} />
+          <Route path="/private_messages" element={<PrivateMessages />} />
         </Route>
         <Route path="/auth" element={<Auth />} />
         <Route path="/error" element={<Error />} />

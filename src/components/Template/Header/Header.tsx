@@ -3,9 +3,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 import { Avatar, IconButton, Menu, MenuItem } from "@mui/material";
+
 import { unsetLogs } from "../../../redux/authSlice";
 import { unsetServers } from "../../../redux/serversSlice";
-import { DarkModeSwitch } from "../../index";
+import { DarkModeSwitch } from "../../";
 import { useDarkMode } from "../../../hooks/useDarkMode";
 import type { User } from "../../../interfaces/IUser";
 import { Theme } from "../../../interfaces/Theme.enum";
@@ -19,6 +20,7 @@ export function Header({ ioClose }: { ioClose?: () => void }): JSX.Element {
     const user: User = authStatus.user;
 
     const [darkMode, setDarkMode] = useDarkMode();
+    const [unreadMessages, setUnreadMessages] = useState<boolean>(false);
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const isAccountMenuOpen = Boolean(anchorEl);
 
@@ -82,6 +84,9 @@ export function Header({ ioClose }: { ioClose?: () => void }): JSX.Element {
                             >
                                 <MenuItem>
                                     <Link to="profile">Profil</Link>
+                                </MenuItem>
+                                <MenuItem>
+                                    <Link to="private_messages">Messages</Link>
                                 </MenuItem>
                                 <MenuItem>
                                     <DarkModeSwitch

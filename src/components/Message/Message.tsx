@@ -65,11 +65,9 @@ function Message({ message }: messageType) {
                 dispatch<any>(removeMessage(message));
             }
         } catch (error) {
-            let errorMessage: string;
+            let errorMessage = 'une erreur est survenue, veuillez réessayer';
             if (error instanceof AxiosError) {
                 errorMessage = error.response?.data.message;
-            } else {
-                errorMessage = 'une erreur est survenue, veuillez réessayer';
             }
             setGetMessagesError({ isError: true, errorMessage });
         }
@@ -82,11 +80,9 @@ function Message({ message }: messageType) {
                 dispatch<any>(addOrUpdateMessage(response.result));
             }
         } catch (error) {
-            let errorMessage: string;
+            let errorMessage: string = 'une erreur est survenue, veuillez réessayer';;
             if (error instanceof AxiosError) {
                 errorMessage = error.response?.data.message;
-            } else {
-                errorMessage = 'une erreur est survenue, veuillez réessayer';
             }
             setGetMessagesError({ isError: true, errorMessage });
         }
@@ -103,7 +99,7 @@ function Message({ message }: messageType) {
 
             {!isEdit
                 ? <div className="message_content">
-                    <p key={message.id}>{parser(message.content)}</p>
+                    <div key={message.id}>{parser(message.content)}</div>
                     {authStatus!.user!.id === message.userId && <span><Actions actionHandler={(action: string) => triggerAction(action)} availableActions={['Modifier', 'Supprimer']} /></span>}
                 </div>
                 : <div className="message_content">

@@ -68,7 +68,7 @@ export function MessageBox({ channelId, canUserPost }: MessageBoxProps) {
 
     return (
         <div className="MessageBox">
-            <MessageList messages={stateMessages.data[channelId]} />
+            <MessageList messages={stateMessages.data[channelId]} channelId={channelId} />
             {canUserPost && <MessageEditor sendMessage={sendMessage} />}
 
             

@@ -1,4 +1,5 @@
 import { IMessage } from "./IMessage"
+import { PrivateChannel } from "./IPrivateChannel"
 import { Server } from "./IServer"
 import { User } from "./IUser"
 
@@ -21,6 +22,11 @@ export interface reduxData {
     }
     users: {
         data: User[],
+        status: SliceStatus,
+        error?: string | null
+    }
+    privateChans: {
+        data: PrivateChannel[],
         status: SliceStatus,
         error?: string | null
     }
