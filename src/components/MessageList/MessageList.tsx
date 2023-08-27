@@ -23,18 +23,26 @@ export const MessageList = ({messages, channelId}: messageList) => {
   const dispatch = useDispatch();
   const stateMessages = useSelector((state: any) => state.messages);
   const [messageError, setMessageError] = useState<{ isError: boolean, errorMessage: string }>({ isError: false, errorMessage: '' });
+  const [markAsReadError, setMarkAsReadError] = useState<{ isError: boolean, errorMessage: string }>({ isError: false, errorMessage: '' });
 
   useEffect(() => {
     if(element.current?.scrollHeight! === element.current?.offsetHeight!) {
-      // send markAsRead
-      new ChannelService().markAsRead(channelId);
+      //* scroled to bottom, mark as read
+      try {
+        new ChannelService().markAsRead(channelId);
+      } catch(error) {
+        let errorMessage = 'une erreur est survenue, veuillez réessayer';
+        if(error instanceof AxiosError) {
+          errorMessage = error.response?.data.message;
+        }
+        setMarkAsReadError({ isError: true, errorMessage });
+      }
     }
     shouldAutoScroll && messageEndRef.current?.scrollIntoView({
       behavior: "auto",
       block: "end"
     })
   }, [messages, stateMessages.status, dispatch, shouldAutoScroll])
-
 
   const getNextMessages = async () => {
     try {
@@ -49,7 +57,6 @@ export const MessageList = ({messages, channelId}: messageList) => {
         errorMessage = error.response?.data.message;
       }
       setMessageError({ isError: true, errorMessage });
-
     }
   }
 
@@ -59,12 +66,11 @@ export const MessageList = ({messages, channelId}: messageList) => {
       getNextMessages();
       setShouldAutoScroll(false);
     }
-    //console.log(elt?.scrollTop === elt?.scrollHeight! - elt?.offsetHeight!);
     if(elt?.scrollTop === elt?.scrollHeight! - elt?.offsetHeight!) {
-      console.log('scrolled to bottom');
+      //TODO When initial scroll will point to first unread message
+      //* scroled to bottom, mark as read
     }
   };
-
 
   return (
     <div ref={element} className="MessageList" onScroll={handleScroll}>
@@ -80,7 +86,11 @@ export const MessageList = ({messages, channelId}: messageList) => {
         setCallbackClose={() => setMessageError({ isError: false, errorMessage: '' })}
         message={messageError.errorMessage}
       />
-
+      <MessageError
+        open={markAsReadError.isError}
+        setCallbackClose={() => setMarkAsReadError({ isError: false, errorMessage: '' })}
+        message={markAsReadError.errorMessage}
+      />
     </div>
   );
 }

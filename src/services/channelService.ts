@@ -2,6 +2,7 @@ import { Fetcher } from "./fetcher";
 import { OperationResult } from "../interfaces/IOperationResult";
 import { ChannelUpdateValues } from "../interfaces/IChannelUpdateValues";
 import { ChannelBase, ChannelCreationValues } from "../interfaces/IChannel.base";
+import { PrivateChannel } from "../interfaces/IPrivateChannel";
 
 export class ChannelService extends Fetcher {
     async updateChannel(values: ChannelUpdateValues):Promise<OperationResult<ChannelBase>> {
@@ -24,8 +25,7 @@ export class ChannelService extends Fetcher {
         return response.data;
     }
 
-    //TODO créer interface PrivateChannel
-    async getPrivateChannels(): Promise<OperationResult<any>> {
+    async getPrivateChannels(): Promise<OperationResult<PrivateChannel[]>> {
         const response = await super.get<any>(`/channels/@me`);
         return response.data;
     }

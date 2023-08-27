@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import data from '../datas/reduxDefault';
 import { OperationResult } from '../interfaces/IOperationResult';
 import { ChannelService } from '../services/channelService';
+import { PrivateChannel } from '../interfaces/IPrivateChannel';
 
 export const privateChansSlice = createSlice({
     name: 'privateChans',
@@ -30,13 +31,13 @@ export const privateChansSlice = createSlice({
 })
 
 export const fetchPrivateChannels = createAsyncThunk<
-        OperationResult<any[]>,
+        OperationResult<PrivateChannel[]>,
         void,
         {
             rejectValue: OperationResult<any[]>
         }
     >('channels/@me', async () => {
-    const response:OperationResult<any[]> = await new ChannelService().getPrivateChannels()
+    const response:OperationResult<PrivateChannel[]> = await new ChannelService().getPrivateChannels()
     .catch(error => {
         throw error.response.data.message;
     })
