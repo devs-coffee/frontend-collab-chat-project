@@ -5,8 +5,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { MessageService } from '../../services/messageService';
 import { setMessages } from '../../redux/messagesSlice';
 import { IMessage } from '../../interfaces/IMessage';
-import { Message } from '../Message/Message';
 import { MessageError } from '../';
+import { MemorisedMessage } from '../';
 
 import './MessageList.scss';
 
@@ -58,7 +58,7 @@ export const MessageList = ({ messages }: messageList) => {
     <div ref={element} className="MessageList" onScroll={handleScroll}>
       {messages && messages.map((message, index) => (
         <div key={message.id}>
-          <Message key={message.id} message={message} />
+          <MemorisedMessage key={message.id} message={message} />
           {index === messages.length - 1 && <div ref={messageEndRef} />}
         </div>
       ))}
