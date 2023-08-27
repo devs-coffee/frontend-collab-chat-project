@@ -6,7 +6,7 @@ import { Snackbar } from "@mui/material";
 import { IoProvider } from '../../interfaces/IIoProvider';
 import { IMessage } from "../../interfaces/IMessage";
 import { reduxData } from "../../interfaces/IReduxData";
-import { addMessage, fetchMessages } from "../../redux/messagesSlice";
+import { addOrUpdateMessage, fetchMessages } from "../../redux/messagesSlice";
 import { MessageService } from "../../services/messageService";
 import { MessageEditor, MessageList } from "../index";
 
@@ -38,7 +38,7 @@ export function MessageBox({ channelId, canUserPost }: MessageBoxProps) {
             const response = await new MessageService().send(message);
             if (response.isSucceed) {
                 const message = response.result;
-                dispatch<any>(addMessage(message))
+                dispatch<any>(addOrUpdateMessage(message))
             }
         }
         catch (error) {
@@ -66,7 +66,7 @@ export function MessageBox({ channelId, canUserPost }: MessageBoxProps) {
         }
         Socket.on(`message_${channelId}`, (res: IMessage) => {
             if (res.userId !== authStatus!.user!.id) {
-                dispatch<any>(addMessage(res))
+                dispatch<any>(addOrUpdateMessage(res))
             }
         });
         return () => {

@@ -6,7 +6,7 @@ import { Avatar, Snackbar } from '@mui/material';
 import parse, { Element } from 'html-react-parser';
 import { IMessage } from '../../interfaces/IMessage';
 import { reduxData } from '../../interfaces/IReduxData';
-import { removeMessage, updateMessage } from '../../redux/messagesSlice';
+import { removeMessage, addOrUpdateMessage } from '../../redux/messagesSlice';
 import { MessageService } from '../../services/messageService';
 import { MessageEditor, Actions } from '../index';
 
@@ -78,7 +78,7 @@ function Message({ message }: messageType) {
         try {
             const response = await new MessageService().update(message.id!, { content });
             if (response.isSucceed) {
-                dispatch<any>(updateMessage(response.result));
+                dispatch<any>(addOrUpdateMessage(response.result));
             }
         } catch (error) {
             let errorMessage: string;

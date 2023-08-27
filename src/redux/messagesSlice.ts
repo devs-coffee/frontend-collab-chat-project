@@ -13,26 +13,26 @@ export const messageSlice = createSlice({
             state.data[channelId] = messages;
             return state;
         },
-        addMessage: (state, action: PayloadAction<IMessage>) => {
+        addOrUpdateMessage: (state, action: PayloadAction<IMessage>) => {
             const message = action.payload;
-            state.data[message.channelId!].push(message);
-            return state;
+            const datas = [...state.data[message.channelId!]].map(elt => {return{...elt}});
+            const oldMessage = datas.find(m => m.id === message.id);
+            if(oldMessage) {
+                oldMessage.content = message.content;
+                
+            }
+            else {
+                state.data[message.channelId!].push(message);
+            }
+            state.data[message.channelId!] = datas;
+            const newState = {...state, datas};
+            state = newState;
+            
         },
         removeMessage: (state, action) => {
             const message = action.payload;
             state.data[message.channelId] = [...state.data[message.channelId].filter(m => m.id !== message.id)];
             return state;
-        },
-        updateMessage: (state, action: PayloadAction<IMessage>) => {
-            const  message = action.payload;
-            const datas = [...state.data[message.channelId!]].map(elt => {return{...elt}});
-            const oldMessage = datas.find(m => m.id === message.id);
-            if(oldMessage) {
-                oldMessage.content = message.content;
-            }
-            state.data[message.channelId!] = datas;
-            const newState = {...state, datas};
-            state = newState;
         },
     },
     extraReducers(builder) {
@@ -68,5 +68,5 @@ export const fetchMessages = createAsyncThunk<IMessagesPayload | undefined, stri
     }
   })
 
-export const { setMessages, addMessage, removeMessage, updateMessage } = messageSlice.actions;
+export const { setMessages, addOrUpdateMessage, removeMessage } = messageSlice.actions;
 export default messageSlice.reducer;
