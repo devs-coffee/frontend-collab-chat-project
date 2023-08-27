@@ -14,7 +14,7 @@ import { setLogs } from '../../../redux/authSlice';
 import { signupForm } from '../../../interfaces/ISignupForm';
 import { AuthenticationService } from '../../../services/authenticationService';
 import { FormValidationService } from '../../../utils/formValidationService';
-import { Modal, AvatarCropper, MessageError } from '../../index';
+import { Modal, AvatarCropper, MessageError } from '../../';
 
 import "./Signup.scss";
 

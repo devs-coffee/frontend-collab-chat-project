@@ -8,7 +8,7 @@ import { IMessage } from '../../interfaces/IMessage';
 import { reduxData } from '../../interfaces/IReduxData';
 import { removeMessage, updateMessage } from '../../redux/messagesSlice';
 import { MessageService } from '../../services/messageService';
-import { MessageEditor, Actions, MessageError } from '../index';
+import { MessageEditor, Actions, MessageError } from '../';
 
 import './Message.scss';
 

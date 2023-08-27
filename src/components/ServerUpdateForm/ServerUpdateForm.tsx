@@ -9,12 +9,12 @@ import EditIcon from '@mui/icons-material/Edit';
 import HighlightOffTwoToneIcon from '@mui/icons-material/HighlightOffTwoTone';
 import { Avatar, Breadcrumbs } from '@mui/material';
 
-import { Modal, AvatarCropper, Search, MessageError } from '../../components';
 import { Server } from '../../interfaces/IServer';
 import { removeServer, addOrUpdateServer } from '../../redux/serversSlice';
 import { ServerService } from '../../services/serverService';
 import { FormValidationService } from '../../utils/formValidationService';
 import { ServerUpdateValues } from '../../interfaces/IServerUpdateValues';
+import { Modal, AvatarCropper, Search, MessageError } from '../';
 
 import './ServerUpdateForm.scss';
 

@@ -9,10 +9,10 @@ import IoSocketContext from "../../../contexts/IoSocketContext";
 import { User } from "../../../interfaces/IUser";
 import { reduxData } from "../../../interfaces/IReduxData";
 import { Server } from "../../../interfaces/IServer";
-import { UserItem, MessageError } from "../../../components";
 import { ServerService } from "../../../services/serverService";
 import { addOrUpdateServer } from "../../../redux/serversSlice";
 import { addUsers } from "../../../redux/usersSlice";
+import { UserItem, MessageError } from "../../";
 
 import "./ServerMembersBox.scss";
 

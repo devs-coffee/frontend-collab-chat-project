@@ -6,7 +6,7 @@ import { MessageService } from '../../services/messageService';
 import { setMessages } from '../../redux/messagesSlice';
 import { IMessage } from '../../interfaces/IMessage';
 import { Message } from '../Message/Message';
-import { MessageError } from '../index';
+import { MessageError } from '../';
 
 import './MessageList.scss';
 
@@ -34,7 +34,6 @@ export const MessageList = ({ messages }: messageList) => {
     try {
       const response = await new MessageService().getMessagesByChannelId(messages[0].channelId!, messages[0].id!);
       if (response.isSucceed) {
-        ;
         messages = response.result.concat(messages);
         dispatch(setMessages({ channelId: messages[0].channelId!, messages: messages }));
       }

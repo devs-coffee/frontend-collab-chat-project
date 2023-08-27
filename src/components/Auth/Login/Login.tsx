@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { useDispatch } from 'react-redux';
 import { useState } from 'react';
+import { AxiosError } from 'axios';
 
 import { Button } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
@@ -9,7 +10,7 @@ import SendIcon from '@mui/icons-material/Send';
 import { setLogs } from '../../../redux/authSlice';
 import { AuthenticationService } from '../../../services/authenticationService';
 import { FormValidationService } from '../../../utils/formValidationService';
-import { MessageError } from '../../index';
+import { MessageError } from '../../';
 
 import "./Login.scss";
 
@@ -18,7 +19,7 @@ const formValidationService = new FormValidationService();
 export function Login(props: any) {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const [loginError, setLoginError] = useState(false);
+    const [loginError, setLoginError] = useState<{ isError: boolean, errorMessage: string }>({ isError: false, errorMessage: '' });
 
     return (
         <div className="Login">
@@ -29,13 +30,18 @@ export function Login(props: any) {
                 }}
                 validate={formValidationService.validateLogin}
                 onSubmit={async (values) => {
-                    setLoginError(false);
+                    setLoginError({ isError: false, errorMessage: '' });
                     try {
                         const response = await new AuthenticationService().login(values);
                         dispatch(setLogs(response.result));
                         navigate('/');
                     } catch (error) {
-                        setLoginError(true);
+                        let errorMessage = 'Une erreur est survenue, c\'est ballot.'
+                        if (error instanceof AxiosError) {
+                            console.log(error.response?.data.message);
+                            errorMessage = error.response?.data.message;
+                        }
+                        setLoginError({ isError: true, errorMessage });
                     }
                 }}
             >
@@ -68,7 +74,7 @@ export function Login(props: any) {
                     </Form>
                 )}
             </Formik>
-            {loginError && <MessageError setCallbackClose={() =>setLoginError(false)} open={loginError} message={'Email et / ou mot de passe invalide !'} />}
+            {loginError && <MessageError setCallbackClose={() =>setLoginError({ isError: false, errorMessage: '' })} open={loginError.isError} message={loginError.errorMessage} />}
         </div>
     )
 }

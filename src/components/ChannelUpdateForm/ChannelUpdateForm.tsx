@@ -10,7 +10,7 @@ import { FormValidationService } from '../../utils/formValidationService';
 import { ChannelService } from '../../services/channelService';
 import { ChannelBase } from '../../interfaces/IChannel.base';
 import { removeChannel, updateChannel } from '../../redux/serversSlice';
-import { MessageError } from '../../components';
+import { MessageError } from '../';
 
 import "./ChannelUpdateForm.scss";
 

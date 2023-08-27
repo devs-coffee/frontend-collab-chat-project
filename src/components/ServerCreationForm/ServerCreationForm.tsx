@@ -9,7 +9,7 @@ import DisabledByDefaultRoundedIcon from '@mui/icons-material/DisabledByDefaultR
 import { FormValidationService } from '../../utils/formValidationService';
 import { ServerService } from '../../services/serverService';
 import { addOrUpdateServer } from '../../redux/serversSlice';
-import { AvatarCropper, Search, MessageError } from '../index';
+import { AvatarCropper, Search, MessageError } from '../';
 
 import "./ServerCreationForm.scss";
 

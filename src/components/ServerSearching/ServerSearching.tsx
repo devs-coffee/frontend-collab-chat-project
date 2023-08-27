@@ -4,9 +4,9 @@ import { AxiosError } from 'axios';
 
 import { Avatar } from '@mui/material';
 
-import { MessageError } from '../../components';
 import { ServerService } from '../../services/serverService';
 import { ServerBase } from '../../interfaces/IServerBase';
+import { MessageError } from '../';
 
 export function ServerSearching() {
     const [searchInput, setSearchInput] = useState('');

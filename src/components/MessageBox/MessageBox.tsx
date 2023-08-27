@@ -7,7 +7,7 @@ import { IMessage } from "../../interfaces/IMessage";
 import { reduxData } from "../../interfaces/IReduxData";
 import { addMessage, fetchMessages } from "../../redux/messagesSlice";
 import { MessageService } from "../../services/messageService";
-import { MessageEditor, MessageList, MessageError } from "../index";
+import { MessageEditor, MessageList, MessageError } from "../";
 
 import "./MessageBox.scss";
 import useIoSocket from "../../hooks/useIoSocket";

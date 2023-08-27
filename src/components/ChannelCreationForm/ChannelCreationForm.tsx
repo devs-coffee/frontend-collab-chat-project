@@ -10,7 +10,7 @@ import DisabledByDefaultRoundedIcon from '@mui/icons-material/DisabledByDefaultR
 import { FormValidationService } from '../../utils/formValidationService';
 import { ChannelService } from '../../services/channelService';
 import { addChannel } from '../../redux/serversSlice';
-import { MessageError } from '../MessageError/MessageError';
+import { MessageError } from '../';
 
 import "./ChannelCreationForm.scss";
 
