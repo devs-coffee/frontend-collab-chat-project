@@ -1,14 +1,13 @@
 import { AxiosError } from "axios";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from 'react-redux';
-import { Snackbar } from "@mui/material";
 
 import { IoProvider } from '../../interfaces/IIoProvider';
 import { IMessage } from "../../interfaces/IMessage";
 import { reduxData } from "../../interfaces/IReduxData";
 import { addMessage, fetchMessages } from "../../redux/messagesSlice";
 import { MessageService } from "../../services/messageService";
-import { MessageEditor, MessageList } from "../index";
+import { MessageEditor, MessageList, MessageError } from "../";
 
 import "./MessageBox.scss";
 import useIoSocket from "../../hooks/useIoSocket";
@@ -52,13 +51,6 @@ export function MessageBox({ channelId, canUserPost }: MessageBoxProps) {
         }
     }
 
-    const handleToastClose = (event: React.SyntheticEvent | Event, reason?: string) => {
-        if (reason === 'clickaway') {
-            return;
-        }
-        setGetMessagesError({ isError: false, errorMessage: '' });
-    }
-
     useEffect(() => {
         if (stateMessages.status === "idle" || stateMessages.data[channelId] === undefined) {
             dispatch<any>(fetchMessages(channelId));
@@ -78,10 +70,11 @@ export function MessageBox({ channelId, canUserPost }: MessageBoxProps) {
         <div className="MessageBox">
             <MessageList messages={stateMessages.data[channelId]} />
             {canUserPost && <MessageEditor sendMessage={sendMessage} />}
-            <Snackbar
+
+            
+            <MessageError
                 open={getMessagesError.isError}
-                autoHideDuration={4000}
-                onClose={handleToastClose}
+                setCallbackClose={() => setGetMessagesError({ isError: false, errorMessage: '' })}
                 message={getMessagesError.errorMessage}
             />
         </div>

@@ -3,13 +3,13 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { useDispatch } from 'react-redux';
 import { AxiosError } from 'axios';
 
-import { Avatar, Snackbar } from '@mui/material';
+import { Avatar } from '@mui/material';
 import DisabledByDefaultRoundedIcon from '@mui/icons-material/DisabledByDefaultRounded';
 
 import { FormValidationService } from '../../utils/formValidationService';
 import { ServerService } from '../../services/serverService';
 import { addOrUpdateServer } from '../../redux/serversSlice';
-import { AvatarCropper, Search } from '../index';
+import { AvatarCropper, Search, MessageError } from '../';
 
 import "./ServerCreationForm.scss";
 
@@ -40,13 +40,6 @@ export function ServerCreationForm(props: ServerCreationFormProps) {
 
     const addCategory = (datas: string[]) => {
         setCategories(datas);
-    }
-
-    const handleToastClose = (event: React.SyntheticEvent | Event, reason?: string) => {
-        if (reason === 'clickaway') {
-            return;
-        }
-        setServerCreationError({ isError: false, errorMessage: '' });
     }
 
     return (
@@ -104,10 +97,9 @@ export function ServerCreationForm(props: ServerCreationFormProps) {
                     </Form>
                 )}
             </Formik>
-            <Snackbar
+            <MessageError
                 open={serverCreationError.isError}
-                autoHideDuration={4000}
-                onClose={handleToastClose}
+                setCallbackClose={() => setServerCreationError({ isError: false, errorMessage: '' })}
                 message={serverCreationError.errorMessage}
             />
         </div>

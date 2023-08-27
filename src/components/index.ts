@@ -13,6 +13,7 @@ export * from "./DashboardPanel/DashboardPanel";
 export * from "./DashboardServersHeading/DashboardServersHeading";
 export * from "./Message/Message";
 export * from "./MessageBox/MessageBox";
+export * from "./MessageError/MessageError";
 export * from "./MessageEditor/MessageEditor";
 export * from "./MessageList/MessageList";
 export * from "./Modal/Modal";

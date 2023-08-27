@@ -3,9 +3,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 
-import { Snackbar } from "@mui/material";
-
-import { ServerHeading, ServerChat, ServerChannelBox, ServerMembersBox, ServerUpdateForm } from "../../components";
+import { ServerHeading, ServerChat, ServerChannelBox, ServerMembersBox, ServerUpdateForm, MessageError } from "../../components";
 import { reduxData } from "../../interfaces/IReduxData";
 import { Server } from "../../interfaces/IServer";
 import { addOrUpdateServer } from "../../redux/serversSlice";
@@ -35,29 +33,22 @@ export function ServerDisplay() {
     const [mainContent, setMainContent] = useState<string>('chat');
     const [channelId, setChannelId] = useState<string>("");
 
-    const handleDataToastClose = (event: React.SyntheticEvent | Event, reason?: string) => {
-        if (reason === 'clickaway') {
-            return;
-        }
-        setServerError('');
-    }
-
     const avoidManagingChannel = () => {
         setMainContent('chat');
     }
 
     useEffect(() => {
-        if(channelId === "") {
+        if (channelId === "") {
             getServerData(urlSearchParams.serverId!)
-            .then(response => {
-                dispatch(addOrUpdateServer(response));
-                const channels = response.channels;
-                const defaultChannel = channels[0];
-                setChannelId(defaultChannel.id);
-            })
-            .catch(error => {
-                setServerError(error);
-            });
+                .then(response => {
+                    dispatch(addOrUpdateServer(response));
+                    const channels = response.channels;
+                    const defaultChannel = channels[0];
+                    setChannelId(defaultChannel.id);
+                })
+                .catch(error => {
+                    setServerError(error);
+                });
         }
     }, [urlSearchParams]);
 
@@ -86,15 +77,15 @@ export function ServerDisplay() {
                             currentUser={server.isCurrentUserMember}
                             avoidManagingChannel={avoidManagingChannel}
                         />
-                        {channelId !== ''  && <ServerMembersBox/>}
+                        {channelId !== '' && <ServerMembersBox />}
                     </div>
                 </>
             }
             {server && isUpdatingServer && (<ServerUpdateForm setIsUpdatingServer={setIsUpdatingServer} server={server} />)}
-            <Snackbar
+
+            <MessageError
                 open={serverError !== ''}
-                autoHideDuration={4000}
-                onClose={handleDataToastClose}
+                setCallbackClose={() => setServerError('')}
                 message={serverError}
             />
         </div>

@@ -1,14 +1,16 @@
 import { AxiosError } from 'axios';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import React from 'react';
-import { Avatar, Snackbar } from '@mui/material';
 import parse, { Element } from 'html-react-parser';
+
+import { Avatar } from '@mui/material';
+import { Avatar, Snackbar } from '@mui/material';
+
 import { IMessage } from '../../interfaces/IMessage';
 import { reduxData } from '../../interfaces/IReduxData';
 import { removeMessage, updateMessage } from '../../redux/messagesSlice';
 import { MessageService } from '../../services/messageService';
-import { MessageEditor, Actions } from '../index';
+import { MessageEditor, Actions, MessageError } from '../';
 
 import './Message.scss';
 
@@ -91,13 +93,6 @@ function Message({ message }: messageType) {
         }
     }
 
-    const handleToastClose = (event: React.SyntheticEvent | Event, reason?: string) => {
-        if (reason === 'clickaway') {
-            return;
-        }
-        setGetMessagesError({ isError: false, errorMessage: '' });
-    }
-
     return (
         <div className="Message">
             <div className='message'>
@@ -119,10 +114,9 @@ function Message({ message }: messageType) {
                     </span>
                 </div>
             }
-            <Snackbar
+            <MessageError
                 open={getMessagesError.isError}
-                autoHideDuration={4000}
-                onClose={handleToastClose}
+                setCallbackClose={() => setGetMessagesError({ isError: false, errorMessage: '' })}
                 message={getMessagesError.errorMessage}
             />
         </div>
