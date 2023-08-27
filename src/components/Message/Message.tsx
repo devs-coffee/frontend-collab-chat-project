@@ -1,10 +1,9 @@
 import { AxiosError } from 'axios';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import parse, { Element } from 'html-react-parser';
 
 import { Avatar } from '@mui/material';
-import { Avatar, Snackbar } from '@mui/material';
 
 import { IMessage } from '../../interfaces/IMessage';
 import { reduxData } from '../../interfaces/IReduxData';
