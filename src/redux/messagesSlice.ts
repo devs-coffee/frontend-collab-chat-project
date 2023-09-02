@@ -11,11 +11,9 @@ export const messageSlice = createSlice({
         setMessages: (state, action: PayloadAction<IMessagesPayload>) => {
             const { channelId, messages } = action.payload;
             state.data[channelId] = messages;
-            return state;
         },
         addOrUpdateMessage: (state, action: PayloadAction<IMessage>) => {
             const message = action.payload;
-            console.log(message);
             const datas = [...state.data[message.channelId!]].map(elt => {return{...elt}});
             const oldMessage = datas.find(m => m.id === message.id);
             if(oldMessage) {
@@ -23,18 +21,16 @@ export const messageSlice = createSlice({
                 
             }
             else {
-                //state.data[message.channelId!].push(message);
                 datas.push(message);
             }
             state.data[message.channelId!] = datas;
             const newState = {...state, datas};
             state = newState;
-            
         },
         removeMessage: (state, action) => {
             const message = action.payload;
             state.data[message.channelId] = [...state.data[message.channelId].filter(m => m.id !== message.id)];
-            return state;
+            //? return state;
         },
     },
     extraReducers(builder) {

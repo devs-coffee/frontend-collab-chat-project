@@ -14,7 +14,6 @@ import "./Dashboard.scss";
 
 const getPrivateChans = async () => {
     const response = await new ChannelService().getPrivateChannels();
-    //console.log(response.result);
     const channels = response.result;
     let userIds: string[] = [];
     for(let chan of response.result) {
@@ -35,7 +34,8 @@ export function Dashboard() {
             dispatch(fetchServers());
         }
         if(privateChannelsStatus === "idle") {
-            getPrivateChans().then(data => {
+            getPrivateChans()
+            .then(data => {
                 dispatch(setPrivateChannels(data.channels))
                 let usersToAdd = [];
                 for(let userId of data.userIds) {
@@ -47,6 +47,9 @@ export function Dashboard() {
                     dispatch(addUsers(fetchedUsers.result));
                 });
             })
+            .catch(error => {
+                console.log(error);
+            }) 
             //dispatch(fetchPrivateChannels())
         }
     })

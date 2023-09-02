@@ -27,10 +27,8 @@ function Message({ message }: messageType) {
     const authStatus = useSelector((state: reduxData) => state.authStatus);
     const users = useSelector((state: reduxData) => state.users.data);
     const author = message.userId === authStatus.user!.id ? authStatus.user : users.find(user => user.id === message.userId);
-    console.log(author);
     const dispatch = useDispatch();
     const [getMessagesError, setGetMessagesError] = useState<{ isError: boolean, errorMessage: string }>({ isError: false, errorMessage: '' });
-
 
     const sendMessage = async (content: string) => {
         setIsEdit(false)

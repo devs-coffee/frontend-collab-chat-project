@@ -9,19 +9,15 @@ export const authSlice = createSlice({
             state.isLogged = true;
             state.user = action.payload.user;
             localStorage.setItem('access_token', action.payload.access_token);
-            return state;
         },
         unsetLogs: (state) => {
             state.isLogged = false;
             state.user = null;
             localStorage.removeItem('access_token');
-            return state;
         },
         setUser: (state, action) => {
             state.isLogged = true;
             state.user = action.payload;
-
-            return state;
         }
     }
 })
