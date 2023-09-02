@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { DashboardPanel, DashboardServersHeading, ServerCreationForm, ServerSearching } from "../../components";
+import { DashboardPanel, DashboardServersHeading, MessageError, ServerCreationForm, ServerSearching } from "../../components";
 import { reduxData } from "../../interfaces/IReduxData";
 import { fetchPrivateChannels, setPrivateChannels } from "../../redux/privateChansSlice";
 import { fetchServers } from "../../redux/serversSlice";
@@ -28,6 +28,8 @@ export function Dashboard() {
     const privateChannelsStatus = useSelector((state: reduxData) => state.privateChans.status);
     const users = useSelector((state: reduxData) => state.users.data);
     const [dashboardContent, setDashboardContent] = useState<string>('');
+    const [privateChansError, setPrivateChansError] = useState<string>('');
+    const [usersError, setUsersError] = useState<string>('');
 
     useEffect(() => {
         if (serversStatus === "idle") {
@@ -43,12 +45,18 @@ export function Dashboard() {
                         usersToAdd.push(userId);
                     }
                 }
-                new UserService().getUsers(usersToAdd.join(",")).then(fetchedUsers => {
+                new UserService().getUsers(usersToAdd.join(","))
+                .then(fetchedUsers => {
                     dispatch(addUsers(fetchedUsers.result));
+                })
+                .catch(error => {
+                    const errorMessage = error as Error;
+                    setUsersError(errorMessage.message);
                 });
             })
             .catch(error => {
-                console.log(error);
+                const errorMessage = error as Error;
+                setPrivateChansError(errorMessage.message);
             }) 
             //dispatch(fetchPrivateChannels())
         }
@@ -64,6 +72,16 @@ export function Dashboard() {
             {dashboardContent === 'searchServer' && (
                 <ServerSearching />
             )}
+            <MessageError
+                open={privateChansError !== ''}
+                setCallbackClose={() => setPrivateChansError('')}
+                message={privateChansError}
+            />
+            <MessageError
+                open={usersError !== ''}
+                setCallbackClose={() => setUsersError('')}
+                message={usersError}
+            />
         </div>
     )
 }
