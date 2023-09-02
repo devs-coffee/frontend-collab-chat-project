@@ -38,7 +38,6 @@ export function Login(props: any) {
                     } catch (error) {
                         let errorMessage = 'Une erreur est survenue, c\'est ballot.'
                         if (error instanceof AxiosError) {
-                            console.log(error.response?.data.message);
                             errorMessage = error.response?.data.message;
                         }
                         setLoginError({ isError: true, errorMessage });

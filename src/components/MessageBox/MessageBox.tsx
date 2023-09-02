@@ -6,7 +6,7 @@ import { IoProvider } from '../../interfaces/IIoProvider';
 import useIoSocket from "../../hooks/useIoSocket";
 import { IMessage } from "../../interfaces/IMessage";
 import { reduxData } from "../../interfaces/IReduxData";
-import { addOrUpdateMessage, fetchMessages } from "../../redux/messagesSlice";
+import { addOrUpdateMessage, fetchMessages, removeMessage } from "../../redux/messagesSlice";
 import { MessageService } from "../../services/messageService";
 import { MessageEditor, MessageList, MessageError } from "../";
 
@@ -66,6 +66,9 @@ export function MessageBox({ channelId, canUserPost, toUserId }: MessageBoxProps
                 dispatch<any>(addOrUpdateMessage(res))
             }
         });
+        Socket.on('deleteMessage', (message: IMessage) => {
+            dispatch(removeMessage(message));
+        })
         return () => {
             Socket.off(`message_${channelId}`)
         }
@@ -75,8 +78,6 @@ export function MessageBox({ channelId, canUserPost, toUserId }: MessageBoxProps
         <div className="MessageBox">
             <MessageList messages={stateMessages.data[channelId]} channelId={channelId} />
             {canUserPost && <MessageEditor sendMessage={sendMessage} />}
-
-            
             <MessageError
                 open={getMessagesError.isError}
                 setCallbackClose={() => setGetMessagesError({ isError: false, errorMessage: '' })}
