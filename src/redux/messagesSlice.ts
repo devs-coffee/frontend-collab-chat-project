@@ -15,6 +15,7 @@ export const messageSlice = createSlice({
         },
         addOrUpdateMessage: (state, action: PayloadAction<IMessage>) => {
             const message = action.payload;
+            console.log(message);
             const datas = [...state.data[message.channelId!]].map(elt => {return{...elt}});
             const oldMessage = datas.find(m => m.id === message.id);
             if(oldMessage) {
@@ -22,7 +23,8 @@ export const messageSlice = createSlice({
                 
             }
             else {
-                state.data[message.channelId!].push(message);
+                //state.data[message.channelId!].push(message);
+                datas.push(message);
             }
             state.data[message.channelId!] = datas;
             const newState = {...state, datas};

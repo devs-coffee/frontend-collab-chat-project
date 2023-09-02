@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 
 import { IoProvider } from '../../interfaces/IIoProvider';
+import useIoSocket from "../../hooks/useIoSocket";
 import { IMessage } from "../../interfaces/IMessage";
 import { reduxData } from "../../interfaces/IReduxData";
 import { addOrUpdateMessage, fetchMessages } from "../../redux/messagesSlice";
@@ -10,14 +11,14 @@ import { MessageService } from "../../services/messageService";
 import { MessageEditor, MessageList, MessageError } from "../";
 
 import "./MessageBox.scss";
-import useIoSocket from "../../hooks/useIoSocket";
 
 type MessageBoxProps = {
     channelId: string,
-    canUserPost: boolean
+    canUserPost: boolean,
+    toUserId?: string
 }
 
-export function MessageBox({ channelId, canUserPost }: MessageBoxProps) {
+export function MessageBox({ channelId, canUserPost, toUserId }: MessageBoxProps) {
     const authStatus = useSelector((state: reduxData) => state.authStatus);
     const stateMessages = useSelector((state: reduxData) => state.messages);
     const [getMessagesError, setGetMessagesError] = useState<{ isError: boolean, errorMessage: string }>({ isError: false, errorMessage: '' });
@@ -31,8 +32,12 @@ export function MessageBox({ channelId, canUserPost }: MessageBoxProps) {
         try {
             const message: IMessage = {
                 userId: authStatus!.user!.id,
-                channelId: channelId,
                 content: messageContent
+            }
+            if(toUserId) {
+                message.toUserId = toUserId;
+            } else {
+                message.channelId = channelId;
             }
             const response = await new MessageService().send(message);
             if (response.isSucceed) {

@@ -21,4 +21,9 @@ export class UserService extends Fetcher {
         const response = await super.get<User>(`/users/${id}`);
         return response.data;
     }
+
+    async getUsers(idList: string): Promise<OperationResult<User[]>> {
+        const response = await super.get<User[]>(`/users?idList=${idList}`);
+        return response.data;
+    }
 }

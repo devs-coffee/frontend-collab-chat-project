@@ -27,6 +27,7 @@ function Message({ message }: messageType) {
     const authStatus = useSelector((state: reduxData) => state.authStatus);
     const users = useSelector((state: reduxData) => state.users.data);
     const author = message.userId === authStatus.user!.id ? authStatus.user : users.find(user => user.id === message.userId);
+    console.log(author);
     const dispatch = useDispatch();
     const [getMessagesError, setGetMessagesError] = useState<{ isError: boolean, errorMessage: string }>({ isError: false, errorMessage: '' });
 
@@ -93,8 +94,8 @@ function Message({ message }: messageType) {
             <div className='message'>
                 {author && author?.picture && author?.picture !== ''
                     ? <Avatar alt="user picture" src={author!.picture}></Avatar>
-                    : <Avatar alt="user picture">{message.user?.pseudo.substring(0, 1).toUpperCase()}</Avatar>}
-                <p className="message_pseudo">{message.user?.pseudo} <span className='message_date'>{isToday ? "Aujourd'hui" : 'le ' + messageDate} à {new Date(message.createdAt!).getHours()}:{new Date(message.createdAt!).getMinutes()}</span></p>
+                    : <Avatar alt="user picture">{author!.pseudo.substring(0, 1).toUpperCase()}</Avatar>}
+                <p className="message_pseudo">{author!.pseudo} <span className='message_date'>{isToday ? "Aujourd'hui" : 'le ' + messageDate} à {new Date(message.createdAt!).getHours()}:{new Date(message.createdAt!).getMinutes()}</span></p>
             </div>
 
             {!isEdit
