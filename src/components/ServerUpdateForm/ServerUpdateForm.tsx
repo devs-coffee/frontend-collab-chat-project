@@ -31,7 +31,7 @@ export function ServerUpdateForm(props: ServerUpdatingFormProps) {
     const [croppedImage, setCroppedImage] = useState<string>('');
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [categories, setCategories] = useState<string[]>(props.server?.categories);
-    const [serverUpdateError, setServerUpdateError] = useState<{ isError: boolean, errorMessage: string }>({ isError: false, errorMessage: '' });
+    const [errorMessage, setErrorMessage] = useState<string>('');
 
     const initialValues: ServerUpdateValues = {
         name: props.server?.name,
@@ -53,7 +53,8 @@ export function ServerUpdateForm(props: ServerUpdatingFormProps) {
                     navigate('/');
                 })
                 .catch(error => {
-                    console.log(error);
+                    const errorMessage = error as Error;
+                    setErrorMessage(errorMessage.message);
                 })
         }
     };
@@ -65,8 +66,9 @@ export function ServerUpdateForm(props: ServerUpdatingFormProps) {
                 setCroppedImage('');
             })
             .catch(error => {
-                console.log(error);
-            })
+                const errorMessage = error as Error;
+                setErrorMessage(errorMessage.message);
+        })
     }
 
     const updateImage = (image: string) => {
@@ -87,18 +89,15 @@ export function ServerUpdateForm(props: ServerUpdatingFormProps) {
                     }
                     modifiedValues.categories = categories.map(c => c.toLowerCase());
                     if (Object.keys(modifiedValues).length) {
-                        setServerUpdateError({ isError: false, errorMessage: '' });
+                        setErrorMessage('');
                         try {
                             const response = await new ServerService().updateServer(modifiedValues, props.server.id);
                             dispatch(addOrUpdateServer(response.result));
                             setCroppedImage('');
                             props.setIsUpdatingServer(false);
                         } catch (error) {
-                            let errorMessage: string = 'Une erreur est survenue, veuillez réessayer';
-                            if (error instanceof AxiosError) {
-                                errorMessage = error.response?.data.message;
-                            }
-                            setServerUpdateError({ isError: true, errorMessage });
+                            const errorMessage = error as Error;
+                            setErrorMessage(errorMessage.message);
                         }
                     }
                 }}
@@ -154,9 +153,9 @@ export function ServerUpdateForm(props: ServerUpdatingFormProps) {
                 )}
             </Formik>
             <MessageError
-                open={serverUpdateError.isError}
-                setCallbackClose={() => setServerUpdateError({ isError: false, errorMessage: '' })}
-                message={serverUpdateError.errorMessage}
+                open={errorMessage !== ''}
+                setCallbackClose={() => setErrorMessage('')}
+                message={errorMessage}
             />
 
         </div>

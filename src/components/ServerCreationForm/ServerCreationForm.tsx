@@ -22,7 +22,7 @@ const formValidationService = new FormValidationService();
 export function ServerCreationForm(props: ServerCreationFormProps) {
     const [croppedImage, setCroppedImage] = useState<string>('');
     const [categories, setCategories] = useState<string[]>([]);
-    const [serverCreationError, setServerCreationError] = useState<{ isError: boolean, errorMessage: string }>({ isError: false, errorMessage: '' });
+    const [serverCreationError, setServerCreationError] = useState<string>('');
 
 
     const dispatch = useDispatch();
@@ -52,17 +52,14 @@ export function ServerCreationForm(props: ServerCreationFormProps) {
                         values.picture = croppedImage;
                     }
                     values.categories = categories;
-                    setServerCreationError({ isError: false, errorMessage: '' });
+                    setServerCreationError('');
                     try {
                         const response = await new ServerService().createServer(values);
                         dispatch(addOrUpdateServer(response.result));
                         closeServerAdding();
                     } catch (error) {
-                        let errorMessage: string = 'Une erreur est survenue, veuillez réessayer';
-                        if (error instanceof AxiosError) {
-                            errorMessage = error.response?.data.message;
-                        }
-                        setServerCreationError({ isError: true, errorMessage });
+                        const errorMessage = error as Error;
+                        setServerCreationError(errorMessage.message);
                     }
                 }}
             >
@@ -98,9 +95,9 @@ export function ServerCreationForm(props: ServerCreationFormProps) {
                 )}
             </Formik>
             <MessageError
-                open={serverCreationError.isError}
-                setCallbackClose={() => setServerCreationError({ isError: false, errorMessage: '' })}
-                message={serverCreationError.errorMessage}
+                open={serverCreationError !== ''}
+                setCallbackClose={() => setServerCreationError('')}
+                message={serverCreationError}
             />
         </div>
     )

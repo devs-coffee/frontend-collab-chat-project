@@ -23,7 +23,7 @@ export function Profile() {
     const [passwordEdit, setPasswordEdit] = useState(false);
     const [croppedImage, setCroppedImage] = useState<string>('');
     const [isOpen, setIsOpen] = useState<boolean>(false);
-    const [profileUpdateError, setProfileUpdateError] = useState<{ isError: boolean, errorMessage: string }>({ isError: false, errorMessage: '' });
+    const [profileUpdateError, setProfileUpdateError] = useState<string>('');
 
     const togglePasswordEdit = () => {
         setPasswordEdit(!passwordEdit);
@@ -57,7 +57,7 @@ export function Profile() {
                 initialValues={initialValues}
                 validate={formValidationService.validateProfileUpdate}
                 onSubmit={async (values, helper) => {
-                    setProfileUpdateError({ isError: false, errorMessage: '' });
+                    setProfileUpdateError('');
                     const modifiedValues = formValidationService.getModifiedValues(values, initialValues);
                     if (croppedImage !== '') {
                         modifiedValues.picture = croppedImage;
@@ -70,11 +70,8 @@ export function Profile() {
                             setPasswordEdit(false);
                             helper.resetForm();
                         } catch (error) {
-                            let errorMessage: string = 'Une erreur est survenue, veuillez réessayer';
-                            if (error instanceof AxiosError) {
-                                errorMessage = error.response?.data.message;
-                            }
-                            setProfileUpdateError({ isError: true, errorMessage });
+                            const errorMessage = error as Error;
+                            setProfileUpdateError(errorMessage.message);
                         }
                     }
                 }}
@@ -162,9 +159,9 @@ export function Profile() {
             </Formik>
 
             <MessageError
-                open={profileUpdateError.isError}
-                setCallbackClose={() => setProfileUpdateError({ isError: false, errorMessage: '' })}
-                message={profileUpdateError.errorMessage}
+                open={profileUpdateError !== ''}
+                setCallbackClose={() => setProfileUpdateError('')}
+                message={profileUpdateError}
             />
 
         </div>

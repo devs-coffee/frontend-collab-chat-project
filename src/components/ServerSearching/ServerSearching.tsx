@@ -11,23 +11,20 @@ import { MessageError } from '../';
 export function ServerSearching() {
     const [searchInput, setSearchInput] = useState('');
     const [foundServers, setFoundServers] = useState<ServerBase[] | null>(null);
-    const [searchError, setSearchError] = useState<{ isError: boolean, errorMessage: string }>({ isError: false, errorMessage: '' });
+    const [searchError, setSearchError] = useState<string>('');
 
     const searchServers = async () => {
-        setSearchError({ isError: false, errorMessage: '' });
+        setSearchError('');
         if (searchInput === '') {
-            setSearchError({ isError: true, errorMessage: 'le champ de recherche ne peut être vide!!' });
+            setSearchError('le champ de recherche ne peut être vide!!');
             return;
         }
         try {
             const response = await new ServerService().searchServers(searchInput);
             setFoundServers(response.result);
         } catch (error) {
-            let errorMessage: string = 'Une erreur est survenue, veuillez réessayer';
-            if (error instanceof AxiosError) {
-                errorMessage = error.response?.data.message;
-            }
-            setSearchError({ isError: true, errorMessage });
+            const errorMessage = error as Error;
+            setSearchError(errorMessage.message);
         }
     }
 
@@ -61,9 +58,9 @@ export function ServerSearching() {
                 </div>
             )}
             <MessageError
-                open={searchError.isError}
-                setCallbackClose={() => setSearchError({ isError: false, errorMessage: '' })}
-                message={searchError.errorMessage}
+                open={searchError !== ''}
+                setCallbackClose={() => setSearchError('')}
+                message={searchError}
             />
         </div>
     )
