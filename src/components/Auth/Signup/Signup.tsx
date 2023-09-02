@@ -73,7 +73,7 @@ export function Signup() {
                         navigate('/');
                     } catch (error) {
                         const errorMessage = error as Error;
-                        setSignupError('');
+                        setSignupError(errorMessage.message);
                     }
                 }}
             >
