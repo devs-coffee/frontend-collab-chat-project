@@ -23,7 +23,7 @@ const formValidationService = new FormValidationService();
 export function Signup() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const [signupError, setSignupError] = useState<{ isError: boolean, errorMessage: string }>({ isError: false, errorMessage: '' });
+    const [signupError, setSignupError] = useState<string>('');
     const [croppedImage, setCroppedImage] = useState<string>('');
     const [isOpen, setIsOpen] = useState<boolean>(false);
 
@@ -66,17 +66,14 @@ export function Signup() {
                 validate={formValidationService.validateSignup}
                 onSubmit={async (values: signupForm) => {
                     values.picture = croppedImage;
-                    setSignupError({ isError: false, errorMessage: '' });
+                    setSignupError('');
                     try {
                         const response = await new AuthenticationService().signup(values);
                         dispatch(setLogs(response.result));
                         navigate('/');
                     } catch (error) {
-                        let errorMessage: string = 'Une erreur est survenue, c\'est ballot.';
-                        if (error instanceof AxiosError) {
-                            errorMessage = error.response?.data.message;
-                        }
-                        setSignupError({ isError: true, errorMessage });
+                        const errorMessage = error as Error;
+                        setSignupError(errorMessage.message);
                     }
                 }}
             >
@@ -150,9 +147,9 @@ export function Signup() {
             </Formik>
 
             <MessageError
-                message={signupError.errorMessage}
-                open={signupError.isError}
-                setCallbackClose={() => setSignupError({ isError: false, errorMessage: '' })}
+                message={signupError}
+                open={signupError !== ''}
+                setCallbackClose={() => setSignupError('')}
             />
 
         </div>

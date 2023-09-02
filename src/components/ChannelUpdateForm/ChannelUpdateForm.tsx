@@ -22,8 +22,7 @@ type ChannelUpdateFormProps = {
 const formValidationService = new FormValidationService();
 
 export function ChannelUpdateForm(props: ChannelUpdateFormProps) {
-    const [channelUpdateError, setChannelUpdateError] = useState<{ isError: boolean, errorMessage: string }>({ isError: false, errorMessage: '' });
-    const [deleteChannelError, setDeleteChannelError] = useState<{ isError: boolean, errorMessage: string }>({ isError: false, errorMessage: '' });
+    const [errorMessage, setErrorMessage] = useState<string>('');
 
     const dispatch = useDispatch();
 
@@ -38,11 +37,8 @@ export function ChannelUpdateForm(props: ChannelUpdateFormProps) {
             dispatch(removeChannel(props.channel));
             props.closeChannelUpdate()
         } catch (error) {
-            let errorMessage = 'Channel non supprimé, veuillez réessayer';
-            if (error instanceof AxiosError) {
-                errorMessage = error.response?.data.message;
-            }
-            setDeleteChannelError({ isError: true, errorMessage });
+            const errorMessage = error as Error;
+            setErrorMessage(errorMessage.message);
         }
     }
 
@@ -52,16 +48,13 @@ export function ChannelUpdateForm(props: ChannelUpdateFormProps) {
                 initialValues={initialValues}
                 validate={formValidationService.validateChannelUpdate}
                 onSubmit={async (values) => {
-                    setChannelUpdateError({ isError: false, errorMessage: '' });
+                    setErrorMessage('');
                     try {
                         const response = await new ChannelService().updateChannel(values);
                         dispatch(updateChannel(response.result));
                     } catch (error) {
-                        let errorMessage: string = "Une erreur est survenue, veuillez réessayer";
-                        if (error instanceof AxiosError) {
-                            errorMessage = error.response?.data.message;
-                        }
-                        setChannelUpdateError({ isError: true, errorMessage });
+                        const errorMessage = error as Error;
+                        setErrorMessage(errorMessage.message);
                     }
                 }}
             >
@@ -86,15 +79,9 @@ export function ChannelUpdateForm(props: ChannelUpdateFormProps) {
             </Formik>
 
             <MessageError
-                open={channelUpdateError.isError}
-                setCallbackClose={() => setChannelUpdateError({ isError: false, errorMessage: '' })}
-                message={channelUpdateError.errorMessage}
-            />
-
-            <MessageError
-                open={deleteChannelError.isError}
-                setCallbackClose={() => setChannelUpdateError({ isError: false, errorMessage: '' })}
-                message={deleteChannelError.errorMessage}
+                open={errorMessage !== ''}
+                setCallbackClose={() => setErrorMessage('')}
+                message={errorMessage}
             />
         </div>
     )

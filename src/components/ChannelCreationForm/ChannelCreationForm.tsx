@@ -21,7 +21,7 @@ type ChannelCreationFormProps = {
 const formValidationService = new FormValidationService();
 
 export function ChannelCreationForm(props: ChannelCreationFormProps) {
-    const [channelCreationError, setChannelCreationError] = useState<{ isError: boolean, errorMessage: string }>({ isError: false, errorMessage: '' });
+    const [channelCreationError, setChannelCreationError] = useState<string>('');
 
     const urlSearchParams = useParams();
     const dispatch = useDispatch();
@@ -41,17 +41,14 @@ export function ChannelCreationForm(props: ChannelCreationFormProps) {
                 initialValues={initialValues}
                 validate={formValidationService.validateChannelCreation}
                 onSubmit={async (values) => {
-                    setChannelCreationError({ isError: false, errorMessage: '' });
+                    setChannelCreationError('');
                     try {
                         const response = await new ChannelService().createChannel(values);
                         dispatch(addChannel(response.result));
                         props.closeChannelCreation();
                     } catch (error) {
-                        let errorMessage: string = "Une erreur est survenue, veuillez réessayer";
-                        if (error instanceof AxiosError) {
-                            errorMessage = error.response?.data.message;
-                        }
-                        setChannelCreationError({ isError: true, errorMessage });
+                        let errorMessage = error as Error;
+                        setChannelCreationError(errorMessage.message);
                     }
                 }}
             >
@@ -76,9 +73,9 @@ export function ChannelCreationForm(props: ChannelCreationFormProps) {
 
             </Formik>
             <MessageError
-                open={channelCreationError.isError}
-                setCallbackClose={() => setChannelCreationError({ isError: false, errorMessage: '' })}
-                message={channelCreationError.errorMessage}
+                open={channelCreationError !== ''}
+                setCallbackClose={() => setChannelCreationError('')}
+                message={channelCreationError}
             />
         </div>
     )

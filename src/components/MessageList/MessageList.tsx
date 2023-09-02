@@ -22,8 +22,7 @@ export const MessageList = ({messages, channelId}: messageList) => {
   const [shouldAutoScroll, setShouldAutoScroll] = useState(true);
   const dispatch = useDispatch();
   const stateMessages = useSelector((state: any) => state.messages);
-  const [messageError, setMessageError] = useState<{ isError: boolean, errorMessage: string }>({ isError: false, errorMessage: '' });
-  const [markAsReadError, setMarkAsReadError] = useState<{ isError: boolean, errorMessage: string }>({ isError: false, errorMessage: '' });
+  const [messageError, setMessageError] = useState<string>('');
 
   useEffect(() => {
     if(element.current?.scrollHeight! === element.current?.offsetHeight!) {
@@ -31,11 +30,8 @@ export const MessageList = ({messages, channelId}: messageList) => {
       try {
         new ChannelService().markAsRead(channelId);
       } catch(error) {
-        let errorMessage = 'une erreur est survenue, veuillez réessayer';
-        if(error instanceof AxiosError) {
-          errorMessage = error.response?.data.message;
-        }
-        setMarkAsReadError({ isError: true, errorMessage });
+        const errorMessage = error as Error;
+        setMessageError(errorMessage.message);
       }
     }
     shouldAutoScroll && messageEndRef.current?.scrollIntoView({
@@ -52,11 +48,8 @@ export const MessageList = ({messages, channelId}: messageList) => {
         dispatch(setMessages({ channelId: messages[0].channelId!, messages: messages }));
       }
     } catch (error) {
-      let errorMessage: string = 'Une erreur est survenue, veuillez réessayer';
-      if (error instanceof AxiosError) {
-        errorMessage = error.response?.data.message;
-      }
-      setMessageError({ isError: true, errorMessage });
+      const errorMessage = error as Error;
+      setMessageError(errorMessage.message);
     }
   }
 
@@ -82,14 +75,9 @@ export const MessageList = ({messages, channelId}: messageList) => {
       ))}
 
       <MessageError
-        open={messageError.isError}
-        setCallbackClose={() => setMessageError({ isError: false, errorMessage: '' })}
-        message={messageError.errorMessage}
-      />
-      <MessageError
-        open={markAsReadError.isError}
-        setCallbackClose={() => setMarkAsReadError({ isError: false, errorMessage: '' })}
-        message={markAsReadError.errorMessage}
+        open={messageError !== ''}
+        setCallbackClose={() => setMessageError('')}
+        message={messageError}
       />
     </div>
   );
