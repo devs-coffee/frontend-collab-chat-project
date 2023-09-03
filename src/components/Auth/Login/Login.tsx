@@ -43,31 +43,49 @@ export function Login(props: any) {
       >
         {(formik) => (
           <Form>
-            <h2>Connexion</h2>
-            <div>
+            <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-white">
+              Connexion au compte
+            </h2>
+            <div className="mt-10">
               <div>
-                <label htmlFor="login-email">E-mail :</label>
-                <Field type="text" name="email" id="login-email" />
+                <label className="label" htmlFor="login-email">
+                  Addresse e-mail
+                </label>
+                <Field
+                  className="input"
+                  type="text"
+                  name="email"
+                  id="login-email"
+                />
               </div>
-              <ErrorMessage name="email" />
-              <div>
-                <label htmlFor="login-password">Mot de passe :</label>
-                <Field type="text" name="password" id="login-password" />
+              <p className="form-error-message">
+                <ErrorMessage name="email" />
+              </p>
+              <div className="mt-4">
+                <label className="label" htmlFor="login-password">
+                  Mot de passe
+                </label>
+                <Field
+                  className="input"
+                  type="password"
+                  name="password"
+                  id="login-password"
+                  
+                />
               </div>
-              <ErrorMessage name="password" />
+              <p className="form-error-message">
+                <ErrorMessage name="password" />
+              </p>
               <div>
-                <Button
-                  variant="contained"
-                  type="submit"
-                  endIcon={<SendIcon />}
-                >
-                  Envoyer
-                </Button>
+                <button className="button mt-4" type="submit">
+                  Se connecter
+                </button>
               </div>
             </div>
           </Form>
         )}
       </Formik>
+      
       {loginError && (
         <MessageError
           setCallbackClose={() => setLoginError("")}

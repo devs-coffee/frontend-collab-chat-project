@@ -6,14 +6,13 @@ body {
   transition: all 0.2s;
   background-color: rgba(var(--rgb-background-color));
   color: var(--font-color);
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
 }
 
 html,
 body,
 #root,
 #root>div {
-  height: 100vh;
-  max-height: 100vh;
   margin: 0;
   padding: 0;
 }

@@ -1,3 +1,35 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-gray-900 text-white;
+  }
+
+  a:focus {
+    @apply outline outline-2 outline-offset-1 rounded;
+  }
+}
+
+@layer components {
+  .label {
+    @apply block text-sm font-medium leading-6 text-white
+  }
+
+  .input {
+    @apply block w-full rounded-md border border-white/10 bg-white/5 py-1.5 text-white shadow-sm sm:text-sm sm:leading-6 px-2 mt-1;
+  }
+
+  .button {
+    @apply flex w-full justify-center rounded-md bg-roman-coffee-500 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-roman-coffee-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2;
+  }
+
+  .button-secondary {
+    @apply flex w-full justify-center rounded-md border border-roman-coffee-500 bg-black/10 px-3 py-1.5 text-sm font-semibold leading-6 text-gray-300 shadow-sm hover:bg-roman-coffee-400 focus:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2;
+  }
+
+  .form-error-message {
+    @apply text-red-500 text-xs leading-5;
+  }
+}

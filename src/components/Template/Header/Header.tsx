@@ -20,7 +20,6 @@ export function Header({ ioClose }: { ioClose?: () => void }): JSX.Element {
     const user: User = authStatus.user;
 
     const [darkMode, setDarkMode] = useDarkMode();
-    const [unreadMessages, setUnreadMessages] = useState<boolean>(false);
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const isAccountMenuOpen = Boolean(anchorEl);
 

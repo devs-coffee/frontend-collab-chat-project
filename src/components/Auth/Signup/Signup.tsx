@@ -40,7 +40,7 @@ export function Signup() {
     let special = value.match(/[+\-/=!@_&*]/);
     let size = value.length >= 8;
     return (
-      <div style={{ whiteSpace: "pre" }}>
+      <div className="text-white mt-8" style={{ whiteSpace: "pre" }}>
         <p>
           Votre mot de passe doit contenir :<br />
           <span style={size ? { color: "green" } : { color: "red" }}>
@@ -94,42 +94,90 @@ export function Signup() {
         {(formik) => (
           <>
             <Form>
-              <h2>inscription</h2>
-              <div>
+              <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-white">
+                Inscription
+              </h2>
+              <div className="mt-10">
                 <div>
-                  <label htmlFor="signup_pseudo">Pseudo :</label>
-                  <Field type="text" name="pseudo" id="signup_pseudo" />
-                </div>
-                <ErrorMessage name="pseudo" />
-                <div>
-                  <label htmlFor="signup-email">Email :</label>
-                  <Field type="text" name="email" id="signup_email" />
-                </div>
-                <ErrorMessage name="email" />
-                <div>
-                  <label htmlFor="signup-password">Mot de passe :</label>
-                  <Field type="text" name="password" id="signup_password" />
-                </div>
-                <ErrorMessage name="password" />
-                <div>
-                  <label htmlFor="signup-passwordconfirm">Confirmez :</label>
+                  <label className="label" htmlFor="signup_pseudo">
+                    Pseudonyme
+                  </label>
                   <Field
+                    className="input"
+                    type="text"
+                    name="pseudo"
+                    id="signup_pseudo"
+                  />
+                </div>
+
+                <p className="form-error-message">
+                  <ErrorMessage name="pseudo" />
+                </p>
+
+                <div className="mt-4">
+                  <label className="label" htmlFor="signup-email">
+                    Adresse e-mail
+                  </label>
+                  <Field
+                    className="input"
+                    type="text"
+                    name="email"
+                    id="signup_email"
+                  />
+                </div>
+
+                <p className="form-error-message">
+                  <ErrorMessage name="email" />
+                </p>
+
+                <div className="mt-4">
+                  <label className="label" htmlFor="signup-password">
+                    Mot de passe
+                  </label>
+                  <Field
+                    className="input"
+                    type="text"
+                    name="password"
+                    id="signup_password"
+                  />
+                </div>
+                <p className="form-error-message">
+                  <ErrorMessage name="password" />
+                </p>
+
+                <div
+                  className={
+                    formik.getFieldMeta("password").error
+                      ? "invalidPassword"
+                      : "validPassword"
+                  }
+                >
+                  {handlePassowrdHelp(formik.getFieldProps("password").value)}
+                </div>
+
+                <div className="mt-4">
+                  <label className="label" htmlFor="signup-passwordconfirm">
+                    Confirmez le mot de passe
+                  </label>
+                  <Field
+                    className="input"
                     type="text"
                     name="passwordConfirm"
                     id="signup_passwordconfirm"
                   />
                 </div>
-                <ErrorMessage name="passwordConfirm" />
-                <div>
-                  <h3>Avatar :</h3>
+                <p className="form-error-message">
+                  <ErrorMessage name="passwordConfirm" />
+                </p>
+                <div className="mt-4">
+                  <h3 className="label">Avatar</h3>
                   {croppedImage === "" ? (
-                    <Button
-                      variant="contained"
-                      startIcon={<AddPhotoAlternateIcon />}
+                    <button
+                      className="button-secondary mt-1"
                       onClick={() => setIsOpen(true)}
                     >
-                      Ajouter
-                    </Button>
+                      Ouvrir le menu de selection
+                    </button>
                   ) : (
                     <>
                       <Avatar alt="avatar serveur demandé" src={croppedImage} />
@@ -152,22 +200,9 @@ export function Signup() {
                     childComponent={<AvatarCropper setImage={updateImage} />}
                   />
                 )}
-                <Button
-                  variant="contained"
-                  type="submit"
-                  endIcon={<SendIcon />}
-                >
-                  Envoyer
-                </Button>
-                <div
-                  className={
-                    formik.getFieldMeta("password").error
-                      ? "invalidPassword"
-                      : "validPassword"
-                  }
-                >
-                  {handlePassowrdHelp(formik.getFieldProps("password").value)}
-                </div>
+                <button className="button mt-4" type="submit">
+                  Créer mon compte
+                </button>
               </div>
             </Form>
           </>
