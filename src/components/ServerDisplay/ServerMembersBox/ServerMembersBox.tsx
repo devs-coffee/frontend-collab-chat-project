@@ -21,11 +21,8 @@ const getServerUsers = async (serverId: string) => {
 		const response = await new ServerService().getServerUsers(serverId);
 		return response.result;
 	} catch (error) {
-		let errorMessage = "membres du serveur non récupérés, veuillez réessayer";
-		if (error instanceof AxiosError) {
-			errorMessage = error.response?.data.message;
-		}
-		throw new Error(errorMessage);
+		const errorMessage = error as Error;
+		throw new Error(errorMessage.message);
 	}
 }
 
@@ -40,8 +37,7 @@ export function ServerMembersBox(): JSX.Element {
 	const [connectedUsers, setConnectedUsers] = useState<string[]>([userId]);
 	const [hasConnectdUsers, setHasConnectedUsers] = useState<boolean>(false);
 	const [isDisabled, setIsDisabled] = useState<boolean>(false);
-	const [joinServerError, setJoinServerError] = useState<{ isError: boolean, errorMessage: string }>({ isError: false, errorMessage: '' });
-	const [usersError, setUsersError] = useState<{ isError: boolean, errorMessage: string }>({ isError: false, errorMessage: '' });
+	const [errorMessage, setErrorMessage] = useState<string>('');
 
 	const joinServer = async () => {
 		try {
@@ -61,14 +57,8 @@ export function ServerMembersBox(): JSX.Element {
 			setServerUsers(usersData);
 			setIsDisabled(false)
 		} catch (error) {
-			let errorMessage: string;
-			if (error instanceof AxiosError) {
-				errorMessage = error.response?.data.message;
-			} else {
-				errorMessage = 'une erreur est survenue, veuillez réessayer';
-			}
-			setJoinServerError({ isError: true, errorMessage });
-			return;
+			const errorMessage = error as Error;
+			setErrorMessage(errorMessage.message);
 		}
 	}
 
@@ -86,7 +76,8 @@ export function ServerMembersBox(): JSX.Element {
 					setServerUsers(response);
 				})
 				.catch(error => {
-					setUsersError(error);
+					const errorMessage = error as Error;
+					setErrorMessage(errorMessage.message);
 				});
 		}
 
@@ -145,15 +136,9 @@ export function ServerMembersBox(): JSX.Element {
 			)}
 
 			<MessageError
-				open={usersError.isError}
-				setCallbackClose={() => setUsersError({ isError: false, errorMessage: '' })}
-				message={usersError.errorMessage}
-			/>
-
-			<MessageError
-				open={joinServerError.isError}
-				setCallbackClose={() => setJoinServerError({ isError: false, errorMessage: '' })}
-				message={joinServerError.errorMessage}
+				open={errorMessage !== ''}
+				setCallbackClose={() => setErrorMessage('')}
+				message={errorMessage}
 			/>
 		</div>
 	);

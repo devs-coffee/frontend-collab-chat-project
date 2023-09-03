@@ -88,7 +88,8 @@ export const fetchServers = createAsyncThunk<
     >('servers/fetchServers', async () => {
     const response:OperationResult<Server[]> = await new ServerService().getServers()
     .catch(error => {
-        throw error.response.data.message;
+        const errorMessage = error as Error;
+        throw new Error(errorMessage.message);
     })
     return response;
     });

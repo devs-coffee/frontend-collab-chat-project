@@ -16,11 +16,8 @@ const getServerData = async (serverId: string) => {
         const response = await new ServerService().getServerById(serverId);
         return response.result;
     } catch (error) {
-        let errorMessage: string = 'Données du serveur non récupérées, veuillez réessayer';
-        if (error instanceof AxiosError) {
-            errorMessage = error.response?.data.message;
-        }
-        throw new Error(errorMessage);
+        const errorMessage = error as Error;
+        throw new Error(errorMessage.message);
     }
 }
 
@@ -29,7 +26,7 @@ export function ServerDisplay() {
     const urlSearchParams = useParams();
     const server = useSelector((state: reduxData) => state.servers.data.find((server: Server) => server.id === urlSearchParams.serverId));
     const [isUpdatingServer, setIsUpdatingServer] = useState<boolean>(false);
-    const [serverError, setServerError] = useState<string>('');
+    const [errorMessage, setErrorMessage] = useState<string>('');
     const [mainContent, setMainContent] = useState<string>('chat');
     const [channelId, setChannelId] = useState<string>("");
 
@@ -47,7 +44,8 @@ export function ServerDisplay() {
                     setChannelId(defaultChannel.id);
                 })
                 .catch(error => {
-                    setServerError(error);
+                    const errorMessage = error as Error;
+                    setErrorMessage(errorMessage.message);
                 });
         }
     }, [urlSearchParams]);
@@ -84,9 +82,9 @@ export function ServerDisplay() {
             {server && isUpdatingServer && (<ServerUpdateForm setIsUpdatingServer={setIsUpdatingServer} server={server} />)}
 
             <MessageError
-                open={serverError !== ''}
-                setCallbackClose={() => setServerError('')}
-                message={serverError}
+                open={errorMessage !== ''}
+                setCallbackClose={() => setErrorMessage('')}
+                message={errorMessage}
             />
         </div>
     )

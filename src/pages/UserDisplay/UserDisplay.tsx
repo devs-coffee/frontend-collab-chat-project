@@ -19,8 +19,7 @@ export function UserDisplay() {
     const userId = useSelector((state: reduxData) => state.authStatus.user?.id);
     const [displayedUser, setDisplayedUser] = useState<User | null>(null);
     const [isSendingPM, setIsSendingPM] = useState<boolean>(false);
-    const [getUserError, setGetUserError] = useState<{ isError: boolean, errorMessage: string }>({ isError: false, errorMessage: '' });
-    const [sendMessageError, setSendMessageError] = useState<{ isError: boolean, errorMessage: string }>({ isError: false, errorMessage: '' });
+    const [sendMessageError, setSendMessageError] = useState<string>('');
 
     const sendPrivateMessage = async (messageContent: string) => {
         let message = {
@@ -32,11 +31,8 @@ export function UserDisplay() {
         try {
             await messageService.send(message);
         } catch (error) {
-            let errorMessage: string = 'une erreur est survenue, veuillez réessayer';;
-            if (error instanceof AxiosError) {
-                errorMessage = error.response?.data.message;
-            }
-            setSendMessageError({ isError: true, errorMessage });
+            const errorMessage = error as Error;
+            setSendMessageError(errorMessage.message);
         }
     }
 
@@ -49,11 +45,8 @@ export function UserDisplay() {
                     return response.result;
                 }
             } catch (error) {
-                let errorMessage: string = 'une erreur est survenue, veuillez réessayer';;
-                if (error instanceof AxiosError) {
-                    errorMessage = error.response?.data.message;
-                }
-                setGetUserError({ isError: true, errorMessage });
+                const errorMessage = error as Error;
+                setSendMessageError(errorMessage.message);
                 }
         }
         getUser();
@@ -75,14 +68,9 @@ export function UserDisplay() {
                 <MessageEditor sendMessage={sendPrivateMessage}/>
             )}
             <MessageError
-                open={sendMessageError.isError}
-                setCallbackClose={() => setSendMessageError({ isError: false, errorMessage: '' })}
-                message={sendMessageError.errorMessage}
-            />
-            <MessageError
-                open={getUserError.isError}
-                setCallbackClose={() => setGetUserError({ isError: false, errorMessage: '' })}
-                message={getUserError.errorMessage}
+                open={sendMessageError !== ''}
+                setCallbackClose={() => setSendMessageError('')}
+                message={sendMessageError}
             />
         </div>
     )

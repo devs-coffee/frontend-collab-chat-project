@@ -19,7 +19,7 @@ const formValidationService = new FormValidationService();
 export function Login(props: any) {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const [loginError, setLoginError] = useState<{ isError: boolean, errorMessage: string }>({ isError: false, errorMessage: '' });
+    const [loginError, setLoginError] = useState<string>('');
 
     return (
         <div className="Login">
@@ -30,17 +30,14 @@ export function Login(props: any) {
                 }}
                 validate={formValidationService.validateLogin}
                 onSubmit={async (values) => {
-                    setLoginError({ isError: false, errorMessage: '' });
+                    setLoginError('');
                     try {
                         const response = await new AuthenticationService().login(values);
                         dispatch(setLogs(response.result));
                         navigate('/');
                     } catch (error) {
-                        let errorMessage = 'Une erreur est survenue, c\'est ballot.'
-                        if (error instanceof AxiosError) {
-                            errorMessage = error.response?.data.message;
-                        }
-                        setLoginError({ isError: true, errorMessage });
+                        const errorMessage = error as Error;
+                        setLoginError(errorMessage.message);
                     }
                 }}
             >
@@ -73,7 +70,7 @@ export function Login(props: any) {
                     </Form>
                 )}
             </Formik>
-            {loginError && <MessageError setCallbackClose={() =>setLoginError({ isError: false, errorMessage: '' })} open={loginError.isError} message={loginError.errorMessage} />}
+            {loginError && <MessageError setCallbackClose={() =>setLoginError('')} open={loginError !== ''} message={loginError} />}
         </div>
     )
 }

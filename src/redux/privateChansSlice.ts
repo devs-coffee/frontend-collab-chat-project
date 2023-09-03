@@ -40,7 +40,8 @@ export const fetchPrivateChannels = createAsyncThunk<
     >('channels/@me', async () => {
     const response:OperationResult<PrivateChannel[]> = await new ChannelService().getPrivateChannels()
     .catch(error => {
-        throw error.response.data.message;
+        const errorMessage = error as Error;
+        throw new Error(errorMessage.message)
     })
     return response;
     });

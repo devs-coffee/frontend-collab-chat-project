@@ -1,10 +1,11 @@
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
 import { Navigate, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { AuthenticationService } from "../../services/authenticationService";
 import { setUser } from '../../redux/authSlice';
 import { User } from "../../interfaces/IUser";
+import { MessageError } from "../MessageError/MessageError";
 
 type ProtectedContentProps = {
     children: ReactNode;
@@ -15,6 +16,7 @@ export const ProtectedContent = ({ children }: ProtectedContentProps) => {
     const dispatch = useDispatch();
     const token = window.localStorage.getItem('access_token');
     const authenticationService = new AuthenticationService();
+    const [errorMessage, setErrorMessage] = useState<string>('')
     const navigate = useNavigate();
 
     async function getUserInfos(): Promise<User | null> {
@@ -25,6 +27,8 @@ export const ProtectedContent = ({ children }: ProtectedContentProps) => {
             }
             return null;
         } catch (error) {
+            const errorMessage = error as Error;
+            setErrorMessage(errorMessage.message);
             return null;
         }
     }
@@ -51,6 +55,13 @@ export const ProtectedContent = ({ children }: ProtectedContentProps) => {
     if (!authStatus.isLogged && !token) {
         return <Navigate to="/auth" ></Navigate>
     }
+    errorMessage !== "" &&
+        <MessageError
+        open={errorMessage !== ''}
+        setCallbackClose={() => setErrorMessage('')}
+        message={errorMessage}
+      />
+    
     return <div>Veuillez patienter</div>
 }
 

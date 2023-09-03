@@ -28,7 +28,7 @@ function Message({ message }: messageType) {
     const users = useSelector((state: reduxData) => state.users.data);
     const author = message.userId === authStatus.user!.id ? authStatus.user : users.find(user => user.id === message.userId);
     const dispatch = useDispatch();
-    const [getMessagesError, setGetMessagesError] = useState<{ isError: boolean, errorMessage: string }>({ isError: false, errorMessage: '' });
+    const [getMessagesError, setGetMessagesError] = useState<string>('');
 
     const sendMessage = async (content: string) => {
         setIsEdit(false)
@@ -64,11 +64,8 @@ function Message({ message }: messageType) {
                 dispatch<any>(removeMessage(message));
             }
         } catch (error) {
-            let errorMessage = 'une erreur est survenue, veuillez réessayer';
-            if (error instanceof AxiosError) {
-                errorMessage = error.response?.data.message;
-            }
-            setGetMessagesError({ isError: true, errorMessage });
+            const errorMessage = error as Error;
+            setGetMessagesError(errorMessage.message);
         }
     }
 
@@ -79,11 +76,8 @@ function Message({ message }: messageType) {
                 dispatch<any>(addOrUpdateMessage(response.result));
             }
         } catch (error) {
-            let errorMessage: string = 'une erreur est survenue, veuillez réessayer';;
-            if (error instanceof AxiosError) {
-                errorMessage = error.response?.data.message;
-            }
-            setGetMessagesError({ isError: true, errorMessage });
+            const errorMessage = error as Error;
+            setGetMessagesError(errorMessage.message);
         }
     }
 
@@ -109,9 +103,9 @@ function Message({ message }: messageType) {
                 </div>
             }
             <MessageError
-                open={getMessagesError.isError}
-                setCallbackClose={() => setGetMessagesError({ isError: false, errorMessage: '' })}
-                message={getMessagesError.errorMessage}
+                open={getMessagesError !== ''}
+                setCallbackClose={() => setGetMessagesError('')}
+                message={getMessagesError}
             />
         </div>
     );
