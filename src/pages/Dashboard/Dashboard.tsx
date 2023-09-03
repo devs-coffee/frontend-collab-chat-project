@@ -29,7 +29,6 @@ export function Dashboard() {
     const users = useSelector((state: reduxData) => state.users.data);
     const [dashboardContent, setDashboardContent] = useState<string>('');
     const [privateChansError, setPrivateChansError] = useState<string>('');
-    const [usersError, setUsersError] = useState<string>('');
 
     useEffect(() => {
         if (serversStatus === "idle") {
@@ -51,7 +50,7 @@ export function Dashboard() {
                 })
                 .catch(error => {
                     const errorMessage = error as Error;
-                    setUsersError(errorMessage.message);
+                    setPrivateChansError(errorMessage.message);
                 });
             })
             .catch(error => {
@@ -76,11 +75,6 @@ export function Dashboard() {
                 open={privateChansError !== ''}
                 setCallbackClose={() => setPrivateChansError('')}
                 message={privateChansError}
-            />
-            <MessageError
-                open={usersError !== ''}
-                setCallbackClose={() => setUsersError('')}
-                message={usersError}
             />
         </div>
     )
