@@ -103,7 +103,7 @@ export function ServerUpdateForm(props: ServerUpdatingFormProps) {
                 }}
             >
                 {formik => (
-                    <Form className="server-update-form">
+                    <Form className="form server-update-form">
                         <h2>Edition du serveur <DisabledByDefaultRoundedIcon color="warning" onClick={() => props.setIsUpdatingServer(false)} /></h2>
                         <div className="field-box">
                             <div className="server-update-form-name form__fields">

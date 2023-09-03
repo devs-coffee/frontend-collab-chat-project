@@ -53,7 +53,7 @@ export function ChannelCreationForm(props: ChannelCreationFormProps) {
                 }}
             >
                 {formik => (
-                    <Form className='channel-creation-form'>
+                    <Form className='form channel-creation-form'>
                         <h2>Nouveau channel <DisabledByDefaultRoundedIcon color="warning" onClick={avoidChannelCreation} /></h2>
                         <div className='field-box'>
                             <div className='channel-creation-form-title form__fields'>

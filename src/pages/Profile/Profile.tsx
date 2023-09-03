@@ -77,7 +77,7 @@ export function Profile() {
                 }}
             >
                 {formik => (
-                    <Form className='profile-update-form'>
+                    <Form className='form profile-update-form'>
                         <h2>Votre Profil :</h2>
                         <div className='field-box'>
                             <div className='profile-update-form-pseudo form__fields'>

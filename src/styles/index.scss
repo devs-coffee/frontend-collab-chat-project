@@ -25,10 +25,10 @@ a:visited {
   color: var(--font-color);
 }
 
-form {
+.form {
   @include form;
 }
 
-[data-theme="dark"] form {
+[data-theme="dark"] .form {
   @include darkForm;
 }

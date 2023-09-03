@@ -64,7 +64,7 @@ export function ServerCreationForm(props: ServerCreationFormProps) {
                 }}
             >
                 {formik => (
-                    <Form className="server-creation-form">
+                    <Form className="form server-creation-form">
                         <h2>Nouveau serveur <DisabledByDefaultRoundedIcon color="warning" onClick={closeServerAdding} /></h2>
                         <div className="field-box">
                             <div className="server-creation-form-name form__fields">
