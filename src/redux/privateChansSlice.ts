@@ -10,6 +10,7 @@ export const privateChansSlice = createSlice({
     reducers: {
         setPrivateChannels: (state, action) => {
             state.data = action.payload;
+            state.status = "succeed";
             return state;
         }
     },

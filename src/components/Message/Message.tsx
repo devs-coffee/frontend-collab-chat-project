@@ -30,7 +30,6 @@ function Message({ message }: messageType) {
     const dispatch = useDispatch();
     const [getMessagesError, setGetMessagesError] = useState<string>('');
 
-
     const sendMessage = async (content: string) => {
         setIsEdit(false)
         update(content)
@@ -87,8 +86,8 @@ function Message({ message }: messageType) {
             <div className='message'>
                 {author && author?.picture && author?.picture !== ''
                     ? <Avatar alt="user picture" src={author!.picture}></Avatar>
-                    : <Avatar alt="user picture">{message.user?.pseudo.substring(0, 1).toUpperCase()}</Avatar>}
-                <p className="message_pseudo">{message.user?.pseudo} <span className='message_date'>{isToday ? "Aujourd'hui" : 'le ' + messageDate} à {new Date(message.createdAt!).getHours()}:{new Date(message.createdAt!).getMinutes()}</span></p>
+                    : <Avatar alt="user picture">{author!.pseudo.substring(0, 1).toUpperCase()}</Avatar>}
+                <p className="message_pseudo">{author!.pseudo} <span className='message_date'>{isToday ? "Aujourd'hui" : 'le ' + messageDate} à {new Date(message.createdAt!).getHours()}:{new Date(message.createdAt!).getMinutes()}</span></p>
             </div>
 
             {!isEdit

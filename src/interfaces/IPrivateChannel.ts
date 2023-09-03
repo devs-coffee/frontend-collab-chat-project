@@ -2,5 +2,7 @@ import { User } from "./IUser";
 
 export interface PrivateChannel {
     id: string,
-    users: Array<{user:User}>
+    title: string,
+    users: string[],
+    hasNew: boolean
 }
