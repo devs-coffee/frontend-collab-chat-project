@@ -7,6 +7,7 @@ import { MessageBox } from "../../components";
 import { reduxData } from "../../interfaces/IReduxData";
 import { addOrUpdateMessage } from "../../redux/messagesSlice";
 import { IMessage } from "../../interfaces/IMessage";
+import "./PrivateMessages.scss";
 
 export const PrivateMessages = () => {
     const { Socket } = useIoSocket() as IoProvider;
