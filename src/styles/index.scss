@@ -32,21 +32,3 @@ form {
 [data-theme="dark"] form {
   @include darkForm;
 }
-
-::-webkit-scrollbar {
-  width: 20px;
-}
-
-::-webkit-scrollbar-track {
-  width: 20px;
-  min-height: 40px;
-  background: linear-gradient(0deg, rgb(var(--rgb-background-color), 0), rgb(var(--rgb-secondary)), rgb(var(--rgb-background-color), 0));
-}
-
-::-webkit-scrollbar-thumb {
-  width: 22px;
-  background: linear-gradient(0deg,
-      rgba(var((--rgb-quaternary)), 0.3),
-      rgba(var((--rgb-quaternary)), 0.80),
-      rgba(var((--rgb-quaternary)), 0.3));
-}
