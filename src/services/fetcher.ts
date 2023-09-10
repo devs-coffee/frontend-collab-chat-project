@@ -44,7 +44,7 @@ export abstract class Fetcher {
 
     private handleError = async (error: Error) => {
         if(error instanceof AxiosError) {
-            if(error.response?.status === 401) {
+            if(error.response?.status === 401 && !error.config.url?.includes('refresh')) {
                 await this.refreshToken(error);
             }
             throw new Error(error.response?.data.message);
@@ -59,7 +59,7 @@ export abstract class Fetcher {
         const refreshToken = Cookies.get('refreshToken');
         if(refreshToken){
             const refreshTokens = await this.get<ITokens>('/auth/refresh', { headers : {'Authorization': `Bearer ${refreshToken}`}});
-            if(refreshTokens.data.isSucceed){
+            if(refreshTokens.data.isSucceed) {
                 localStorage.setItem('access_token', refreshTokens.data.result.access_token);
                 Cookies.set('refreshToken', refreshTokens.data.result.refreshToken, { expires: 7, secure: true });
                 this.token = refreshTokens.data.result.access_token;
