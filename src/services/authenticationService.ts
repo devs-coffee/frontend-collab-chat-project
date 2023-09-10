@@ -22,16 +22,13 @@ export class AuthenticationService extends Fetcher {
         if (response.data.result.user.prefs?.colorScheme) {
             response.data.result.user.prefs!.colorScheme = response.data.result.user.prefs?.colorScheme.toLowerCase() as Theme;
         } 
-        console.log(response.headers)
-        let c = Cookies.get('auth-cookie');
-        console.log('auth-cookie', c)
         Cookies.set('refreshToken', response.data.result.user.refreshToken, { expires: 7, secure: true });
         return response.data;
     }
 
     async signup(values:signupForm):Promise<OperationResult<ApiAuthResponse>> {
         const response = await super.post<signupForm, ApiAuthResponse>('/auth/signup', values);
-        Cookies.set('refreshToken', response.data.result.user.refreshToken, { expires: 7 });
+        Cookies.set('refreshToken', response.data.result.user.refreshToken, { expires: 7, secure: true });
         return response.data;
     }
 }
