@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import data from '../datas/reduxDefault';
+import Cookies from 'js-cookie';
 
 export const authSlice = createSlice({
     name: 'authStatus',
@@ -14,6 +15,7 @@ export const authSlice = createSlice({
             state.isLogged = false;
             state.user = null;
             localStorage.removeItem('access_token');
+            Cookies.remove('refreshToken');
         },
         setUser: (state, action) => {
             state.isLogged = true;

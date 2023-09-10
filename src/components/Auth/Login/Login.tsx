@@ -1,8 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
-import { useDispatch } from 'react-redux';
-import { useState } from 'react';
-import { AxiosError } from 'axios';
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect, useState } from 'react';
 
 import { Button } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
@@ -13,6 +12,7 @@ import { FormValidationService } from '../../../utils/formValidationService';
 import { MessageError } from '../../';
 
 import "./Login.scss";
+import { reduxData } from '../../../interfaces/IReduxData';
 
 const formValidationService = new FormValidationService();
 
@@ -20,7 +20,18 @@ export function Login(props: any) {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [loginError, setLoginError] = useState<string>('');
+    const userId = useSelector((state: reduxData) => state.authStatus.user?.id);
 
+    useEffect(() => {
+        if(!userId){
+            new AuthenticationService().getMe()
+            .then(u => {
+                if(u.isSucceed){
+                    dispatch(setLogs({"user": u.result}));
+                    navigate('/')
+            }}).catch(error => console.log(error));
+        }
+    })
     return (
         <div className="Login">
             <Formik

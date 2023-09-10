@@ -11,3 +11,7 @@ export interface User extends Prefs {
     pseudo: string;
     picture?: string;
 }
+
+export interface IAuthUser extends User {
+    refreshToken: string;
+}

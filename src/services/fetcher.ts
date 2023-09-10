@@ -1,10 +1,12 @@
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
-
+import Cookies from 'js-cookie';
 import { OperationResult } from "../interfaces/IOperationResult";
+import { config } from "process";
+import { ITokens } from "../interfaces/ITokens";
 
 export abstract class Fetcher {
     private axiosInstance = axios.create();
-    private readonly token = localStorage.getItem('access_token');
+    private token = localStorage.getItem('access_token');
     private host = process.env.REACT_APP_BACKEND_HOST
 
     constructor() {
@@ -40,8 +42,11 @@ export abstract class Fetcher {
         return response;
     }
 
-    private handleError = (error: Error) => {
+    private handleError = async (error: Error) => {
         if(error instanceof AxiosError) {
+            if(error.response?.status === 401) {
+                await this.refreshToken(error);
+            }
             throw new Error(error.response?.data.message);
         }
         else {
@@ -49,6 +54,19 @@ export abstract class Fetcher {
         }
     }
     
+    private async refreshToken(error: AxiosError){
+        const originalRequest = error.config;
+        const refreshToken = Cookies.get('refreshToken');
+        if(refreshToken){
+            const refreshTokens = await this.get<ITokens>('/auth/refresh', { headers : {'Authorization': `Bearer ${refreshToken}`}});
+            if(refreshTokens.data.isSucceed){
+                localStorage.setItem('access_token', refreshTokens.data.result.access_token);
+                Cookies.set('refreshToken', refreshTokens.data.result.refreshToken, { expires: 7, secure: true });
+                this.token = refreshTokens.data.result.access_token;
+                return await this.axiosInstance({...originalRequest, headers: {'Authorization': `Bearer ${this.token}`}});
+            }
+        }
+    }
 
     async get<T>(url: string, config?: AxiosRequestConfig<T>):Promise<AxiosResponse<OperationResult<T>>> {
         const response = await this.axiosInstance.get(this.host + url, config);
