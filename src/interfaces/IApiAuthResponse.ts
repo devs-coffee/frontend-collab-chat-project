@@ -1,6 +1,6 @@
-import { User } from "./IUser";
+import { IAuthUser, User } from "./IUser";
 
 export interface ApiAuthResponse {
     access_token: string,
-    user: User
+    user: IAuthUser
 }

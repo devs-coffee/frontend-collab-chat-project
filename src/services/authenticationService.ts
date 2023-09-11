@@ -5,6 +5,7 @@ import { Fetcher } from "./fetcher";
 import { ApiAuthResponse } from "../interfaces/IApiAuthResponse";
 import { loginForm } from "../interfaces/ILoginForm";
 import { Theme } from "../interfaces/Theme.enum";
+import Cookies from "js-cookie";
 
 export class AuthenticationService extends Fetcher {
     
@@ -21,11 +22,13 @@ export class AuthenticationService extends Fetcher {
         if (response.data.result.user.prefs?.colorScheme) {
             response.data.result.user.prefs!.colorScheme = response.data.result.user.prefs?.colorScheme.toLowerCase() as Theme;
         } 
+        Cookies.set('refreshToken', response.data.result.user.refreshToken, { expires: 7, secure: true });
         return response.data;
     }
 
     async signup(values:signupForm):Promise<OperationResult<ApiAuthResponse>> {
         const response = await super.post<signupForm, ApiAuthResponse>('/auth/signup', values);
+        Cookies.set('refreshToken', response.data.result.user.refreshToken, { expires: 7, secure: true });
         return response.data;
     }
 }
