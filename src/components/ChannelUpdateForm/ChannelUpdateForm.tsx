@@ -4,12 +4,13 @@ import { useDispatch } from 'react-redux';
 import { AxiosError } from 'axios';
 
 import DisabledByDefaultRoundedIcon from '@mui/icons-material/DisabledByDefaultRounded';
-import { Button, Snackbar } from '@mui/material';
+import { Button } from '@mui/material';
 
 import { FormValidationService } from '../../utils/formValidationService';
 import { ChannelService } from '../../services/channelService';
 import { ChannelBase } from '../../interfaces/IChannel.base';
 import { removeChannel, updateChannel } from '../../redux/serversSlice';
+import { MessageError } from '../';
 
 import "./ChannelUpdateForm.scss";
 
@@ -20,9 +21,8 @@ type ChannelUpdateFormProps = {
 
 const formValidationService = new FormValidationService();
 
-export default function ChannelUpdateForm(props: ChannelUpdateFormProps) {
-    const [ channelUpdateError, setChannelUpdateError ] = useState<{isError:boolean, errorMessage:string}>({isError: false, errorMessage: ''});
-    const [ deleteChannelError, setDeleteChannelError ] = useState<{isError:boolean, errorMessage:string}>({isError: false, errorMessage: ''});
+export function ChannelUpdateForm(props: ChannelUpdateFormProps) {
+    const [errorMessage, setErrorMessage] = useState<string>('');
 
     const dispatch = useDispatch();
 
@@ -36,44 +36,31 @@ export default function ChannelUpdateForm(props: ChannelUpdateFormProps) {
             await new ChannelService().deleteChannel(props.channel.id);
             dispatch(removeChannel(props.channel));
             props.closeChannelUpdate()
-        } catch(error) {
-            let errorMessage = 'Channel non supprimé, veuillez réessayer';
-            if(error instanceof AxiosError) {
-                errorMessage = error.response?.data.message;
-            }
-            setDeleteChannelError({isError:true, errorMessage});
+        } catch (error) {
+            const errorMessage = error as Error;
+            setErrorMessage(errorMessage.message);
         }
-    }
-    
-    const handleToastClose = (event: React.SyntheticEvent | Event, reason?: string) => {
-        if(reason === 'clickaway') {
-            return;
-        }
-        setChannelUpdateError({isError:false, errorMessage:''});
     }
 
-    return(
+    return (
         <div className='ChannelUpdateForm'>
             <Formik
                 initialValues={initialValues}
                 validate={formValidationService.validateChannelUpdate}
                 onSubmit={async (values) => {
-                    setChannelUpdateError({isError:false, errorMessage:''});
+                    setErrorMessage('');
                     try {
                         const response = await new ChannelService().updateChannel(values);
                         dispatch(updateChannel(response.result));
-                    } catch(error) {
-                        let errorMessage:string = "Une erreur est survenue, veuillez réessayer";
-                        if(error instanceof AxiosError) {
-                            errorMessage = error.response?.data.message;
-                        }
-                        setChannelUpdateError({isError:true, errorMessage});
+                    } catch (error) {
+                        const errorMessage = error as Error;
+                        setErrorMessage(errorMessage.message);
                     }
                 }}
             >
                 {formik => (
                     <Form className='channel-update-form'>
-                        <h2>Edition du channel <DisabledByDefaultRoundedIcon color="warning" onClick={props.closeChannelUpdate}/></h2>
+                        <h2>Edition du channel <DisabledByDefaultRoundedIcon color="warning" onClick={props.closeChannelUpdate} /></h2>
                         <div className='field-box'>
                             <div className='channel-update-form-title form__fields'>
                                 <label className='form__labels' htmlFor='newchannel-title'>Titre :</label>
@@ -85,22 +72,16 @@ export default function ChannelUpdateForm(props: ChannelUpdateFormProps) {
                             </div>
                             <ErrorMessage name='title' />
                         </div>
-                        <Button variant="contained" type="submit">Envoyer</Button><br/>
+                        <Button variant="contained" type="submit">Envoyer</Button><br />
                         <Button variant="contained" onClick={() => deleteChannel()}>Supprimer</Button>
                     </Form>
                 )}
             </Formik>
-            <Snackbar
-                open={channelUpdateError.isError}
-                autoHideDuration={4000}
-                onClose={handleToastClose}
-                message={channelUpdateError.errorMessage}
-            />
-            <Snackbar
-                open={deleteChannelError.isError}
-                autoHideDuration={4000}
-                onClose={handleToastClose}
-                message={deleteChannelError.errorMessage}
+
+            <MessageError
+                open={errorMessage !== ''}
+                setCallbackClose={() => setErrorMessage('')}
+                message={errorMessage}
             />
         </div>
     )

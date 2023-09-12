@@ -1,0 +1,37 @@
+@import '../../../styles/mixins';
+
+.Signup {
+    
+    margin-top: 0.6em;
+    
+    form {
+        @include form;
+    }
+    
+    .avatar-managment {
+        padding: 1em 0;
+        & h3 {
+            margin: 0;
+        }
+    }
+    
+    .passwordHelper {
+        width: fit-content;
+        margin: auto;
+        display: flex;
+        flex-direction: column;
+        text-align: left;
+    }
+
+    .invalidPassword {
+        transition: all 1s ease-in-out;
+        max-height: 600px;
+    }
+
+    .validPassword {
+        transition: all 1s ease-in-out;
+        max-height: 0;
+        overflow: hidden;
+    }
+
+}

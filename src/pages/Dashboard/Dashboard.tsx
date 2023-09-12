@@ -1,26 +1,81 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
-import DashboardPanel from "../../components/DashboardPanel/DashboardPanel";
-import DashboardServersHeading from "../../components/DashboardServersHeading/DashboardServersHeading";
-import ServerCreationForm from "../../components/ServerCreationForm/ServerCreationForm";
-import ServerSearching from '../../components/ServerSearching/ServerSearching';
+import { DashboardPanel, DashboardServersHeading, MessageError, ServerCreationForm, ServerSearching } from "../../components";
+import { reduxData } from "../../interfaces/IReduxData";
+import { fetchPrivateChannels, setPrivateChannels } from "../../redux/privateChansSlice";
+import { fetchServers } from "../../redux/serversSlice";
+import { addUsers } from "../../redux/usersSlice";
+import { AppDispatch } from "../../redux/store";
+import { ChannelService } from "../../services/channelService";
+import { UserService } from "../../services/userService";
 
 import "./Dashboard.scss";
 
-export default function Dashboard() {
-    const [dashboardContent, setDashboardContent] = useState<string>('');
+const getPrivateChans = async () => {
+    const response = await new ChannelService().getPrivateChannels();
+    const channels = response.result;
+    let userIds: string[] = [];
+    for(let chan of response.result) {
+        userIds = userIds.concat(chan.users)
+    }
+    return {channels, userIds};
+}
 
+export function Dashboard() {
+    const dispatch = useDispatch<AppDispatch>();
+    const serversStatus = useSelector((state: reduxData) => state.servers.status);
+    const privateChannelsStatus = useSelector((state: reduxData) => state.privateChans.status);
+    const users = useSelector((state: reduxData) => state.users.data);
+    const [dashboardContent, setDashboardContent] = useState<string>('');
+    const [privateChansError, setPrivateChansError] = useState<string>('');
+
+    useEffect(() => {
+        if (serversStatus === "idle") {
+            dispatch(fetchServers());
+        }
+        if(privateChannelsStatus === "idle") {
+            getPrivateChans()
+            .then(data => {
+                dispatch(setPrivateChannels(data.channels))
+                let usersToAdd = [];
+                for(let userId of data.userIds) {
+                    if(!users.find(user => user.id === userId)) {
+                        usersToAdd.push(userId);
+                    }
+                }
+                new UserService().getUsers(usersToAdd.join(","))
+                .then(fetchedUsers => {
+                    dispatch(addUsers(fetchedUsers.result));
+                })
+                .catch(error => {
+                    const errorMessage = error as Error;
+                    setPrivateChansError(errorMessage.message);
+                });
+            })
+            .catch(error => {
+                const errorMessage = error as Error;
+                setPrivateChansError(errorMessage.message);
+            }) 
+            //dispatch(fetchPrivateChannels())
+        }
+    })
     return (
         <div className="Dashboard">
             <DashboardServersHeading setDashboardContent={setDashboardContent} />
             <h2>Dashboard</h2>
             {dashboardContent === '' && <DashboardPanel />}
             {dashboardContent === 'addServer' && (
-                <ServerCreationForm setDashboardContent={setDashboardContent}/>
+                <ServerCreationForm setDashboardContent={setDashboardContent} />
             )}
             {dashboardContent === 'searchServer' && (
                 <ServerSearching />
             )}
+            <MessageError
+                open={privateChansError !== ''}
+                setCallbackClose={() => setPrivateChansError('')}
+                message={privateChansError}
+            />
         </div>
     )
 }

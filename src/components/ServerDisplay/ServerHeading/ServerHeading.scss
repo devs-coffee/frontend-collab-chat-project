@@ -1,0 +1,21 @@
+ .heading {
+ 	width: fit-content;
+ 	margin: auto;
+ 	display: flex;
+ 	align-items: center;
+
+ 	.MuiAvatar-root {
+ 		margin-right: 20px;
+ 	}
+
+ 	.MuiSvgIcon-root {
+ 		align-self: flex-start;
+ 		color: lightgray;
+ 		margin-left: 20px;
+
+ 		&:hover {
+ 			cursor: pointer;
+ 			color: grey;
+ 		}
+ 	}
+ }

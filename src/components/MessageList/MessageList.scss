@@ -3,4 +3,23 @@
     min-height: 0;
     overflow-y: scroll;
     padding: 0 0.5em;
+
+    &::-webkit-scrollbar {
+        width: 20px;
+    }
+
+    &::-webkit-scrollbar-track {
+        width: 20px;
+        min-height: 40px;
+        background: linear-gradient(0deg, rgb(var(--rgb-background-color), 0), rgb(var(--rgb-secondary), 0.5), rgb(var(--rgb-background-color), 0));
+    }
+
+    &::-webkit-scrollbar-thumb {
+        border-radius: 10px;
+        width: 22px;
+        background: linear-gradient(0deg,
+                rgba(var((--rgb-quaternary)), 0.5),
+                rgba(var((--rgb-secondary)), 0.7),
+                rgba(var((--rgb-quaternary)), 0.5));
+    }
 }
