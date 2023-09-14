@@ -1,4 +1,3 @@
-import { AxiosError } from 'axios';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import parse, { Element } from 'html-react-parser';

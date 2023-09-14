@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { AxiosError } from "axios";
 import { useSelector } from "react-redux";
 
 import { Avatar } from "@mui/material";

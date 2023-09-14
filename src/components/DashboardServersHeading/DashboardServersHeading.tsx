@@ -17,7 +17,7 @@ type DashboardServersHeadingProps = {
     setDashboardContent: React.Dispatch<React.SetStateAction<string>>,
 }
 
-export function DashboardServersHeading(props: DashboardServersHeadingProps) {
+export function DashboardServersHeading(props: DashboardServersHeadingProps): JSX.Element {
     const addNewServer = () => props.setDashboardContent('addServer');
     const searchServers = () => props.setDashboardContent('searchServer');
     const servers = getMineServersState(useSelector((state: reduxData) => state.servers));

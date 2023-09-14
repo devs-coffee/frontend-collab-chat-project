@@ -18,7 +18,6 @@ export function Modal( {setIsOpen, childComponent} : openModal) {
   };
 
   return (
-    <>
       <div className="modal-overlay">
         <div className="modal" ref={modalRef}>
           <div className='modal-close'>
@@ -30,7 +29,6 @@ export function Modal( {setIsOpen, childComponent} : openModal) {
           </div>
         </div>
       </div>
-    </>
   );
 }
 
