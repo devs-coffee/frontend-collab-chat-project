@@ -33,8 +33,10 @@ export function Signup() {
     }
 
     const handlePassowrdHelp = ((value: string): JSX.Element => {
-        type PasswordHelp = Array<{ regExp: RegExp | boolean, text: string }>;
-        const passwordHelp: PasswordHelp = [
+        type PasswordHelp = { regExp: RegExp | boolean, text: string };
+        type PasswordsHelp = Array<PasswordHelp>;
+
+        const passwordsHelp: PasswordsHelp = [
             { regExp: value.length > 8, text: 'au moins 8 caractères', },
             { regExp: /[0-9]/, text: 'un chiffre', },
             { regExp: /[a-z]/, text: 'une minuscule', },
@@ -45,7 +47,7 @@ export function Signup() {
         return (
             <div className="passwordHelper">
                 Votre mot de passe doit contenir :
-                {passwordHelp.map((value: any) => (<span style={value.regExp ? { color: 'green' } : { color: 'red' }}>{`- ${value.text}`}</span>))}
+                {passwordsHelp.map((value: PasswordHelp, index: any) => (<span key={index} style={value.regExp ? { color: 'green' } : { color: 'red' }}>{`- ${value.text}`}</span>))}
             </div>
         );
     })
