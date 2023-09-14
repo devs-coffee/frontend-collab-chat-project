@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { useDispatch } from 'react-redux';
-import { AxiosError } from 'axios';
 
 import DisabledByDefaultRoundedIcon from '@mui/icons-material/DisabledByDefaultRounded';
 import { Button } from '@mui/material';

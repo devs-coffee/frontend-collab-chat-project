@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { DashboardPanel, DashboardServersHeading, MessageError, ServerCreationForm, ServerSearching } from "../../components";
 import { reduxData } from "../../interfaces/IReduxData";
-import { fetchPrivateChannels, setPrivateChannels } from "../../redux/privateChansSlice";
+import { setPrivateChannels } from "../../redux/privateChansSlice";
 import { fetchServers } from "../../redux/serversSlice";
 import { addUsers } from "../../redux/usersSlice";
 import { AppDispatch } from "../../redux/store";
