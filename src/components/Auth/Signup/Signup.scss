@@ -1,26 +1,29 @@
 @import '../../../styles/mixins';
 
 .Signup {
-    
+
     margin-top: 0.6em;
-    
+
     form {
         @include form;
     }
-    
+
     .avatar-managment {
         padding: 1em 0;
+
         & h3 {
             margin: 0;
         }
     }
-    
+
     .passwordHelper {
-        width: fit-content;
-        margin: auto;
         display: flex;
         flex-direction: column;
-        text-align: left;
+        width: fit-content;
+        margin: 10px 0 10px 0;
+        gap: 10px;
+        white-space: pre;
+        text-align: center;
     }
 
     .invalidPassword {
