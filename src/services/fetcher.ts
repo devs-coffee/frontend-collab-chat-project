@@ -53,13 +53,18 @@ export abstract class Fetcher {
     }
     
     private async refreshToken(error: AxiosError){
-        const originalRequest = error.config;
-        const refreshTokens = await this.get<string>('/auth/refresh');
-        if(refreshTokens.data.isSucceed) {
-            localStorage.setItem('access_token', refreshTokens.data.result);
-            this.token = refreshTokens.data.result;
-            return await this.axiosInstance({...originalRequest, headers: {'Authorization': `Bearer ${this.token}`}});
+        try {
+            const originalRequest = error.config;
+            const refreshTokens = await this.get<string>('/auth/refresh');
+            if(refreshTokens.data.isSucceed) {
+                localStorage.setItem('access_token', refreshTokens.data.result);
+                this.token = refreshTokens.data.result;
+                return await this.axiosInstance({...originalRequest, headers: {'Authorization': `Bearer ${this.token}`}});
+            }
+        } catch (error) {
+            document.location.replace('/')
         }
+
     }
 
     async get<T>(url: string, config?: AxiosRequestConfig<T>):Promise<AxiosResponse<OperationResult<T>>> {
