@@ -30,8 +30,7 @@ export function Login(props: any) {
                     dispatch(setLogs({"user": u.result}));
                     navigate('/')
             }}).catch((error) => {
-                const errorMessage = error as Error;
-                setLoginError(errorMessage.message);
+                console.log(error);
             });
         }
     }, [dispatch, userId])
