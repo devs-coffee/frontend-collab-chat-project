@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { useDispatch, useSelector } from 'react-redux';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { Button } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
@@ -30,8 +30,7 @@ export function Login(props: any) {
                     dispatch(setLogs({"user": u.result}));
                     navigate('/')
             }}).catch((error) => {
-                const errorMessage = error as Error;
-                setLoginError(errorMessage.message);
+                console.log(error);
             });
         }
     }, [dispatch, userId])

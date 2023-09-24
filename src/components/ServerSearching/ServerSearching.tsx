@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { AxiosError } from 'axios';
 
 import { Avatar } from '@mui/material';
 

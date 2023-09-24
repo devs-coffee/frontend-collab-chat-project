@@ -1,8 +1,7 @@
-import { Formik, Form, Field, ErrorMessage, useField } from 'formik';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { useState } from 'react';
-import { AxiosError } from 'axios';
 
 import { Avatar, Breadcrumbs, Button } from '@mui/material';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
@@ -34,21 +33,21 @@ export function Signup() {
     }
 
     const handlePassowrdHelp = ((value: string): JSX.Element => {
-        let number = value.match(/[0-9]/);
-        let lower = value.match(/[a-z]/);
-        let upper = value.match(/[A-Z]/);
-        let special = value.match(/[+\-/=!@_&*]/);
-        let size = value.length >= 8;
+        type PasswordHelp = { regExp: RegExp | boolean, text: string };
+        type PasswordsHelp = Array<PasswordHelp>;
+
+        const passwordsHelp: PasswordsHelp = [
+            { regExp: value.length > 8, text: 'au moins 8 caractères', },
+            { regExp: /[0-9]/, text: 'un chiffre', },
+            { regExp: /[a-z]/, text: 'une minuscule', },
+            { regExp: /[A-Z]/, text: 'une majuscule', },
+            { regExp: /[+\-/=!@_&*]/, text: 'un caractère spécial parmi + - * / = ! @ _ &', },
+        ]
+
         return (
-            <div className="passwordHelper" style={{ whiteSpace: 'pre' }}>
-                <p>
-                    Votre mot de passe doit contenir :<br />
-                    <span style={size ? { color: 'green' } : { color: 'red' }}>- au moins 8 caractères</span><br />
-                    <span style={number ? { color: 'green' } : { color: 'red' }}>- un chiffre</span><br />
-                    <span style={lower ? { color: 'green' } : { color: 'red' }}>- une minuscule</span><br />
-                    <span style={upper ? { color: 'green' } : { color: 'red' }}>- une majuscule</span><br />
-                    <span style={special ? { color: 'green' } : { color: 'red' }}>- un caractère spécial parmi + - * / = ! @ _ &</span>
-                </p>
+            <div className="passwordHelper">
+                Votre mot de passe doit contenir :
+                {passwordsHelp.map((value: PasswordHelp, index: any) => (<span key={index} style={value.regExp ? { color: 'green' } : { color: 'red' }}>{`- ${value.text}`}</span>))}
             </div>
         );
     })
