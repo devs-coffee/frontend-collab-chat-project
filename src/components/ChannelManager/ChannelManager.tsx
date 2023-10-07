@@ -5,8 +5,7 @@ import { Button, Stack } from "@mui/material";
 import { red } from "@mui/material/colors";
 
 import { ChannelBase } from "../../interfaces/IChannel.base";
-import { ChannelCreationForm } from "../ChannelCreationForm/ChannelCreationForm";
-import { ChannelUpdateForm } from "../ChannelUpdateForm/ChannelUpdateForm";
+import { ChannelCreationForm, ChannelUpdateForm } from "../";
 
 import './ChannelManager.scss';
 

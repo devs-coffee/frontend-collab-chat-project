@@ -5,8 +5,8 @@ import { MessageService } from '../../services/messageService';
 import { ChannelService } from '../../services/channelService';
 import { setMessages } from '../../redux/messagesSlice';
 import { IMessage } from '../../interfaces/IMessage';
-import { MessageError } from '../';
-import { MemorisedMessage } from '../';
+
+import { MessageError, MemorisedMessage } from '../';
 
 import './MessageList.scss';
 
@@ -69,6 +69,7 @@ export const MessageList = ({messages, channelId}: messageList) => {
       {messages && messages.map((message, index) => (
         <div key={message.id}>
           <MemorisedMessage key={message.id} message={message} />
+          //TODO set ref to first unread message
           {index === messages.length - 1 && <div ref={messageEndRef} />}
         </div>
       ))}

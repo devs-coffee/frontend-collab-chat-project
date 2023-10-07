@@ -1,10 +1,10 @@
+import { ErrorMessage, Field, Form, Formik } from 'formik';
+import { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { Formik, Form, Field, ErrorMessage } from 'formik';
-import { useDispatch, useSelector } from 'react-redux';
-import { useEffect, useState } from 'react';
 
-import { Button } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
+import { Button } from '@mui/material';
 
 import { setLogs } from '../../../redux/authSlice';
 import { AuthenticationService } from '../../../services/authenticationService';
@@ -12,7 +12,6 @@ import { FormValidationService } from '../../../utils/formValidationService';
 import { MessageError } from '../../';
 
 import "./Login.scss";
-import { reduxData } from '../../../interfaces/IReduxData';
 
 const formValidationService = new FormValidationService();
 

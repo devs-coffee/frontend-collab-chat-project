@@ -1,5 +1,6 @@
 import { ChannelBase } from "../../../interfaces/IChannel.base";
-import { ChannelManager, MessageBox } from "../../index";
+import { ChannelManager, MessageBox } from "../..";
+
 import './ServerChat.scss';
 
 interface ServerChatProps {

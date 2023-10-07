@@ -1,10 +1,13 @@
-import { Slider } from '@mui/material';
 import { useCallback, useState } from 'react';
 import Cropper from 'react-easy-crop';
-import getCroppedImg from '../../utils/canvasUtils';
 import { Area, Point } from 'react-easy-crop/types';
 
+import { Slider } from '@mui/material';
+
+import getCroppedImg from '../../utils/canvasUtils';
+
 import './AvatarCropper.scss';
+
 type avatar = {
     setImage: (image: string) => string
 }
