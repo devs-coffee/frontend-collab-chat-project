@@ -41,8 +41,12 @@ export abstract class Fetcher {
     private handleError = async (error: Error) => {
         if(error instanceof AxiosError) {
             if(error.response?.status === 401 && !error.config.url?.includes('refresh')) {
-                await this.refreshToken(error);
-                document.location.replace('/')
+                const isRefreshed = await this.refreshToken(error);
+                if(isRefreshed){
+                    document.location.replace(window.location.href);
+                } else {
+                    document.location.replace('/auth');
+                }
             }
 
             throw new Error(error.response?.data.message);
@@ -59,10 +63,13 @@ export abstract class Fetcher {
             if(refreshTokens.data.isSucceed) {
                 localStorage.setItem('access_token', refreshTokens.data.result);
                 this.token = refreshTokens.data.result;
-                return await this.axiosInstance({...originalRequest, headers: {'Authorization': `Bearer ${this.token}`}});
+                await this.axiosInstance({...originalRequest, headers: {'Authorization': `Bearer ${this.token}`}});
+                return true;
+            } else {
+                return false;
             }
         } catch (error) {
-            document.location.replace('/')
+            return false;
         }
 
     }

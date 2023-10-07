@@ -20,20 +20,6 @@ export function Login(props: any) {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [loginError, setLoginError] = useState<string>('');
-    const userId = useSelector((state: reduxData) => state.authStatus.user?.id);
-
-    useEffect(() => {
-        if(!userId){
-            new AuthenticationService().getMe()
-            .then(u => {
-                if(u.isSucceed){
-                    dispatch(setLogs({"user": u.result}));
-                    navigate('/')
-            }}).catch((error) => {
-                console.log(error);
-            });
-        }
-    }, [dispatch, userId])
     return (
         <div className="Login">
             <Formik
