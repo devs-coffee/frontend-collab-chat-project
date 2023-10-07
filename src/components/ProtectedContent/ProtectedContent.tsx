@@ -37,24 +37,20 @@ export const ProtectedContent = ({ children }: ProtectedContentProps) => {
         return <div>{children}</div>;
     }
 
-    if (!authStatus.isLogged && token) {
-        getUserInfos()
-            .then(response => {
-                if (response) {
-                    dispatch(setUser(response))
-                    return <div>{children}</div>
-                }
-                else {
-                    navigate('/auth');
-                }
-            })
-            .catch(error => {
-                return <Navigate to="/auth" ></Navigate>
-            });
-    }
-    if (!authStatus.isLogged && !token) {
-        return <Navigate to="/auth" ></Navigate>
-    }
+    getUserInfos()
+        .then(response => {
+            if (response) {
+                dispatch(setUser(response))
+                return <div>{children}</div>
+            }
+            else {
+                navigate('/auth');
+            }
+        })
+        .catch(error => {
+            return <Navigate to="/auth" ></Navigate>
+        });
+
     errorMessage !== "" &&
         <MessageError
         open={errorMessage !== ''}
