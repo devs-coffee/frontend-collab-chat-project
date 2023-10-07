@@ -25,3 +25,4 @@ yarn-error.log*
 
 .vscode
 _vscode.code-workspace
+desktop.ini
