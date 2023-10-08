@@ -6,10 +6,10 @@ import { Avatar, IconButton, Menu, MenuItem } from "@mui/material";
 
 import { unsetLogs } from "../../../redux/authSlice";
 import { unsetServers } from "../../../redux/serversSlice";
-import { DarkModeSwitch } from "../../";
 import { useDarkMode } from "../../../hooks/useDarkMode";
 import type { User } from "../../../interfaces/IUser";
 import { Theme } from "../../../interfaces/Theme.enum";
+import { DarkModeSwitch } from "../../";
 
 import './Header.scss';
 

@@ -4,7 +4,6 @@ import DisabledByDefaultRoundedIcon from '@mui/icons-material/DisabledByDefaultR
 
 import './Modal.scss';
 
-
 type openModal = {
   setIsOpen : Dispatch<SetStateAction<boolean>>,
   childComponent: ReactNode

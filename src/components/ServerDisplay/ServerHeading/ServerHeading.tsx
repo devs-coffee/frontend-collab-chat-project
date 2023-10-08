@@ -1,5 +1,6 @@
 import { Avatar } from "@mui/material"
 import SettingsIcon from '@mui/icons-material/Settings';
+
 import "./ServerHeading.scss";
 
 interface ServerHeadingProps {

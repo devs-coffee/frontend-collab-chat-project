@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 
 import { Badge } from "@mui/material";
+
 import { User } from "../../interfaces/IUser";
 
 import "./UserItem.scss";

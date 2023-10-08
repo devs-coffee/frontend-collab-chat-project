@@ -1,5 +1,7 @@
 import { FC } from 'react';
+
 import { CircularProgress, Box } from '@mui/material';
+
 import './Loader.scss'
 
 export const Loader: FC = () => {

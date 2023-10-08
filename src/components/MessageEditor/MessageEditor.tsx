@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { convertToRaw, EditorState } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
-import { useMessageEditorState } from "../../hooks/useMessageEditorState";
 import { Editor } from 'react-draft-wysiwyg';
+
+import { useMessageEditorState } from "../../hooks/useMessageEditorState";
+
 import '../../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import './MessageEditor.scss';
 

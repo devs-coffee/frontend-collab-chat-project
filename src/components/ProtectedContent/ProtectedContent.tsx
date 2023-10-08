@@ -5,7 +5,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { AuthenticationService } from "../../services/authenticationService";
 import { setUser } from '../../redux/authSlice';
 import { User } from "../../interfaces/IUser";
-import { MessageError } from "../MessageError/MessageError";
+
+import { MessageError } from "../";
 
 type ProtectedContentProps = {
     children: ReactNode;

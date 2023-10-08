@@ -1,6 +1,8 @@
-import { ChannelBase } from "../../../interfaces/IChannel.base";
 import { Stack } from "@mui/material";
 import SettingsIcon from '@mui/icons-material/Settings';
+
+import { ChannelBase } from "../../../interfaces/IChannel.base";
+
 import "./ServerChannelBox.scss";
 
 interface ServerChannelBoxProps {

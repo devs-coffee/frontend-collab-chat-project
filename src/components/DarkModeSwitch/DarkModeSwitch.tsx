@@ -1,9 +1,12 @@
 import { ChangeEventHandler, useState } from "react";
+
 import { FormControlLabel, FormGroup, Switch } from "@mui/material";
+
 import { UserService } from "../../services/userService";
 import { Theme } from "../../interfaces/Theme.enum";
+import { MessageError } from "../";
+
 import "./DarkModeSwitch.scss";
-import { MessageError } from "../MessageError/MessageError";
 
 type SetState<T> = React.Dispatch<React.SetStateAction<T>>;
 
