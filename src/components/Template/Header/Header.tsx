@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 import { Avatar, IconButton, Menu, MenuItem } from "@mui/material";
-
+import { Logo } from "../../";
 import { unsetLogs } from "../../../redux/authSlice";
 import { unsetServers } from "../../../redux/serversSlice";
 import { useDarkMode } from "../../../hooks/useDarkMode";
@@ -54,12 +54,7 @@ export function Header({ ioClose }: { ioClose?: () => void }): JSX.Element {
     return (
         <div className="Header">
             <h1>
-                <div className="logo-container">
-                    <Link to="/"><img src={process.env.PUBLIC_URL + "/images/openChatRooms.png"} alt="logo openChatRooms" /></Link>
-                </div>
-                <div className="sitename">
-                    <Link to="/">OpenChatRooms</Link>
-                </div>
+                <Logo />
                 <div className="logpad-container">
                     {authStatus.isLogged && (
                         <div className="logpad">

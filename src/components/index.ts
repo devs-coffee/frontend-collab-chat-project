@@ -27,3 +27,4 @@ export * from "./ServerSearching/ServerSearching";
 export * from "./ServerUpdateForm/ServerUpdateForm";
 export * from "./Template/Header/Header";
 export * from "./UserItem/UserItem"
+export * from "./Logo/Logo";
