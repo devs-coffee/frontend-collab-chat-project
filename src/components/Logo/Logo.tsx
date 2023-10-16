@@ -13,9 +13,6 @@ export function Logo(): JSX.Element {
 
 	useEffect(() => {
 		const setFromEvent = (e: MouseEvent) => {
-			console.log(e.clientX);
-			console.log(e.clientY);
-
 			if (e.clientX < 420 && e.clientY < 55) {
 				setClassPosition('--top')
 			}
