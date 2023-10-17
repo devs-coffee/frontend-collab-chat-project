@@ -1,0 +1,101 @@
+    .logo {
+    	display: flex;
+    	align-items: center;
+    	gap: 10px;
+
+
+    	&__picture {
+    		position: relative;
+
+    		img {
+    			width: 150px;
+    		}
+
+    		%eye {
+    			position: absolute;
+    			background-color: white;
+    			border-radius: 100%;
+    			height: 2px;
+    			width: 2px;
+    			transition: all 0.25s ease-in;
+    		}
+
+    		&__lefteye {
+    			@extend %eye;
+    			top: 69px;
+    			left: 62px;
+
+    			&--top {
+    				@extend %eye;
+    				top: 68px;
+    				left: 64px;
+    			}
+
+    			&--right {
+    				@extend %eye;
+    				top: 70px;
+    				left: 65px;
+    			}
+
+    			&--bottom {
+    				@extend %eye;
+    				top: 72px;
+    				left: 63.5px;
+    			}
+
+    			&--bottom-right {
+    				@extend %eye;
+    				top: 71px;
+    				left: 65px;
+    			}
+
+    			&--center {
+    				@extend %eye;
+    				top: 70px;
+    				left: 64px;
+    			}
+    		}
+
+    		&__righteye {
+    			@extend %eye;
+    			top: 69px;
+    			left: 83px;
+
+    			&--top {
+    				@extend %eye;
+    				top: 68px;
+    				left: 84px;
+    			}
+
+    			&--right {
+    				@extend %eye;
+    				top: 70px;
+    				left: 86px;
+    			}
+
+    			&--bottom {
+    				@extend %eye;
+    				top: 72px;
+    				left: 84.2px;
+    			}
+
+    			&--bottom-right {
+    				@extend %eye;
+    				top: 71px;
+    				left: 86px;
+    			}
+
+    			&--center {
+    				@extend %eye;
+    				top: 70px;
+    				left: 84.5px;
+    			}
+    		}
+
+    	}
+
+
+    	&__text {
+    		padding-bottom: 10px;
+    	}
+    }

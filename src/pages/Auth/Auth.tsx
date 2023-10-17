@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Login, Signup, Header } from '../../components';
+ 
 import './Auth.scss';
 
 export function Auth() {
