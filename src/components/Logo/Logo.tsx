@@ -18,9 +18,6 @@ export function Logo(): JSX.Element {
 	return (
 
 		<div className="logo">
-			<div className="point">
-
-			</div>
 			<Link to="/">
 				<div className="logo__picture">
 					<img src={imageSrc} alt="logo openChatRooms" />
