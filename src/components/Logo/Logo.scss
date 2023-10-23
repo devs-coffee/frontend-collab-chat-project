@@ -1,101 +1,61 @@
-    .logo {
-    	display: flex;
-    	align-items: center;
-    	gap: 10px;
+.logo {
+	display: flex;
+	align-items: center;
+	gap: 10px;
 
 
-    	&__picture {
-    		position: relative;
+	&__picture {
+		position: relative;
 
-    		img {
-    			width: 150px;
-    		}
+		img {
+			width: 150px;
+		}
 
-    		%eye {
-    			position: absolute;
-    			background-color: rgb(0, 0, 0);
-    			border-radius: 50px;
-    			height: 6px;
-    			width: 6px;
-    			transition: all 0.15s ease-in;
-    		}
+		%eye {
+			display: flex;
+			align-items: center;
+			justify-content: flex-end;
+			position: absolute;
+			top: 62px;
+			height: 10px;
+			width: 10px;
+			border-radius: 50px;
+			background-color: rgb(255, 255, 255);
+		}
 
-    		&__lefteye {
-    			@extend %eye;
-    			top: 69px;
-    			left: 62px;
+		%puppy {
+			content: "";
+			position: absolute;
+			justify-content: center;
+			align-items: center;
+			border-radius: 100%;
+			background-color: black;
+			margin-right: 0.2px;
+			height: 6px;
+			width: 6px;
+		}
 
-    			&--top {
-    				@extend %eye;
-    				top: 66.5px;
-    				left: 61.5px;
-    			}
+		&__lefteye {
+			@extend %eye;
+			left: 59px;
 
-    			&--right {
-    				@extend %eye;
-    				top: 68px;
-    				left: 62.5px;
-    			}
+			&::after {
+				@extend %puppy;
+			}
+		}
 
-    			&--bottom {
-    				@extend %eye;
-    				top: 69px;
-    				left: 61.5px;
-    			}
+		&__righteye {
+			@extend %eye;
+			left: 79.5px;
 
-    			&--bottom-right {
-    				@extend %eye;
-    				top: 69px;
-    				left: 62.5px;
-    			}
-
-    			&--center {
-    				@extend %eye;
-    				top: 68px;
-    				left: 61.5px;
-    			}
-    		}
-
-    		&__righteye {
-    			@extend %eye;
-    			top: 69px;
-    			left: 83px;
-
-    			&--top {
-    				@extend %eye;
-    				top: 66.5px;
-    				left: 82.2px;
-    			}
-
-    			&--right {
-    				@extend %eye;
-    				top: 68px;
-    				left: 83.2px;
-    			}
-
-    			&--bottom {
-    				@extend %eye;
-    				top: 69px;
-    				left: 82.2px;
-    			}
-
-    			&--bottom-right {
-    				@extend %eye;
-    				top: 69px;
-    				left: 83px;
-    			}
-
-    			&--center {
-    				@extend %eye;
-    				top: 68px;
-    				left: 82px;
-    			}
-    		}
-
-    	}
+			&::after {
+				@extend %puppy;
+			}
+		}
+	}
 
 
-    	&__text {
-    		padding-bottom: 10px;
-    	}
-    }
+	&__text {
+		padding-bottom: 10px;
+	}
+}
